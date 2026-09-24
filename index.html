@@ -332,9 +332,11 @@ function saveSent(arr){ try { localStorage.setItem('bhv-sent-'+ME.id, JSON.strin
 function pendingFor(taskId){ const gen = DATA.generatedAt || ''; return sentList().filter(s => s.task === taskId && s.t > gen); }
 function pruneSent(){ const gen = DATA.generatedAt || ''; saveSent(sentList().filter(s => s.t > gen)); }
 
+const canon = (s) => String(s||'').replace(/[^\p{L}\p{N}]/gu, '');
 async function sendReport(t, text, status, close){
   const ts = new Date().toISOString();
-  const sig = hex(await crypto.subtle.digest('SHA-256', enc.encode(['bhv-rep1', CODE, ME.id, t.id, ts, status, close?1:0, text].join('|'))));
+  // חתימה על צורה קנונית: ספרות הזמן בלבד ואותיות וספרות של הטקסט, כדי שעיצוב הגיליון לא ישבור את האימות
+  const sig = hex(await crypto.subtle.digest('SHA-256', enc.encode(['bhv-rep2', CODE, ME.id, t.id, canon(ts), status, close?1:0, canon(text)].join('|'))));
   const ok = await post({type:'progress', v:1, id:ME.id, n:ME.name, task:t.id, title:t.title, text, status, close:!!close, t:ts, sig});
   if(ok){ const arr = sentList(); arr.push({task:t.id, text, status, close:!!close, t:ts}); saveSent(arr); }
   return ok;
@@ -456,10 +458,10 @@ function taskHtml(t){
   const done = t.status === 'done', late = isOverdue(t);
   const last = (t.updates||[]).slice(-1)[0];
   const mine = (PERMS && PERMS.report) ? pendingFor(t.id) : [];
-  const closeReq = !done && ((PERMS && PERMS.report && t.closeRequest) || mine.some(s => s.close));
+  const closeReq = !done && (!!t.closeRequest || mine.some(s => s.close));
   const tags = [];
   tags.push('<span class="tag status">'+(done?ICON.check:'')+esc(STATUS[t.status]||t.status)+'</span>');
-  if(closeReq) tags.push('<span class="tag pend">ממתינה לאישור סגירה</span>');
+  if(closeReq) tags.push('<span class="tag pend">דווח כבוצע, ממתין לאישור אסף</span>');
   if(done) tags.push('<span class="tag">'+ICON.cal+'נסגרה '+fmtD(closedAt(t))+'</span>');
   else if(t.due) tags.push('<span class="tag '+(late?'late':soon(t)?'soon':'')+'">'+ICON.cal+(late?'באיחור · ':'יעד ')+fmtD(t.due)+'</span>');
   if(isMine(t)) tags.push('<span class="tag topic">'+ICON_USER+'באחריותי</span>');
@@ -500,7 +502,7 @@ function openForm(id){
     const text = $(fid+'-text').value.trim(); if(!text){ $(fid+'-text').focus(); return; }
     const sel = box.querySelector('input[name="'+fid+'-st"]:checked');
     $(fid+'-send').disabled = true; $(fid+'-send').textContent = 'שולח…';
-    const ok = await sendReport(t, text.slice(0,2000), sel ? sel.value : t.status, $(fid+'-close').checked);
+    const ok = await sendReport(t, text.replace(/\s+/g,' ').trim().slice(0,2000), sel ? sel.value : t.status, $(fid+'-close').checked);
     st.open[id] = true; render();
     const b = $('rep-'+id);
     if(b) b.insertAdjacentHTML('afterbegin', ok ? '<div class="rep-msg" role="status">העדכון נשלח. הוא יופיע באתר בעדכון הבא.</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>');

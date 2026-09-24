@@ -98,6 +98,9 @@ button{cursor:pointer}
 .chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:14.5px;font-weight:500;min-height:40px;display:flex;align-items:center;gap:7px;white-space:nowrap}
 .chip .dot{width:10px;height:10px;border-radius:50%;background:var(--oc,var(--muted))}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.mine{border-color:var(--brand);color:var(--brand);font-weight:700}
+.chip.mine[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip.mine svg{width:16px;height:16px}
 .chip.st-open[aria-pressed="true"]{background:var(--open);border-color:var(--open);color:#fff}
 .chip.st-progress[aria-pressed="true"]{background:var(--prog);border-color:var(--prog);color:#fff}
 .chip.st-waiting[aria-pressed="true"]{background:var(--wait);border-color:var(--wait);color:#fff}
@@ -344,6 +347,8 @@ function ownerGroup(t){ return t.owner || 'ללא אחראי'; }
 function ownerColor(o){ const i = OWNERS.indexOf(o); return OWNER_COLORS[(i<0?0:i) % OWNER_COLORS.length]; }
 function meetingLabel(id){ const m = (DATA.meetings||[]).find(x=>x.id===id); return m ? ('ישיבה ' + (m.number? m.number+' · ' : '') + fmtD(m.date)) : ''; }
 const closedAt = (t) => t.doneAt || t.updatedAt || '';
+const isMine = (t) => !!ME && (t.ownerId === ME.id || t.createdBy === ME.id);
+const ICON_USER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>';
 const initial = (s) => { const w = String(s||'').replace(/["׳״']/g,'').trim(); return w ? w[0] : '?'; };
 
 function start(){
@@ -360,7 +365,9 @@ function start(){
 function ownerChips(sel, key, list){
   const counts = {}; list.forEach(t => counts[ownerGroup(t)] = (counts[ownerGroup(t)]||0)+1);
   const owners = OWNERS.filter(o => counts[o]);
+  const nMine = list.filter(isMine).length;
   return '<button class="chip" data-'+key+'="all" aria-pressed="'+(sel==='all')+'">כל האחראים</button>' +
+    (nMine ? '<button class="chip mine" data-'+key+'="__mine" aria-pressed="'+(sel==='__mine')+'">'+ICON_USER+'המשימות שלי · '+nMine+'</button>' : '') +
     owners.map(o => '<button class="chip" style="--oc:'+ownerColor(o)+'" data-'+key+'="'+esc(o)+'" aria-pressed="'+(sel===o)+'"><span class="dot"></span>'+esc(o)+' · '+counts[o]+'</button>').join('');
 }
 
@@ -371,7 +378,7 @@ function filtered(){
     if(st.stat==='overdue' && !isOverdue(t)) return false;
     if(st.stat==='waiting' && t.status!=='waiting') return false;
     if(!st.stat && st.status!=='active' && t.status!==st.status) return false;
-    if(st.owner!=='all' && ownerGroup(t)!==st.owner) return false;
+    if(st.owner==='__mine'){ if(!isMine(t)) return false; } else if(st.owner!=='all' && ownerGroup(t)!==st.owner) return false;
     if(st.meeting!=='all' && t.meetingId!==st.meeting) return false;
     if(q && !((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(q)) return false;
     return true;
@@ -393,6 +400,8 @@ function render(){
   $('cnt-tasks').textContent = active.length || ''; $('cnt-closed').textContent = closed.length || '';
 
   // filters
+  if(st.owner==='__mine' && !active.some(isMine)) st.owner='all';
+  if(st.cowner==='__mine' && !closed.some(isMine)) st.cowner='all';
   $('owner-chips').innerHTML = ownerChips(st.owner, 'owner', active);
   $('owner-chips').querySelectorAll('[data-owner]').forEach(b => b.onclick = () => { st.owner = b.dataset.owner; render(); });
   const sOpts = [['active','הכל'],['open','פתוחה'],['progress','בטיפול'],['waiting',"ממתינה לצד ג'"]];
@@ -419,7 +428,7 @@ function render(){
   $('c-owner-chips').innerHTML = ownerChips(st.cowner, 'cowner', closed);
   $('c-owner-chips').querySelectorAll('[data-cowner]').forEach(b => b.onclick = () => { st.cowner = b.dataset.cowner; render(); });
   const cq = st.cq.trim();
-  const cl = closed.filter(t => (st.cowner==='all' || ownerGroup(t)===st.cowner) && (!cq || ((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(cq)))
+  const cl = closed.filter(t => (st.cowner==='all' || (st.cowner==='__mine' ? isMine(t) : ownerGroup(t)===st.cowner)) && (!cq || ((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(cq)))
     .sort((a,b) => closedAt(b).localeCompare(closedAt(a)));
   const months = []; cl.forEach(t => { const d = closedAt(t); const key = d ? d.slice(0,7) : ''; let m = months[months.length-1]; if(!m || m.key!==key){ m = {key, items:[]}; months.push(m); } m.items.push(t); });
   $('closed').innerHTML = months.length ? months.map(m => '<div class="month-block"><h3 class="month">'+(m.key ? MONTHS[+m.key.slice(5,7)-1]+' '+m.key.slice(0,4) : 'ללא תאריך סגירה')+' · '+m.items.length+'</h3><div class="grid">'+m.items.map(taskHtml).join('')+'</div></div>').join('')
@@ -453,6 +462,7 @@ function taskHtml(t){
   if(closeReq) tags.push('<span class="tag pend">ממתינה לאישור סגירה</span>');
   if(done) tags.push('<span class="tag">'+ICON.cal+'נסגרה '+fmtD(closedAt(t))+'</span>');
   else if(t.due) tags.push('<span class="tag '+(late?'late':soon(t)?'soon':'')+'">'+ICON.cal+(late?'באיחור · ':'יעד ')+fmtD(t.due)+'</span>');
+  if(isMine(t)) tags.push('<span class="tag topic">'+ICON_USER+'באחריותי</span>');
   if(t.topic) tags.push('<span class="tag topic">'+esc(t.topic)+'</span>');
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
   if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');

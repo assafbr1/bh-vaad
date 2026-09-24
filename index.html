@@ -13,6 +13,7 @@
   --bg:#EEF0EC; --surface:#FFFFFF; --surface2:#F6F7F4; --ink:#1D2621; --muted:#5E6A62; --line:#D7DCD4;
   --accent:#3E5A36; --accent-ink:#FFFFFF; --accent-soft:#E2EADC; --sky:#2D5F86;
   --ok:#2E7D4F; --ok-soft:#E0F0E6; --warn:#9A6A12; --warn-soft:#F7ECD6; --bad:#B3261E; --bad-soft:#F8E1DF; --info-soft:#E1EAF3;
+  --pend:#6B4FA0; --pend-soft:#ECE6F6;
   --shadow:0 1px 2px rgba(29,38,33,.06),0 4px 16px rgba(29,38,33,.05);
   color-scheme:light;
 }
@@ -20,17 +21,19 @@
   --bg:#141A16; --surface:#1C241F; --surface2:#222C26; --ink:#E6EBE5; --muted:#9BA89F; --line:#2F3A33;
   --accent:#9CC08A; --accent-ink:#13200F; --accent-soft:#2A3A26; --sky:#8DB8DC;
   --ok:#7CC79A; --ok-soft:#1F3328; --warn:#E3B45E; --warn-soft:#3A2F1A; --bad:#F08A80; --bad-soft:#3D2220; --info-soft:#1F2D3A;
+  --pend:#C3A8F0; --pend-soft:#2E2640;
   --shadow:none; color-scheme:dark;}}
 :root[data-theme="dark"]{
   --bg:#141A16; --surface:#1C241F; --surface2:#222C26; --ink:#E6EBE5; --muted:#9BA89F; --line:#2F3A33;
   --accent:#9CC08A; --accent-ink:#13200F; --accent-soft:#2A3A26; --sky:#8DB8DC;
   --ok:#7CC79A; --ok-soft:#1F3328; --warn:#E3B45E; --warn-soft:#3A2F1A; --bad:#F08A80; --bad-soft:#3D2220; --info-soft:#1F2D3A;
+  --pend:#C3A8F0; --pend-soft:#2E2640;
   --shadow:none; color-scheme:dark;}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:16px/1.6 "Assistant","Arial Hebrew",Arial,sans-serif;padding:0 16px;padding-block:env(safe-area-inset-top,0) 40px}
 h1,h2,h3{font-family:"Frank Ruhl Libre","David Libre",Georgia,serif;text-wrap:balance;margin:0}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 [hidden]{display:none!important}
@@ -45,7 +48,9 @@ button{cursor:pointer}
 .code-in{direction:ltr;text-align:center;letter-spacing:.18em;font-family:ui-monospace,Consolas,monospace;font-size:20px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);text-transform:uppercase}
 .chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin-bottom:16px}
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:8px 14px;font-weight:600}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);width:100%;padding:12px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.login-card .btn.primary{width:100%;padding:12px}
+.btn.small{padding:5px 12px;font-size:14px}
 .btn:disabled{opacity:.6;cursor:wait}
 .err{color:var(--bad);font-size:14px;min-height:22px;margin-top:8px}
 .notice{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);margin-top:18px;padding-top:12px}
@@ -60,8 +65,8 @@ header.top h1{font-size:28px;color:var(--accent)}
 .stat span{font-size:13px;color:var(--muted)}
 .stat.active{outline:2px solid var(--accent)}
 .stat.bad b{color:var(--bad)} .stat.warn b{color:var(--warn)} .stat.ok b{color:var(--ok)}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 14px;font-weight:600;color:var(--muted)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 14px;font-weight:600;color:var(--muted);white-space:nowrap}
 .tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .filters select,.filters input{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px;min-width:0}
@@ -74,15 +79,33 @@ header.top h1{font-size:28px;color:var(--accent)}
 .task-head{width:100%;text-align:right;background:none;border:none;padding:11px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
 .task-title{font-weight:700}
 .task-sub{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;color:var(--muted)}
+.pills{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:700;white-space:nowrap}
 .s-open{background:var(--info-soft);color:var(--sky)} .s-progress{background:var(--accent-soft);color:var(--accent)}
 .s-waiting{background:var(--warn-soft);color:var(--warn)} .s-done{background:var(--ok-soft);color:var(--ok)}
+.p-pend{background:var(--pend-soft);color:var(--pend)}
 .due-bad{color:var(--bad);font-weight:700} .due-soon{color:var(--warn);font-weight:700}
 .task-body{padding:0 14px 14px;border-top:1px dashed var(--line);font-size:15px}
 .task-body p{margin:10px 0}
 .upd{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
 .upd li{background:var(--surface2);border-radius:8px;padding:6px 10px;font-size:14px}
+.upd li.mine{background:var(--pend-soft)}
 .upd time{color:var(--muted);font-size:12.5px;margin-inline-end:8px;font-variant-numeric:tabular-nums}
+.upd .by{color:var(--muted);font-size:12.5px;margin-inline-start:6px}
+/* report form */
+.rep-open{margin-top:12px}
+.rep{margin-top:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.rep label{font-size:13px;font-weight:700;color:var(--muted)}
+.rep textarea,.rep select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;width:100%}
+.rep textarea{min-height:80px;resize:vertical}
+.rep .row2{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.rep .row2 .grow{flex:1}
+.rep .close-chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;font-weight:600;color:var(--ink)}
+.rep .hint{font-size:12.5px;color:var(--muted);margin:0}
+.rep-msg{font-size:14px;color:var(--ok);font-weight:600;margin-top:8px}
+/* closed */
+.month{font-size:18px;margin:18px 0 8px;color:var(--muted);font-family:"Assistant",sans-serif;font-weight:700}
+.month:first-child{margin-top:0}
 .meeting{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px}
 .meeting h3{font-size:18px}
 .meeting .mm{color:var(--muted);font-size:14px;margin:2px 0 8px}
@@ -119,8 +142,9 @@ footer{color:var(--muted);font-size:12.5px;margin-top:30px;text-align:center}
   </header>
   <div class="stats" id="stats"></div>
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-tasks" aria-selected="true">משימות</button>
-    <button class="tab" role="tab" id="tab-meetings" aria-selected="false">ישיבות ועד</button>
+    <button class="tab" role="tab" data-tab="tasks" aria-selected="true">משימות</button>
+    <button class="tab" role="tab" data-tab="closed" aria-selected="false" id="tab-closed">משימות שנסגרו</button>
+    <button class="tab" role="tab" data-tab="meetings" aria-selected="false">ישיבות ועד</button>
   </div>
   <section id="view-tasks">
     <div class="filters">
@@ -128,31 +152,40 @@ footer{color:var(--muted);font-size:12.5px;margin-top:30px;text-align:center}
       <select id="f-owner" aria-label="אחראי"></select>
       <select id="f-meeting" aria-label="ישיבה"></select>
       <select id="f-status" aria-label="סטטוס">
-        <option value="active">פתוחות בלבד</option><option value="all">הכל</option>
-        <option value="open">פתוחה</option><option value="progress">בטיפול</option><option value="waiting">ממתינה לצד ג'</option><option value="done">הושלמה</option>
+        <option value="active">כל הפתוחות</option>
+        <option value="open">פתוחה</option><option value="progress">בטיפול</option><option value="waiting">ממתינה לצד ג'</option>
       </select>
     </div>
     <div id="groups"></div>
   </section>
+  <section id="view-closed" hidden>
+    <div class="filters">
+      <input id="cq" type="search" placeholder="חיפוש במשימות שנסגרו…" aria-label="חיפוש במשימות שנסגרו">
+      <select id="c-owner" aria-label="אחראי"></select>
+    </div>
+    <div id="closed"></div>
+  </section>
   <section id="view-meetings" hidden><div id="meetings"></div></section>
-  <footer>הנתונים מוצפנים ומתעדכנים מדי לילה. לשאלות ולתיקונים: אסף ברקוביץ.</footer>
+  <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה נעשית באישור אסף ברקוביץ. לשאלות ולתיקונים: אסף ברקוביץ.</footer>
 </div>
 
 <script>
 (function(){
-const STATUS = {open:'פתוחה', progress:'בטיפול', waiting:"ממתינה לצד ג'", done:'הושלמה'};
+const STATUS = {open:'פתוחה', progress:'בטיפול', waiting:"ממתינה לצד ג'", done:'נסגרה'};
 const OWNER_ORDER = ['מנכ"לית','מזכירות','ועד'];
+const MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
 const enc = new TextEncoder(), dec = new TextDecoder();
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm = (c) => String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 const ub64 = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const hex = (buf) => Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 const todayISO = () => new Date(Date.now() + 3*3600e3).toISOString().slice(0,10);
-const fmtD = (iso) => { if(!iso) return ''; const [y,m,d] = iso.slice(0,10).split('-'); return +d + '.' + +m + '.' + y; };
-let DATA = null, ME = null;
-const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'' };
+const fmtD = (iso) => { if(!iso) return ''; const [y,m,d] = String(iso).slice(0,10).split('-'); return +d + '.' + +m + '.' + y; };
+let DATA = null, ME = null, CODE = '', PERMS = null;
+const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'', cq:'', cowner:'all', open:{} };
 
-async function lookupId(code){ const h = await crypto.subtle.digest('SHA-256', enc.encode('bhv1:'+norm(code))); return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,24); }
+async function lookupId(code){ return hex(await crypto.subtle.digest('SHA-256', enc.encode('bhv1:'+norm(code)))).slice(0,24); }
 async function fetchText(p){ const r = await fetch(p + '?t=' + Date.now(), {cache:'no-store'}); if(!r.ok) throw new Error('http'); return r.text(); }
 
 async function unlock(code){
@@ -169,17 +202,19 @@ async function unlock(code){
   return { me:{id:inner.id, name:inner.n}, data: JSON.parse(plain) };
 }
 
-function logVisit(){
-  if(!DATA.logUrl) return;
-  try { fetch(DATA.logUrl, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({id:ME.id, n:ME.name, t:new Date().toISOString(), ua:navigator.userAgent.slice(0,120)})}); } catch(e){}
+async function post(obj){
+  if(!DATA.logUrl) return false;
+  try { await fetch(DATA.logUrl, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(obj)}); return true; } catch(e){ return false; }
 }
+function logVisit(){ post({id:ME.id, n:ME.name, t:new Date().toISOString(), ua:navigator.userAgent.slice(0,120)}); }
 
 $('login-form').addEventListener('submit', async (ev) => {
   ev.preventDefault();
   const code = $('code').value; $('err').textContent = ''; $('go').disabled = true; $('go').textContent = 'פותח…';
   try {
-    const r = await unlock(code); DATA = r.data; ME = r.me;
-    try { if($('remember').checked) localStorage.setItem('bhv-code', norm(code)); else localStorage.removeItem('bhv-code'); } catch(e){}
+    const r = await unlock(code); DATA = r.data; ME = r.me; CODE = norm(code);
+    const me = (DATA.people||[]).find(p => p.id === ME.id); PERMS = (me && me.perms) || null;
+    try { if($('remember').checked) localStorage.setItem('bhv-code', CODE); else localStorage.removeItem('bhv-code'); } catch(e){}
     logVisit(); start();
   } catch(e){
     $('err').textContent = e.message === 'bad-code' ? 'הקוד שהוזן אינו מוכר. בדוק שהקלדת אותו כפי שקיבלת.' : 'לא ניתן לפתוח את הנתונים כרגע. נסה שוב בעוד דקה.';
@@ -187,30 +222,55 @@ $('login-form').addEventListener('submit', async (ev) => {
 });
 $('logout').addEventListener('click', () => { try { localStorage.removeItem('bhv-code'); } catch(e){} location.reload(); });
 
+// ─── reporting ───
+function canReport(t){
+  if(!PERMS || !PERMS.report || t.status === 'done') return false;
+  if(PERMS.report === 'all') return true;
+  if(PERMS.report === 'own') return t.createdBy === ME.id || t.ownerId === ME.id;
+  return false;
+}
+function sentList(){ try { return JSON.parse(localStorage.getItem('bhv-sent-'+ME.id) || '[]'); } catch(e){ return []; } }
+function saveSent(arr){ try { localStorage.setItem('bhv-sent-'+ME.id, JSON.stringify(arr)); } catch(e){} }
+function pendingFor(taskId){ const gen = DATA.generatedAt || ''; return sentList().filter(s => s.task === taskId && s.t > gen); }
+function pruneSent(){ const gen = DATA.generatedAt || ''; saveSent(sentList().filter(s => s.t > gen)); }
+
+async function sendReport(t, text, status, close){
+  const ts = new Date().toISOString();
+  const sig = hex(await crypto.subtle.digest('SHA-256', enc.encode(['bhv-rep1', CODE, ME.id, t.id, ts, status, close?1:0, text].join('|'))));
+  const ok = await post({type:'progress', v:1, id:ME.id, n:ME.name, task:t.id, title:t.title, text, status, close:!!close, t:ts, sig});
+  if(ok){ const arr = sentList(); arr.push({task:t.id, text, status, close:!!close, t:ts}); saveSent(arr); }
+  return ok;
+}
+
 function isOverdue(t){ return t.status !== 'done' && t.due && t.due < todayISO(); }
 function soon(t){ if(t.status==='done'||!t.due) return false; const d=(new Date(t.due)-new Date(todayISO()))/864e5; return d>=0 && d<=7; }
 function ownerGroup(t){ return t.owner || 'ללא אחראי'; }
 function meetingLabel(id){ const m = (DATA.meetings||[]).find(x=>x.id===id); return m ? ('ישיבה ' + (m.number? m.number+' · ' : '') + fmtD(m.date)) : ''; }
+const closedAt = (t) => t.doneAt || t.updatedAt || '';
 
 function start(){
   $('login').hidden = true; $('app').hidden = false;
   $('hello').textContent = 'שלום, ' + ME.name;
   $('updated').textContent = 'עודכן: ' + new Date(DATA.generatedAt).toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short', timeZone:'Asia/Jerusalem'});
+  pruneSent();
   const owners = Array.from(new Set(DATA.tasks.map(ownerGroup)));
   owners.sort((a,b)=>{ const ia=OWNER_ORDER.indexOf(a), ib=OWNER_ORDER.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b,'he'); });
-  $('f-owner').innerHTML = '<option value="all">כל האחראים</option>' + owners.map(o=>'<option>'+esc(o)+'</option>').join('');
+  const opts = '<option value="all">כל האחראים</option>' + owners.map(o=>'<option>'+esc(o)+'</option>').join('');
+  $('f-owner').innerHTML = opts; $('c-owner').innerHTML = opts;
   const ms = (DATA.meetings||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   $('f-meeting').innerHTML = '<option value="all">כל הישיבות והמקורות</option>' + ms.map(m=>'<option value="'+esc(m.id)+'">'+esc(meetingLabel(m.id))+'</option>').join('');
-  window.__owners = owners; render();
+  window.__owners = owners;
+  try { const h = location.hash.slice(1); if(['tasks','closed','meetings'].includes(h)) st.tab = h; } catch(e){}
+  setTab(st.tab);
 }
 
 function filtered(){
   const q = st.q.trim();
   return DATA.tasks.filter(t => {
+    if(t.status === 'done') return false;
     if(st.stat==='overdue' && !isOverdue(t)) return false;
     if(st.stat==='waiting' && t.status!=='waiting') return false;
-    if(st.stat==='done30' && !(t.status==='done' && t.doneAt && (Date.now()-new Date(t.doneAt))<30*864e5)) return false;
-    if(!st.stat){ if(st.status==='active' && t.status==='done') return false; if(!['active','all'].includes(st.status) && t.status!==st.status) return false; }
+    if(!st.stat && st.status!=='active' && t.status!==st.status) return false;
     if(st.owner!=='all' && ownerGroup(t)!==st.owner) return false;
     if(st.meeting!=='all' && t.meetingId!==st.meeting) return false;
     if(q && !((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(q)) return false;
@@ -219,49 +279,114 @@ function filtered(){
 }
 
 function render(){
-  const all = DATA.tasks, active = all.filter(t=>t.status!=='done');
+  const all = DATA.tasks, active = all.filter(t=>t.status!=='done'), closed = all.filter(t=>t.status==='done');
   const n = { open: active.length, overdue: all.filter(isOverdue).length, waiting: all.filter(t=>t.status==='waiting').length,
-    done30: all.filter(t=>t.status==='done'&&t.doneAt&&(Date.now()-new Date(t.doneAt))<30*864e5).length };
-  const chip = (k,label,cls) => '<button class="stat '+cls+(st.stat===k?' active':'')+'" data-stat="'+k+'"><b>'+n[k]+'</b><span>'+label+'</span></button>';
-  $('stats').innerHTML = chip('open','משימות פתוחות','') + chip('overdue','באיחור','bad') + chip('waiting',"ממתינות לצד ג'",'warn') + chip('done30','הושלמו ב-30 יום','ok');
-  $('stats').querySelectorAll('[data-stat]').forEach(b => b.onclick = () => { const k=b.dataset.stat; st.stat = (k==='open'||st.stat===k) ? '' : k; if(k==='open') st.status='active'; $('f-status').value=st.status; render(); });
+    done30: closed.filter(t=>closedAt(t) && (Date.now()-new Date(closedAt(t)))<30*864e5).length };
+  const chip = (k,label,cls) => '<button class="stat '+cls+(st.tab==='tasks'&&st.stat===k?' active':'')+'" data-stat="'+k+'"><b>'+n[k]+'</b><span>'+label+'</span></button>';
+  $('stats').innerHTML = chip('open','משימות פתוחות','') + chip('overdue','באיחור','bad') + chip('waiting',"ממתינות לצד ג'",'warn') + chip('done30','נסגרו ב-30 יום','ok');
+  $('stats').querySelectorAll('[data-stat]').forEach(b => b.onclick = () => {
+    const k = b.dataset.stat;
+    if(k==='done30'){ setTab('closed'); return; }
+    st.stat = (k==='open'||st.stat===k) ? '' : k; if(k==='open'){ st.status='active'; $('f-status').value='active'; }
+    setTab('tasks');
+  });
+  $('tab-closed').textContent = 'משימות שנסגרו' + (closed.length ? ' ('+closed.length+')' : '');
 
+  // open tasks
   const list = filtered(), groups = {};
   list.forEach(t => (groups[ownerGroup(t)] = groups[ownerGroup(t)] || []).push(t));
   const order = (window.__owners||[]).filter(o=>groups[o]);
   $('groups').innerHTML = order.length ? order.map(o => {
-    const ts = groups[o].sort((a,b)=> (a.status==='done')-(b.status==='done') || (a.due||'9').localeCompare(b.due||'9'));
+    const ts = groups[o].sort((a,b)=> (a.due||'9').localeCompare(b.due||'9'));
     return '<div class="group"><h2>'+esc(o)+' <small>'+ts.length+' משימות</small></h2>' + ts.map(taskHtml).join('') + '</div>';
-  }).join('') : '<div class="empty">אין משימות שמתאימות לסינון.</div>';
-  $('groups').querySelectorAll('.task-head').forEach(b => b.onclick = () => { const body = b.nextElementSibling; body.hidden = !body.hidden; b.setAttribute('aria-expanded', String(!body.hidden)); });
+  }).join('') : '<div class="empty">אין משימות פתוחות שמתאימות לסינון.</div>';
+  wireTasks($('groups'));
 
+  // closed tasks, newest first, grouped by month
+  const cq = st.cq.trim();
+  const cl = closed.filter(t => (st.cowner==='all' || ownerGroup(t)===st.cowner) && (!cq || ((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(cq)))
+    .sort((a,b) => closedAt(b).localeCompare(closedAt(a)));
+  let lastKey = '', html = '';
+  cl.forEach(t => { const d = closedAt(t); const key = d ? d.slice(0,7) : 'ללא תאריך';
+    if(key !== lastKey){ lastKey = key; html += '<h3 class="month">'+(d ? MONTHS[+d.slice(5,7)-1]+' '+d.slice(0,4) : 'ללא תאריך סגירה')+'</h3>'; }
+    html += taskHtml(t); });
+  $('closed').innerHTML = html || '<div class="empty">'+(closed.length ? 'אין משימות סגורות שמתאימות לסינון.' : 'עדיין לא נסגרו משימות.')+'</div>';
+  wireTasks($('closed'));
+
+  // meetings
   const ms = (DATA.meetings||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   $('meetings').innerHTML = ms.length ? ms.map(m => {
     const ts = all.filter(t=>t.meetingId===m.id), done = ts.filter(t=>t.status==='done').length;
-    return '<div class="meeting"><h3>'+esc(m.title || ('ישיבת ועד' + (m.number?' מס\' '+m.number:'')))+'</h3><div class="mm">'+fmtD(m.date)+' · '+ts.length+' משימות, '+done+' הושלמו</div>'+
+    return '<div class="meeting"><h3>'+esc(m.title || ('ישיבת ועד' + (m.number?' מס\' '+m.number:'')))+'</h3><div class="mm">'+fmtD(m.date)+' · '+ts.length+' משימות, '+done+' נסגרו</div>'+
       (m.decisions&&m.decisions.length ? '<ol>'+m.decisions.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ol>' : '') +
-      (ts.length ? '<div style="margin-top:8px"><button class="linkbtn" data-m="'+esc(m.id)+'">הצג את משימות הישיבה</button></div>' : '') + '</div>';
+      (ts.length - done ? '<div style="margin-top:8px"><button class="linkbtn" data-m="'+esc(m.id)+'">הצג את המשימות הפתוחות של הישיבה</button></div>' : '') + '</div>';
   }).join('') : '<div class="empty">טרם נקלטו פרוטוקולים.</div>';
-  $('meetings').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { st.meeting=b.dataset.m; st.status='all'; st.stat=''; $('f-meeting').value=st.meeting; $('f-status').value='all'; setTab('tasks'); });
+  $('meetings').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { st.meeting=b.dataset.m; st.status='active'; st.stat=''; $('f-meeting').value=st.meeting; $('f-status').value='active'; setTab('tasks'); });
+}
+
+function wireTasks(root){
+  root.querySelectorAll('.task-head').forEach(b => b.onclick = () => { const id = b.dataset.id; st.open[id] = !st.open[id]; const body = b.nextElementSibling; body.hidden = !st.open[id]; b.setAttribute('aria-expanded', String(!!st.open[id])); });
+  root.querySelectorAll('[data-rep]').forEach(b => b.onclick = () => openForm(b.dataset.rep));
 }
 
 function taskHtml(t){
-  const due = t.due ? '<span class="'+(isOverdue(t)?'due-bad':soon(t)?'due-soon':'')+'">יעד: '+fmtD(t.due)+(isOverdue(t)?' (באיחור)':'')+'</span>' : '';
+  const done = t.status === 'done';
+  const due = !done && t.due ? '<span class="'+(isOverdue(t)?'due-bad':soon(t)?'due-soon':'')+'">יעד: '+fmtD(t.due)+(isOverdue(t)?' (באיחור)':'')+'</span>' : '';
   const ml = t.meetingId ? '<span>'+esc(meetingLabel(t.meetingId))+'</span>' : '';
   const last = (t.updates||[]).slice(-1)[0];
-  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+'</time>'+esc(u.text)+'</li>').join('');
-  return '<div class="task'+(isOverdue(t)?' overdue':'')+'"><button class="task-head" aria-expanded="false"><span class="task-title">'+esc(t.title)+'</span>'+
-    '<span class="pill s-'+esc(t.status)+'">'+esc(STATUS[t.status]||t.status)+'</span>'+
-    '<span class="task-sub">'+(t.topic?'<span>'+esc(t.topic)+'</span>':'')+due+ml+(last?'<span>עדכון אחרון: '+fmtD(last.at)+'</span>':'')+'</span></button>'+
-    '<div class="task-body" hidden>'+(t.details?'<p>'+esc(t.details)+'</p>':'')+(upd?'<ul class="upd">'+upd+'</ul>':'<p style="color:var(--muted)">אין עדכונים.</p>')+'</div></div>';
+  const mine = canReport(t) || (PERMS && PERMS.report) ? pendingFor(t.id) : [];
+  const closeReq = (PERMS && PERMS.report && t.closeRequest) || mine.some(s => s.close);
+  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+'</time>'+esc(s.text)+(s.close?' · <b>ביקשת לסגור</b>':'')+'<span class="by">נשלח, יופיע באתר בעדכון הבא</span></li>').join('');
+  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+'</time>'+esc(u.text)+(u.by?'<span class="by">('+esc(u.by)+')</span>':'')+'</li>').join('');
+  const expanded = !!st.open[t.id];
+  const sub = (t.topic?'<span>'+esc(t.topic)+'</span>':'') + (done ? '<span>נסגרה: '+fmtD(closedAt(t))+'</span><span>אחראי: '+esc(ownerGroup(t))+'</span>' : due) + ml + (last?'<span>עדכון אחרון: '+fmtD(last.at)+'</span>':'');
+  return '<div class="task'+(isOverdue(t)?' overdue':'')+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'"><span class="task-title">'+esc(t.title)+'</span>'+
+    '<span class="pills">'+(closeReq?'<span class="pill p-pend">ממתינה לאישור סגירה</span>':'')+'<span class="pill s-'+esc(t.status)+'">'+esc(STATUS[t.status]||t.status)+'</span></span>'+
+    '<span class="task-sub">'+sub+'</span></button>'+
+    '<div class="task-body"'+(expanded?'':' hidden')+'>'+(t.details?'<p>'+esc(t.details)+'</p>':'')+
+    ((pend||upd)?'<ul class="upd">'+pend+upd+'</ul>':'<p style="color:var(--muted)">אין עדכונים.</p>')+
+    (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn small rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
+    '</div></div>';
 }
 
-function setTab(k){ st.tab=k; $('tab-tasks').setAttribute('aria-selected', String(k==='tasks')); $('tab-meetings').setAttribute('aria-selected', String(k==='meetings')); $('view-tasks').hidden = k!=='tasks'; $('view-meetings').hidden = k!=='meetings'; render(); }
-$('tab-tasks').onclick = () => setTab('tasks'); $('tab-meetings').onclick = () => setTab('meetings');
+function openForm(id){
+  const t = DATA.tasks.find(x => x.id === id); if(!t) return;
+  const box = $('rep-'+id); if(!box) return;
+  const fid = 'r-'+id.replace(/[^a-zA-Z0-9_-]/g,'');
+  box.innerHTML = '<form class="rep" id="'+fid+'-form">'+
+    '<div><label for="'+fid+'-text">מה התקדם?</label><textarea id="'+fid+'-text" required placeholder="למשל: נשלחה פנייה למועצה, ממתינים לתשובה עד סוף השבוע."></textarea></div>'+
+    '<div class="row2"><div class="grow"><label for="'+fid+'-status">סטטוס</label><select id="'+fid+'-status">'+
+      ['open','progress','waiting'].map(k => '<option value="'+k+'"'+(k===t.status?' selected':'')+'>'+STATUS[k]+'</option>').join('')+'</select></div></div>'+
+    '<label class="close-chk"><input type="checkbox" id="'+fid+'-close"> <span>המשימה בוצעה. לבקש מאסף לסגור אותה</span></label>'+
+    '<p class="hint">העדכון יופיע לחברי הוועד בעדכון הבא של האתר. משימה נסגרת רק באישור אסף.</p>'+
+    '<div class="row2"><span class="grow"></span><button type="button" class="btn small" id="'+fid+'-cancel">ביטול</button><button type="submit" class="btn small primary" id="'+fid+'-send">שליחה</button></div>'+
+    '</form>';
+  $(fid+'-text').focus();
+  $(fid+'-cancel').onclick = () => render();
+  $(fid+'-form').onsubmit = async (ev) => {
+    ev.preventDefault();
+    const text = $(fid+'-text').value.trim(); if(!text){ $(fid+'-text').focus(); return; }
+    $(fid+'-send').disabled = true; $(fid+'-send').textContent = 'שולח…';
+    const ok = await sendReport(t, text.slice(0,2000), $(fid+'-status').value, $(fid+'-close').checked);
+    st.open[id] = true; render();
+    const b = $('rep-'+id);
+    if(b) b.insertAdjacentHTML('afterbegin', ok ? '<div class="rep-msg" role="status">העדכון נשלח. הוא יופיע באתר בעדכון הבא.</div>' : '<div class="rep-msg" role="alert" style="color:var(--bad)">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>');
+  };
+}
+
+function setTab(k){
+  st.tab = k;
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab===k)));
+  $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings';
+  render();
+}
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => { if(b.dataset.tab==='tasks') st.stat=''; setTab(b.dataset.tab); });
 $('q').oninput = (e) => { st.q = e.target.value; render(); };
 $('f-owner').onchange = (e) => { st.owner = e.target.value; render(); };
 $('f-meeting').onchange = (e) => { st.meeting = e.target.value; render(); };
 $('f-status').onchange = (e) => { st.status = e.target.value; st.stat=''; render(); };
+$('cq').oninput = (e) => { st.cq = e.target.value; render(); };
+$('c-owner').onchange = (e) => { st.cowner = e.target.value; render(); };
 
 try { const saved = localStorage.getItem('bhv-code'); if(saved){ $('code').value = saved; $('remember').checked = true; $('login-form').requestSubmit(); } } catch(e){}
 })();

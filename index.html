@@ -4,121 +4,208 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#24533A">
 <title>ועד בית חורון · מעקב משימות</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#EEF0EC; --surface:#FFFFFF; --surface2:#F6F7F4; --ink:#1D2621; --muted:#5E6A62; --line:#D7DCD4;
-  --accent:#3E5A36; --accent-ink:#FFFFFF; --accent-soft:#E2EADC; --sky:#2D5F86;
-  --ok:#2E7D4F; --ok-soft:#E0F0E6; --warn:#9A6A12; --warn-soft:#F7ECD6; --bad:#B3261E; --bad-soft:#F8E1DF; --info-soft:#E1EAF3;
-  --pend:#6B4FA0; --pend-soft:#ECE6F6;
-  --shadow:0 1px 2px rgba(29,38,33,.06),0 4px 16px rgba(29,38,33,.05);
+  --bg:#EEF3F0; --surface:#FFFFFF; --surface2:#F5F8F6; --ink:#17231C; --muted:#5B6B62; --line:#DCE5DF;
+  --brand:#24533A; --brand2:#1D6A7A; --brand-ink:#FFFFFF; --brand-soft:#DDEBE2;
+  --open:#2463A6; --open-soft:#E2EDFA;
+  --prog:#0E7A6B; --prog-soft:#D9F2ED;
+  --wait:#B06200; --wait-soft:#FDEBD3;
+  --done:#2E7D32; --done-soft:#E1F3E2;
+  --bad:#C0352B; --bad-soft:#FBE2DF;
+  --pend:#6B4FA0; --pend-soft:#ECE5F7;
+  --shadow:0 1px 2px rgba(23,35,28,.06),0 6px 18px rgba(23,35,28,.07);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141A16; --surface:#1C241F; --surface2:#222C26; --ink:#E6EBE5; --muted:#9BA89F; --line:#2F3A33;
-  --accent:#9CC08A; --accent-ink:#13200F; --accent-soft:#2A3A26; --sky:#8DB8DC;
-  --ok:#7CC79A; --ok-soft:#1F3328; --warn:#E3B45E; --warn-soft:#3A2F1A; --bad:#F08A80; --bad-soft:#3D2220; --info-soft:#1F2D3A;
-  --pend:#C3A8F0; --pend-soft:#2E2640;
+  --bg:#101714; --surface:#18221D; --surface2:#1E2A24; --ink:#E7EEE9; --muted:#9FB0A6; --line:#2B3A32;
+  --brand:#2E6B4A; --brand2:#23707F; --brand-ink:#FFFFFF; --brand-soft:#223A2D;
+  --open:#8BB8EE; --open-soft:#1B2C40; --prog:#6FD4C2; --prog-soft:#153530;
+  --wait:#F2B461; --wait-soft:#3A2B15; --done:#86D18A; --done-soft:#1C3320;
+  --bad:#F28B80; --bad-soft:#3D1F1C; --pend:#C7AEF2; --pend-soft:#2D2440;
   --shadow:none; color-scheme:dark;}}
 :root[data-theme="dark"]{
-  --bg:#141A16; --surface:#1C241F; --surface2:#222C26; --ink:#E6EBE5; --muted:#9BA89F; --line:#2F3A33;
-  --accent:#9CC08A; --accent-ink:#13200F; --accent-soft:#2A3A26; --sky:#8DB8DC;
-  --ok:#7CC79A; --ok-soft:#1F3328; --warn:#E3B45E; --warn-soft:#3A2F1A; --bad:#F08A80; --bad-soft:#3D2220; --info-soft:#1F2D3A;
-  --pend:#C3A8F0; --pend-soft:#2E2640;
+  --bg:#101714; --surface:#18221D; --surface2:#1E2A24; --ink:#E7EEE9; --muted:#9FB0A6; --line:#2B3A32;
+  --brand:#2E6B4A; --brand2:#23707F; --brand-ink:#FFFFFF; --brand-soft:#223A2D;
+  --open:#8BB8EE; --open-soft:#1B2C40; --prog:#6FD4C2; --prog-soft:#153530;
+  --wait:#F2B461; --wait-soft:#3A2B15; --done:#86D18A; --done-soft:#1C3320;
+  --bad:#F28B80; --bad-soft:#3D1F1C; --pend:#C7AEF2; --pend-soft:#2D2440;
   --shadow:none; color-scheme:dark;}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.6 "Assistant","Arial Hebrew",Arial,sans-serif;padding:0 16px;padding-block:env(safe-area-inset-top,0) 40px}
-h1,h2,h3{font-family:"Frank Ruhl Libre","David Libre",Georgia,serif;text-wrap:balance;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Heebo","Arial Hebrew",Arial,sans-serif;-webkit-text-size-adjust:100%}
+h1,h2,h3{margin:0;text-wrap:balance}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+:focus-visible{outline:3px solid var(--open);outline-offset:2px}
 [hidden]{display:none!important}
-.wrap{max-width:1040px;margin:0 auto}
-/* login */
-.login{min-height:100vh;display:grid;place-items:center;padding-block:24px}
-.login-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:32px 28px;width:100%;max-width:420px;box-shadow:var(--shadow)}
-.login-card h1{font-size:30px;color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* ── login ── */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:linear-gradient(160deg,var(--brand) 0%,var(--brand2) 100%)}
+.login-card{background:var(--surface);border-radius:18px;padding:30px 24px;width:100%;max-width:420px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.login-card .logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;margin-bottom:14px}
+.login-card h1{font-size:28px;font-weight:800;color:var(--brand)}
 .login-card .sub{color:var(--muted);margin:4px 0 22px}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.field label{font-weight:600;font-size:14px}
-.code-in{direction:ltr;text-align:center;letter-spacing:.18em;font-family:ui-monospace,Consolas,monospace;font-size:20px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);text-transform:uppercase}
-.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin-bottom:16px}
-.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:8px 14px;font-weight:600}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.login-card .btn.primary{width:100%;padding:12px}
-.btn.small{padding:5px 12px;font-size:14px}
+.field label{font-weight:700;font-size:15px}
+.code-in{direction:ltr;text-align:center;letter-spacing:.16em;font-family:ui-monospace,Consolas,monospace;font-size:21px;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--surface2);text-transform:uppercase;width:100%}
+.code-in:focus{border-color:var(--brand2);outline:none}
+.chk{display:flex;gap:10px;align-items:center;font-size:15px;color:var(--muted);margin-bottom:18px}
+.chk input{width:20px;height:20px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 16px;font-weight:700;min-height:44px}
+.btn.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.btn.block{width:100%;font-size:17px}
 .btn:disabled{opacity:.6;cursor:wait}
-.err{color:var(--bad);font-size:14px;min-height:22px;margin-top:8px}
+.err{color:var(--bad);font-size:15px;min-height:22px;margin-top:10px;font-weight:500}
 .notice{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);margin-top:18px;padding-top:12px}
-/* app */
-header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:22px 14px;border-bottom:2px solid var(--accent)}
-header.top h1{font-size:28px;color:var(--accent)}
-.meta{color:var(--muted);font-size:14px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.linkbtn{background:none;border:none;color:var(--sky);text-decoration:underline;padding:0}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-align:right}
-.stat b{display:block;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.2}
-.stat span{font-size:13px;color:var(--muted)}
-.stat.active{outline:2px solid var(--accent)}
-.stat.bad b{color:var(--bad)} .stat.warn b{color:var(--warn)} .stat.ok b{color:var(--ok)}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
-.tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 14px;font-weight:600;color:var(--muted);white-space:nowrap}
-.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.filters select,.filters input{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px;min-width:0}
-.filters input{flex:1 1 200px}
-.group{margin-bottom:22px}
-.group h2{font-size:20px;display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
-.group h2 small{font-family:"Assistant",sans-serif;font-size:13px;color:var(--muted);font-weight:400}
-.task{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;overflow:hidden}
-.task.overdue{border-inline-start:4px solid var(--bad)}
-.task-head{width:100%;text-align:right;background:none;border:none;padding:11px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
-.task-title{font-weight:700}
-.task-sub{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;color:var(--muted)}
-.pills{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:700;white-space:nowrap}
-.s-open{background:var(--info-soft);color:var(--sky)} .s-progress{background:var(--accent-soft);color:var(--accent)}
-.s-waiting{background:var(--warn-soft);color:var(--warn)} .s-done{background:var(--ok-soft);color:var(--ok)}
-.p-pend{background:var(--pend-soft);color:var(--pend)}
-.due-bad{color:var(--bad);font-weight:700} .due-soon{color:var(--warn);font-weight:700}
-.task-body{padding:0 14px 14px;border-top:1px dashed var(--line);font-size:15px}
-.task-body p{margin:10px 0}
-.upd{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
-.upd li{background:var(--surface2);border-radius:8px;padding:6px 10px;font-size:14px}
-.upd li.mine{background:var(--pend-soft)}
-.upd time{color:var(--muted);font-size:12.5px;margin-inline-end:8px;font-variant-numeric:tabular-nums}
-.upd .by{color:var(--muted);font-size:12.5px;margin-inline-start:6px}
+
+/* ── header ── */
+.hero{background:linear-gradient(120deg,var(--brand) 0%,var(--brand2) 100%);color:var(--brand-ink);padding-top:env(safe-area-inset-top,0px)}
+.hero .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding-block:18px 64px}
+.hero h1{font-size:24px;font-weight:800;letter-spacing:.2px}
+.hero .meta{font-size:14px;opacity:.9;display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:2px}
+.logout{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;min-height:40px}
+
+/* ── stats ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:-48px;position:relative}
+.stat{border:none;border-radius:16px;padding:14px 16px;text-align:right;background:var(--surface);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:2px;border-top:5px solid var(--c);min-height:92px}
+.stat b{font-size:32px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--c)}
+.stat span{font-size:14px;color:var(--muted);font-weight:500}
+.stat.active{background:var(--cs)}
+.stat.c-open{--c:var(--open);--cs:var(--open-soft)} .stat.c-bad{--c:var(--bad);--cs:var(--bad-soft)}
+.stat.c-wait{--c:var(--wait);--cs:var(--wait-soft)} .stat.c-done{--c:var(--done);--cs:var(--done-soft)}
+
+/* ── tabs ── */
+.tabs{display:flex;gap:6px;margin:22px 0 14px;background:var(--surface);border-radius:14px;padding:5px;box-shadow:var(--shadow);width:fit-content;max-width:100%}
+.tab{background:none;border:none;border-radius:10px;padding:9px 18px;font-weight:700;color:var(--muted);white-space:nowrap;display:flex;gap:8px;align-items:center;min-height:44px}
+.tab svg{width:20px;height:20px;flex:none}
+.tab[aria-selected="true"]{background:var(--brand);color:var(--brand-ink)}
+.tab .cnt{background:rgba(127,127,127,.18);border-radius:999px;padding:0 8px;font-size:13px}
+
+/* ── filters ── */
+.filters{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.search{position:relative}
+.search input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 44px 12px 14px;min-height:48px;font-size:16px}
+.search svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted);pointer-events:none}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:14.5px;font-weight:500;min-height:40px;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.chip .dot{width:10px;height:10px;border-radius:50%;background:var(--oc,var(--muted))}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.st-open[aria-pressed="true"]{background:var(--open);border-color:var(--open);color:#fff}
+.chip.st-progress[aria-pressed="true"]{background:var(--prog);border-color:var(--prog);color:#fff}
+.chip.st-waiting[aria-pressed="true"]{background:var(--wait);border-color:var(--wait);color:#fff}
+.filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-row select{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;min-height:44px;max-width:100%}
+.active-filter{display:flex;gap:8px;align-items:center;background:var(--open-soft);color:var(--open);border-radius:12px;padding:8px 12px;font-weight:700;font-size:14.5px}
+.active-filter button{margin-inline-start:auto;background:none;border:none;color:inherit;text-decoration:underline;font-weight:700;min-height:32px}
+
+/* ── groups & cards ── */
+.group{margin-bottom:26px}
+.group-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.group-h .av{width:34px;height:34px;border-radius:10px;background:var(--oc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;flex:none}
+.group-h h2{font-size:20px;font-weight:800}
+.group-h small{color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;align-items:start}
+.task{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;border-inline-start:6px solid var(--sc)}
+.task.st-open{--sc:var(--open);--ss:var(--open-soft)} .task.st-progress{--sc:var(--prog);--ss:var(--prog-soft)}
+.task.st-waiting{--sc:var(--wait);--ss:var(--wait-soft)} .task.st-done{--sc:var(--done);--ss:var(--done-soft)}
+.task.overdue{--sc:var(--bad)}
+.task-head{width:100%;text-align:right;background:none;border:none;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.task-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;width:100%}
+.task-title{font-weight:700;font-size:17px;line-height:1.4}
+.chev{flex:none;width:22px;height:22px;color:var(--muted);transition:transform .2s;margin-top:2px}
+.task-head[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.task-head[aria-expanded="true"] .last{display:none}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700;white-space:nowrap;background:var(--surface2);color:var(--muted)}
+.tag svg{width:14px;height:14px}
+.tag.status{background:var(--ss);color:var(--sc)}
+.task.overdue .tag.status{background:var(--ss);color:var(--sc)}
+.tag.late{background:var(--bad-soft);color:var(--bad)}
+.tag.soon{background:var(--wait-soft);color:var(--wait)}
+.tag.pend{background:var(--pend-soft);color:var(--pend)}
+.tag.topic{background:var(--brand-soft);color:var(--brand)}
+:root:not([data-theme="light"]) .tag.topic{color:var(--ink)}
+.last{font-size:13.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.task-body{padding:0 16px 16px;font-size:15.5px}
+.task-body .details{margin:0 0 12px;padding:10px 12px;background:var(--surface2);border-radius:10px}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl li{position:relative;padding:0 18px 12px 0;font-size:15px}
+.tl li::before{content:"";position:absolute;right:3px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--sc)}
+.tl li::after{content:"";position:absolute;right:7px;top:18px;bottom:-2px;width:1px;background:var(--line)}
+.tl li:last-child::after{display:none}
+.tl li.mine::before{background:var(--pend)}
+.tl time{display:block;color:var(--muted);font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.tl .by{color:var(--muted);font-size:12.5px}
+.empty-upd{color:var(--muted);margin:0}
 /* report form */
-.rep-open{margin-top:12px}
-.rep{margin-top:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
-.rep label{font-size:13px;font-weight:700;color:var(--muted)}
-.rep textarea,.rep select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;width:100%}
-.rep textarea{min-height:80px;resize:vertical}
-.rep .row2{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.rep .row2 .grow{flex:1}
-.rep .close-chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;font-weight:600;color:var(--ink)}
-.rep .hint{font-size:12.5px;color:var(--muted);margin:0}
-.rep-msg{font-size:14px;color:var(--ok);font-weight:600;margin-top:8px}
+.rep-open{margin-top:12px;width:100%;background:var(--brand);color:var(--brand-ink);border:none}
+.rep{margin-top:12px;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.rep label.l{font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+.rep textarea{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;width:100%;min-height:96px;resize:vertical;font-size:16px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg label{display:flex}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{flex:1;text-align:center;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 4px;font-weight:700;font-size:14.5px;min-height:44px;display:grid;place-items:center;cursor:pointer}
+.seg input:checked + span.s-open{background:var(--open);border-color:var(--open);color:#fff}
+.seg input:checked + span.s-progress{background:var(--prog);border-color:var(--prog);color:#fff}
+.seg input:checked + span.s-waiting{background:var(--wait);border-color:var(--wait);color:#fff}
+.seg input:focus-visible + span{outline:3px solid var(--open);outline-offset:2px}
+.close-chk{display:flex;gap:10px;align-items:flex-start;font-size:15px;font-weight:700;background:var(--done-soft);color:var(--done);border-radius:10px;padding:10px 12px}
+.close-chk input{width:20px;height:20px;flex:none;margin-top:2px}
+.rep .hint{font-size:13px;color:var(--muted);margin:0}
+.rep .row2{display:flex;gap:8px}
+.rep .row2 .btn{flex:1}
+.rep-msg{font-size:15px;color:var(--done);font-weight:700;margin-top:10px;background:var(--done-soft);border-radius:10px;padding:8px 12px}
+.rep-msg.err{color:var(--bad);background:var(--bad-soft)}
+
 /* closed */
-.month{font-size:18px;margin:18px 0 8px;color:var(--muted);font-family:"Assistant",sans-serif;font-weight:700}
-.month:first-child{margin-top:0}
-.meeting{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px}
-.meeting h3{font-size:18px}
-.meeting .mm{color:var(--muted);font-size:14px;margin:2px 0 8px}
-.meeting ol{margin:0;padding-inline-start:20px}
-.empty{color:var(--muted);text-align:center;padding:30px}
-footer{color:var(--muted);font-size:12.5px;margin-top:30px;text-align:center}
-@media (max-width:560px){header.top h1{font-size:23px}.stat b{font-size:22px}}
+.month{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;color:var(--done);margin:6px 0 10px}
+.month::after{content:"";flex:1;height:2px;background:var(--done-soft)}
+.month-block{margin-bottom:22px}
+/* meetings */
+.meeting{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+.meeting h3{font-size:19px;font-weight:800;color:var(--brand)}
+:root:not([data-theme="light"]) .meeting h3{color:var(--ink)}
+.meeting .mm{color:var(--muted);font-size:14.5px;margin:2px 0 10px}
+.bar{height:10px;border-radius:999px;background:var(--surface2);overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--done),var(--prog));border-radius:999px}
+.meeting ol{margin:0 0 10px;padding-inline-start:22px}
+.meeting li{margin-bottom:4px}
+.linkbtn{background:none;border:none;color:var(--open);font-weight:700;text-decoration:underline;padding:0;min-height:36px}
+.empty{color:var(--muted);text-align:center;padding:36px 16px;background:var(--surface);border-radius:16px}
+footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
+
+/* ── phone ── */
+@media (max-width:720px){
+  .hero .wrap{padding-block:14px 58px}
+  .hero h1{font-size:20px}
+  .stats{grid-template-columns:repeat(2,1fr);gap:10px;margin-top:-44px}
+  .stat{min-height:80px;padding:12px}
+  .stat b{font-size:27px}
+  .tabs{position:fixed;bottom:0;right:0;left:0;margin:0;width:auto;border-radius:0;box-shadow:0 -2px 14px rgba(0,0,0,.12);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));z-index:10;justify-content:space-around;gap:4px}
+  .tab{flex:1;flex-direction:column;gap:2px;padding:6px 4px;font-size:12.5px;justify-content:center;min-height:54px}
+  .tab .cnt{position:absolute;margin-top:-4px;margin-inline-start:26px;font-size:11px;padding:0 6px;background:var(--bad);color:#fff}
+  .tab{position:relative}
+  .tab .cnt{display:none}
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .grid{grid-template-columns:1fr}
+  .main{padding-top:16px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div id="login" class="login">
   <form class="login-card" id="login-form" autocomplete="off">
+    <div class="logo" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></div>
     <h1>ועד בית חורון</h1>
     <div class="sub">מעקב משימות המזכירות וההנהלה לפי החלטות הוועד</div>
     <div class="field">
@@ -126,54 +213,62 @@ footer{color:var(--muted);font-size:12.5px;margin-top:30px;text-align:center}
       <input id="code" class="code-in" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX" required>
     </div>
     <label class="chk"><input type="checkbox" id="remember"> לזכור את הקוד במכשיר זה</label>
-    <button class="btn primary" id="go" type="submit">כניסה</button>
+    <button class="btn primary block" id="go" type="submit">כניסה</button>
     <div class="err" id="err" role="alert"></div>
     <div class="notice">הקוד אישי ואין להעבירו לאחר. כל כניסה לאתר נרשמת ביומן הכניסות של הוועד (שם ושעה).</div>
   </form>
 </div>
 
-<div id="app" class="wrap" hidden>
-  <header class="top">
-    <div>
-      <h1>ועד בית חורון · מעקב משימות</h1>
-      <div class="meta"><span id="hello"></span><span id="updated"></span></div>
+<div id="app" hidden>
+  <header class="hero">
+    <div class="wrap">
+      <div>
+        <h1>ועד בית חורון · מעקב משימות</h1>
+        <div class="meta"><span id="hello"></span><span id="updated"></span></div>
+      </div>
+      <button class="logout" id="logout" type="button">יציאה</button>
     </div>
-    <div class="meta"><button class="linkbtn" id="logout" type="button">יציאה</button></div>
   </header>
-  <div class="stats" id="stats"></div>
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" data-tab="tasks" aria-selected="true">משימות</button>
-    <button class="tab" role="tab" data-tab="closed" aria-selected="false" id="tab-closed">משימות שנסגרו</button>
-    <button class="tab" role="tab" data-tab="meetings" aria-selected="false">ישיבות ועד</button>
+  <div class="wrap main">
+    <div class="stats" id="stats"></div>
+    <nav class="tabs" role="tablist" aria-label="תצוגה">
+      <button class="tab" role="tab" data-tab="tasks" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg><span>משימות פתוחות</span><span class="cnt" id="cnt-tasks"></span></button>
+      <button class="tab" role="tab" data-tab="closed" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>נסגרו</span><span class="cnt" id="cnt-closed"></span></button>
+      <button class="tab" role="tab" data-tab="meetings" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>ישיבות ועד</span></button>
+    </nav>
+
+    <section id="view-tasks">
+      <div class="filters">
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="חיפוש משימה…" aria-label="חיפוש משימה"></div>
+        <div class="chips" id="owner-chips" role="group" aria-label="סינון לפי אחראי"></div>
+        <div class="chips" id="status-chips" role="group" aria-label="סינון לפי סטטוס"></div>
+        <div id="active-filter"></div>
+      </div>
+      <div id="groups"></div>
+    </section>
+    <section id="view-closed" hidden>
+      <div class="filters">
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="cq" type="search" placeholder="חיפוש במשימות שנסגרו…" aria-label="חיפוש במשימות שנסגרו"></div>
+        <div class="chips" id="c-owner-chips" role="group" aria-label="סינון לפי אחראי"></div>
+      </div>
+      <div id="closed"></div>
+    </section>
+    <section id="view-meetings" hidden><div id="meetings" class="grid"></div></section>
+    <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה נעשית באישור אסף ברקוביץ.</footer>
   </div>
-  <section id="view-tasks">
-    <div class="filters">
-      <input id="q" type="search" placeholder="חיפוש משימה…" aria-label="חיפוש">
-      <select id="f-owner" aria-label="אחראי"></select>
-      <select id="f-meeting" aria-label="ישיבה"></select>
-      <select id="f-status" aria-label="סטטוס">
-        <option value="active">כל הפתוחות</option>
-        <option value="open">פתוחה</option><option value="progress">בטיפול</option><option value="waiting">ממתינה לצד ג'</option>
-      </select>
-    </div>
-    <div id="groups"></div>
-  </section>
-  <section id="view-closed" hidden>
-    <div class="filters">
-      <input id="cq" type="search" placeholder="חיפוש במשימות שנסגרו…" aria-label="חיפוש במשימות שנסגרו">
-      <select id="c-owner" aria-label="אחראי"></select>
-    </div>
-    <div id="closed"></div>
-  </section>
-  <section id="view-meetings" hidden><div id="meetings"></div></section>
-  <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה נעשית באישור אסף ברקוביץ. לשאלות ולתיקונים: אסף ברקוביץ.</footer>
 </div>
 
 <script>
 (function(){
 const STATUS = {open:'פתוחה', progress:'בטיפול', waiting:"ממתינה לצד ג'", done:'נסגרה'};
 const OWNER_ORDER = ['מנכ"לית','מזכירות','ועד'];
+const OWNER_COLORS = ['#6B4FA0','#0E7A6B','#2463A6','#B8457A','#B06200','#3F7D2E','#7A5C2E','#5B5FC7'];
 const MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const ICON = {
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>',
+  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>'
+};
 const enc = new TextEncoder(), dec = new TextDecoder();
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -182,7 +277,7 @@ const ub64 = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const hex = (buf) => Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 const todayISO = () => new Date(Date.now() + 3*3600e3).toISOString().slice(0,10);
 const fmtD = (iso) => { if(!iso) return ''; const [y,m,d] = String(iso).slice(0,10).split('-'); return +d + '.' + +m + '.' + y; };
-let DATA = null, ME = null, CODE = '', PERMS = null;
+let DATA = null, ME = null, CODE = '', PERMS = null, OWNERS = [];
 const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'', cq:'', cowner:'all', open:{} };
 
 async function lookupId(code){ return hex(await crypto.subtle.digest('SHA-256', enc.encode('bhv1:'+norm(code)))).slice(0,24); }
@@ -242,26 +337,31 @@ async function sendReport(t, text, status, close){
   return ok;
 }
 
+// ─── helpers ───
 function isOverdue(t){ return t.status !== 'done' && t.due && t.due < todayISO(); }
 function soon(t){ if(t.status==='done'||!t.due) return false; const d=(new Date(t.due)-new Date(todayISO()))/864e5; return d>=0 && d<=7; }
 function ownerGroup(t){ return t.owner || 'ללא אחראי'; }
+function ownerColor(o){ const i = OWNERS.indexOf(o); return OWNER_COLORS[(i<0?0:i) % OWNER_COLORS.length]; }
 function meetingLabel(id){ const m = (DATA.meetings||[]).find(x=>x.id===id); return m ? ('ישיבה ' + (m.number? m.number+' · ' : '') + fmtD(m.date)) : ''; }
 const closedAt = (t) => t.doneAt || t.updatedAt || '';
+const initial = (s) => { const w = String(s||'').replace(/["׳״']/g,'').trim(); return w ? w[0] : '?'; };
 
 function start(){
   $('login').hidden = true; $('app').hidden = false;
   $('hello').textContent = 'שלום, ' + ME.name;
-  $('updated').textContent = 'עודכן: ' + new Date(DATA.generatedAt).toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short', timeZone:'Asia/Jerusalem'});
+  $('updated').textContent = 'עודכן ' + new Date(DATA.generatedAt).toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short', timeZone:'Asia/Jerusalem'});
   pruneSent();
-  const owners = Array.from(new Set(DATA.tasks.map(ownerGroup)));
-  owners.sort((a,b)=>{ const ia=OWNER_ORDER.indexOf(a), ib=OWNER_ORDER.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b,'he'); });
-  const opts = '<option value="all">כל האחראים</option>' + owners.map(o=>'<option>'+esc(o)+'</option>').join('');
-  $('f-owner').innerHTML = opts; $('c-owner').innerHTML = opts;
-  const ms = (DATA.meetings||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  $('f-meeting').innerHTML = '<option value="all">כל הישיבות והמקורות</option>' + ms.map(m=>'<option value="'+esc(m.id)+'">'+esc(meetingLabel(m.id))+'</option>').join('');
-  window.__owners = owners;
+  OWNERS = Array.from(new Set(DATA.tasks.map(ownerGroup)));
+  OWNERS.sort((a,b)=>{ const ia=OWNER_ORDER.indexOf(a), ib=OWNER_ORDER.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b,'he'); });
   try { const h = location.hash.slice(1); if(['tasks','closed','meetings'].includes(h)) st.tab = h; } catch(e){}
   setTab(st.tab);
+}
+
+function ownerChips(sel, key, list){
+  const counts = {}; list.forEach(t => counts[ownerGroup(t)] = (counts[ownerGroup(t)]||0)+1);
+  const owners = OWNERS.filter(o => counts[o]);
+  return '<button class="chip" data-'+key+'="all" aria-pressed="'+(sel==='all')+'">כל האחראים</button>' +
+    owners.map(o => '<button class="chip" style="--oc:'+ownerColor(o)+'" data-'+key+'="'+esc(o)+'" aria-pressed="'+(sel===o)+'"><span class="dot"></span>'+esc(o)+' · '+counts[o]+'</button>').join('');
 }
 
 function filtered(){
@@ -282,46 +382,60 @@ function render(){
   const all = DATA.tasks, active = all.filter(t=>t.status!=='done'), closed = all.filter(t=>t.status==='done');
   const n = { open: active.length, overdue: all.filter(isOverdue).length, waiting: all.filter(t=>t.status==='waiting').length,
     done30: closed.filter(t=>closedAt(t) && (Date.now()-new Date(closedAt(t)))<30*864e5).length };
-  const chip = (k,label,cls) => '<button class="stat '+cls+(st.tab==='tasks'&&st.stat===k?' active':'')+'" data-stat="'+k+'"><b>'+n[k]+'</b><span>'+label+'</span></button>';
-  $('stats').innerHTML = chip('open','משימות פתוחות','') + chip('overdue','באיחור','bad') + chip('waiting',"ממתינות לצד ג'",'warn') + chip('done30','נסגרו ב-30 יום','ok');
+  const tile = (k,label,cls) => '<button class="stat '+cls+(st.tab==='tasks'&&st.stat===k?' active':'')+'" data-stat="'+k+'"><b>'+n[k]+'</b><span>'+label+'</span></button>';
+  $('stats').innerHTML = tile('open','משימות פתוחות','c-open') + tile('overdue','באיחור','c-bad') + tile('waiting',"ממתינות לצד ג'",'c-wait') + tile('done30','נסגרו ב-30 יום','c-done');
   $('stats').querySelectorAll('[data-stat]').forEach(b => b.onclick = () => {
     const k = b.dataset.stat;
     if(k==='done30'){ setTab('closed'); return; }
-    st.stat = (k==='open'||st.stat===k) ? '' : k; if(k==='open'){ st.status='active'; $('f-status').value='active'; }
+    st.stat = (k==='open'||st.stat===k) ? '' : k; if(k==='open') st.status='active';
     setTab('tasks');
   });
-  $('tab-closed').textContent = 'משימות שנסגרו' + (closed.length ? ' ('+closed.length+')' : '');
+  $('cnt-tasks').textContent = active.length || ''; $('cnt-closed').textContent = closed.length || '';
+
+  // filters
+  $('owner-chips').innerHTML = ownerChips(st.owner, 'owner', active);
+  $('owner-chips').querySelectorAll('[data-owner]').forEach(b => b.onclick = () => { st.owner = b.dataset.owner; render(); });
+  const sOpts = [['active','הכל'],['open','פתוחה'],['progress','בטיפול'],['waiting',"ממתינה לצד ג'"]];
+  $('status-chips').innerHTML = sOpts.map(([k,l]) => '<button class="chip st-'+k+'" data-status="'+k+'" aria-pressed="'+(!st.stat && st.status===k)+'">'+l+'</button>').join('');
+  $('status-chips').querySelectorAll('[data-status]').forEach(b => b.onclick = () => { st.status = b.dataset.status; st.stat=''; render(); });
+  const af = [];
+  if(st.stat==='overdue') af.push('מוצגות משימות באיחור בלבד');
+  if(st.stat==='waiting') af.push("מוצגות משימות שממתינות לצד ג' בלבד");
+  if(st.meeting!=='all') af.push('מוצגות משימות מ'+meetingLabel(st.meeting));
+  $('active-filter').innerHTML = af.length ? '<div class="active-filter"><span>'+esc(af.join(' · '))+'</span><button type="button" id="clear-f">ניקוי</button></div>' : '';
+  if(af.length) $('clear-f').onclick = () => { st.stat=''; st.meeting='all'; render(); };
 
   // open tasks
   const list = filtered(), groups = {};
   list.forEach(t => (groups[ownerGroup(t)] = groups[ownerGroup(t)] || []).push(t));
-  const order = (window.__owners||[]).filter(o=>groups[o]);
+  const order = OWNERS.filter(o=>groups[o]);
   $('groups').innerHTML = order.length ? order.map(o => {
-    const ts = groups[o].sort((a,b)=> (a.due||'9').localeCompare(b.due||'9'));
-    return '<div class="group"><h2>'+esc(o)+' <small>'+ts.length+' משימות</small></h2>' + ts.map(taskHtml).join('') + '</div>';
+    const ts = groups[o].sort((a,b)=> (isOverdue(b)-isOverdue(a)) || (a.due||'9').localeCompare(b.due||'9'));
+    return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(o))+'</span><h2>'+esc(o)+'</h2><small>'+ts.length+' משימות</small></div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
   }).join('') : '<div class="empty">אין משימות פתוחות שמתאימות לסינון.</div>';
   wireTasks($('groups'));
 
-  // closed tasks, newest first, grouped by month
+  // closed
+  $('c-owner-chips').innerHTML = ownerChips(st.cowner, 'cowner', closed);
+  $('c-owner-chips').querySelectorAll('[data-cowner]').forEach(b => b.onclick = () => { st.cowner = b.dataset.cowner; render(); });
   const cq = st.cq.trim();
   const cl = closed.filter(t => (st.cowner==='all' || ownerGroup(t)===st.cowner) && (!cq || ((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(cq)))
     .sort((a,b) => closedAt(b).localeCompare(closedAt(a)));
-  let lastKey = '', html = '';
-  cl.forEach(t => { const d = closedAt(t); const key = d ? d.slice(0,7) : 'ללא תאריך';
-    if(key !== lastKey){ lastKey = key; html += '<h3 class="month">'+(d ? MONTHS[+d.slice(5,7)-1]+' '+d.slice(0,4) : 'ללא תאריך סגירה')+'</h3>'; }
-    html += taskHtml(t); });
-  $('closed').innerHTML = html || '<div class="empty">'+(closed.length ? 'אין משימות סגורות שמתאימות לסינון.' : 'עדיין לא נסגרו משימות.')+'</div>';
+  const months = []; cl.forEach(t => { const d = closedAt(t); const key = d ? d.slice(0,7) : ''; let m = months[months.length-1]; if(!m || m.key!==key){ m = {key, items:[]}; months.push(m); } m.items.push(t); });
+  $('closed').innerHTML = months.length ? months.map(m => '<div class="month-block"><h3 class="month">'+(m.key ? MONTHS[+m.key.slice(5,7)-1]+' '+m.key.slice(0,4) : 'ללא תאריך סגירה')+' · '+m.items.length+'</h3><div class="grid">'+m.items.map(taskHtml).join('')+'</div></div>').join('')
+    : '<div class="empty">'+(closed.length ? 'אין משימות סגורות שמתאימות לסינון.' : 'עדיין לא נסגרו משימות. משימה שתיסגר תופיע כאן, עם תאריך הסגירה.')+'</div>';
   wireTasks($('closed'));
 
   // meetings
   const ms = (DATA.meetings||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   $('meetings').innerHTML = ms.length ? ms.map(m => {
-    const ts = all.filter(t=>t.meetingId===m.id), done = ts.filter(t=>t.status==='done').length;
+    const ts = all.filter(t=>t.meetingId===m.id), done = ts.filter(t=>t.status==='done').length, pct = ts.length ? Math.round(done*100/ts.length) : 0;
     return '<div class="meeting"><h3>'+esc(m.title || ('ישיבת ועד' + (m.number?' מס\' '+m.number:'')))+'</h3><div class="mm">'+fmtD(m.date)+' · '+ts.length+' משימות, '+done+' נסגרו</div>'+
-      (m.decisions&&m.decisions.length ? '<ol>'+m.decisions.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ol>' : '') +
-      (ts.length - done ? '<div style="margin-top:8px"><button class="linkbtn" data-m="'+esc(m.id)+'">הצג את המשימות הפתוחות של הישיבה</button></div>' : '') + '</div>';
+      (ts.length ? '<div class="bar" role="img" aria-label="'+pct+' אחוז מהמשימות נסגרו"><i style="width:'+pct+'%"></i></div>' : '')+
+      (m.decisions&&m.decisions.length ? '<ol>'+m.decisions.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ol>' : '<p class="empty-upd">ההחלטות טרם נקלטו.</p>') +
+      (ts.length - done ? '<button class="linkbtn" data-m="'+esc(m.id)+'">למשימות הפתוחות של הישיבה</button>' : '') + '</div>';
   }).join('') : '<div class="empty">טרם נקלטו פרוטוקולים.</div>';
-  $('meetings').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { st.meeting=b.dataset.m; st.status='active'; st.stat=''; $('f-meeting').value=st.meeting; $('f-status').value='active'; setTab('tasks'); });
+  $('meetings').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { st.meeting=b.dataset.m; st.status='active'; st.stat=''; setTab('tasks'); });
 }
 
 function wireTasks(root){
@@ -330,23 +444,31 @@ function wireTasks(root){
 }
 
 function taskHtml(t){
-  const done = t.status === 'done';
-  const due = !done && t.due ? '<span class="'+(isOverdue(t)?'due-bad':soon(t)?'due-soon':'')+'">יעד: '+fmtD(t.due)+(isOverdue(t)?' (באיחור)':'')+'</span>' : '';
-  const ml = t.meetingId ? '<span>'+esc(meetingLabel(t.meetingId))+'</span>' : '';
+  const done = t.status === 'done', late = isOverdue(t);
   const last = (t.updates||[]).slice(-1)[0];
-  const mine = canReport(t) || (PERMS && PERMS.report) ? pendingFor(t.id) : [];
-  const closeReq = (PERMS && PERMS.report && t.closeRequest) || mine.some(s => s.close);
-  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+'</time>'+esc(s.text)+(s.close?' · <b>ביקשת לסגור</b>':'')+'<span class="by">נשלח, יופיע באתר בעדכון הבא</span></li>').join('');
-  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+'</time>'+esc(u.text)+(u.by?'<span class="by">('+esc(u.by)+')</span>':'')+'</li>').join('');
+  const mine = (PERMS && PERMS.report) ? pendingFor(t.id) : [];
+  const closeReq = !done && ((PERMS && PERMS.report && t.closeRequest) || mine.some(s => s.close));
+  const tags = [];
+  tags.push('<span class="tag status">'+(done?ICON.check:'')+esc(STATUS[t.status]||t.status)+'</span>');
+  if(closeReq) tags.push('<span class="tag pend">ממתינה לאישור סגירה</span>');
+  if(done) tags.push('<span class="tag">'+ICON.cal+'נסגרה '+fmtD(closedAt(t))+'</span>');
+  else if(t.due) tags.push('<span class="tag '+(late?'late':soon(t)?'soon':'')+'">'+ICON.cal+(late?'באיחור · ':'יעד ')+fmtD(t.due)+'</span>');
+  if(t.topic) tags.push('<span class="tag topic">'+esc(t.topic)+'</span>');
+  if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
+  if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');
+  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(s.text)+(s.close?' · <b>ביקשת לסגור</b>':'')+'</li>').join('');
+  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+'</time>'+esc(u.text)+'</li>').join('');
   const expanded = !!st.open[t.id];
-  const sub = (t.topic?'<span>'+esc(t.topic)+'</span>':'') + (done ? '<span>נסגרה: '+fmtD(closedAt(t))+'</span><span>אחראי: '+esc(ownerGroup(t))+'</span>' : due) + ml + (last?'<span>עדכון אחרון: '+fmtD(last.at)+'</span>':'');
-  return '<div class="task'+(isOverdue(t)?' overdue':'')+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'"><span class="task-title">'+esc(t.title)+'</span>'+
-    '<span class="pills">'+(closeReq?'<span class="pill p-pend">ממתינה לאישור סגירה</span>':'')+'<span class="pill s-'+esc(t.status)+'">'+esc(STATUS[t.status]||t.status)+'</span></span>'+
-    '<span class="task-sub">'+sub+'</span></button>'+
-    '<div class="task-body"'+(expanded?'':' hidden')+'>'+(t.details?'<p>'+esc(t.details)+'</p>':'')+
-    ((pend||upd)?'<ul class="upd">'+pend+upd+'</ul>':'<p style="color:var(--muted)">אין עדכונים.</p>')+
-    (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn small rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
-    '</div></div>';
+  const cls = 'task st-'+esc(t.status)+(late?' overdue':'');
+  return '<article class="'+cls+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'">'+
+    '<span class="task-top"><span class="task-title">'+esc(t.title)+'</span>'+ICON.chev+'</span>'+
+    '<span class="tags">'+tags.join('')+'</span>'+
+    (last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(last.text)+'</span>' : '')+
+    '</button>'+
+    '<div class="task-body"'+(expanded?'':' hidden')+'>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
+    ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
+    (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
+    '</div></article>';
 }
 
 function openForm(id){
@@ -354,23 +476,24 @@ function openForm(id){
   const box = $('rep-'+id); if(!box) return;
   const fid = 'r-'+id.replace(/[^a-zA-Z0-9_-]/g,'');
   box.innerHTML = '<form class="rep" id="'+fid+'-form">'+
-    '<div><label for="'+fid+'-text">מה התקדם?</label><textarea id="'+fid+'-text" required placeholder="למשל: נשלחה פנייה למועצה, ממתינים לתשובה עד סוף השבוע."></textarea></div>'+
-    '<div class="row2"><div class="grow"><label for="'+fid+'-status">סטטוס</label><select id="'+fid+'-status">'+
-      ['open','progress','waiting'].map(k => '<option value="'+k+'"'+(k===t.status?' selected':'')+'>'+STATUS[k]+'</option>').join('')+'</select></div></div>'+
+    '<div><label class="l" for="'+fid+'-text">מה התקדם?</label><textarea id="'+fid+'-text" required placeholder="למשל: נשלחה פנייה למועצה, ממתינים לתשובה עד סוף השבוע."></textarea></div>'+
+    '<div><span class="l" style="font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">סטטוס</span><div class="seg" role="radiogroup" aria-label="סטטוס">'+
+      ['open','progress','waiting'].map(k => '<label><input type="radio" name="'+fid+'-st" value="'+k+'"'+(k===t.status?' checked':'')+'><span class="s-'+k+'">'+(k==='waiting'?'ממתינה':STATUS[k])+'</span></label>').join('')+'</div></div>'+
     '<label class="close-chk"><input type="checkbox" id="'+fid+'-close"> <span>המשימה בוצעה. לבקש מאסף לסגור אותה</span></label>'+
     '<p class="hint">העדכון יופיע לחברי הוועד בעדכון הבא של האתר. משימה נסגרת רק באישור אסף.</p>'+
-    '<div class="row2"><span class="grow"></span><button type="button" class="btn small" id="'+fid+'-cancel">ביטול</button><button type="submit" class="btn small primary" id="'+fid+'-send">שליחה</button></div>'+
+    '<div class="row2"><button type="button" class="btn" id="'+fid+'-cancel">ביטול</button><button type="submit" class="btn primary" id="'+fid+'-send">שליחה</button></div>'+
     '</form>';
   $(fid+'-text').focus();
   $(fid+'-cancel').onclick = () => render();
   $(fid+'-form').onsubmit = async (ev) => {
     ev.preventDefault();
     const text = $(fid+'-text').value.trim(); if(!text){ $(fid+'-text').focus(); return; }
+    const sel = box.querySelector('input[name="'+fid+'-st"]:checked');
     $(fid+'-send').disabled = true; $(fid+'-send').textContent = 'שולח…';
-    const ok = await sendReport(t, text.slice(0,2000), $(fid+'-status').value, $(fid+'-close').checked);
+    const ok = await sendReport(t, text.slice(0,2000), sel ? sel.value : t.status, $(fid+'-close').checked);
     st.open[id] = true; render();
     const b = $('rep-'+id);
-    if(b) b.insertAdjacentHTML('afterbegin', ok ? '<div class="rep-msg" role="status">העדכון נשלח. הוא יופיע באתר בעדכון הבא.</div>' : '<div class="rep-msg" role="alert" style="color:var(--bad)">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>');
+    if(b) b.insertAdjacentHTML('afterbegin', ok ? '<div class="rep-msg" role="status">העדכון נשלח. הוא יופיע באתר בעדכון הבא.</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>');
   };
 }
 
@@ -380,13 +503,9 @@ function setTab(k){
   $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings';
   render();
 }
-document.querySelectorAll('.tab').forEach(b => b.onclick = () => { if(b.dataset.tab==='tasks') st.stat=''; setTab(b.dataset.tab); });
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => { if(b.dataset.tab==='tasks') st.stat=''; setTab(b.dataset.tab); window.scrollTo({top:0}); });
 $('q').oninput = (e) => { st.q = e.target.value; render(); };
-$('f-owner').onchange = (e) => { st.owner = e.target.value; render(); };
-$('f-meeting').onchange = (e) => { st.meeting = e.target.value; render(); };
-$('f-status').onchange = (e) => { st.status = e.target.value; st.stat=''; render(); };
 $('cq').oninput = (e) => { st.cq = e.target.value; render(); };
-$('c-owner').onchange = (e) => { st.cowner = e.target.value; render(); };
 
 try { const saved = localStorage.getItem('bhv-code'); if(saved){ $('code').value = saved; $('remember').checked = true; $('login-form').requestSubmit(); } } catch(e){}
 })();

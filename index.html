@@ -120,6 +120,18 @@ button{cursor:pointer}
 .chip.grp[aria-pressed="true"]{background:var(--oc,var(--ink));border-color:var(--oc,var(--ink));color:#fff}
 .group.topic .group-h{border-inline-start:5px solid var(--oc);padding-inline-start:12px;border-radius:6px}
 .group.topic .group-h .av{border-radius:50%}
+.group.topic .group-h{flex-wrap:wrap}
+.topic-card{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:12px;border-inline-start:6px solid var(--oc)}
+.topic-card .goal{font-size:15.5px;margin:0 0 6px}
+.topic-card .goal b{color:var(--oc)}
+.topic-card .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px;color:var(--muted);align-items:center}
+.topic-card .bar{flex:1;min-width:120px;margin:0;height:8px}
+.topic-card .bar i{background:var(--oc)}
+.sub-h{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);margin:14px 0 8px}
+.sub-h::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--oc)}
+.sub-h small{color:var(--muted);font-weight:500;font-size:13.5px}
+.sub-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.tag.sub{background:var(--surface2);color:var(--ink);border:1px dashed var(--line)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;align-items:start}
 .task{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;border-inline-start:6px solid var(--sc)}
 .task.st-open{--sc:var(--open);--ss:var(--open-soft)} .task.st-progress{--sc:var(--prog);--ss:var(--prog-soft)}
@@ -409,7 +421,7 @@ function filtered(){
     if(!st.stat && st.status!=='active' && t.status!==st.status) return false;
     if(st.owner==='__mine'){ if(!isMine(t)) return false; } else if(st.owner!=='all' && ownerGroup(t)!==st.owner) return false;
     if(st.meeting!=='all' && t.meetingId!==st.meeting) return false;
-    if(q && !((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(q)) return false;
+    if(q && !((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')+' '+(t.subtopic||'')).includes(q)) return false;
     return true;
   });
 }
@@ -458,7 +470,25 @@ function render(){
     const order = Object.values(groups).sort((a,b) => topicIndex(a.tp) - topicIndex(b.tp));
     html = order.map(g => {
       const ts = g.items.sort(byDue);
-      return '<div class="group topic" style="--oc:'+g.tp.color+'"><div class="group-h"><span class="av" style="--oc:'+g.tp.color+'">'+esc(initial(g.tp.name))+'</span><h2>'+esc(g.tp.name)+'</h2><small>'+ts.length+' משימות</small></div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
+      // כרטיס הנושא: מטרה, אחראי מוביל והתקדמות (כולל משימות סגורות של הנושא)
+      const info = (DATA.topics||{})[g.tp.name] || {};
+      const allT = all.filter(t => superTopic(t).name === g.tp.name), doneT = allT.filter(t=>t.status==='done').length;
+      const pct = allT.length ? Math.round(doneT*100/allT.length) : 0;
+      const lastAt = allT.reduce((m,t)=>{ const u=(t.updates||[]).slice(-1)[0]; const d=u?u.at:(t.updatedAt||''); return d>m?d:m; }, '');
+      const card = (info.goal || info.lead) ? '<div class="topic-card" style="--oc:'+g.tp.color+'">'+
+        (info.goal ? '<p class="goal"><b>המטרה:</b> '+esc(info.goal)+'</p>' : '')+
+        '<div class="meta">'+(info.lead ? '<span>מוביל: '+esc(info.lead)+'</span>' : '')+
+        '<span>'+doneT+' מתוך '+allT.length+' נסגרו</span><div class="bar" role="img" aria-label="'+pct+' אחוז"><i style="width:'+pct+'%"></i></div>'+
+        (lastAt ? '<span>עדכון אחרון '+fmtD(lastAt)+'</span>' : '')+'</div></div>' : '';
+      // תתי נושאים: משימות עם אותו subtopic מוצגות יחד; משימות בלי תת נושא בסוף
+      const subs = {}; ts.forEach(t => { const k = (t.subtopic||'').trim(); (subs[k] = subs[k] || []).push(t); });
+      const keys = Object.keys(subs).filter(k=>k).sort((a,b)=>a.localeCompare(b,'he'));
+      let body = '';
+      if(keys.length){
+        keys.forEach(k => { body += '<h3 class="sub-h">'+esc(k)+'<small>'+subs[k].length+'</small></h3><div class="grid">'+subs[k].map(taskHtml).join('')+'</div>'; });
+        if(subs['']) body += '<h3 class="sub-h">נושאים נוספים<small>'+subs[''].length+'</small></h3><div class="grid">'+subs[''].map(taskHtml).join('')+'</div>';
+      } else body = '<div class="grid">' + ts.map(taskHtml).join('') + '</div>';
+      return '<div class="group topic" style="--oc:'+g.tp.color+'"><div class="group-h"><span class="av" style="--oc:'+g.tp.color+'">'+esc(initial(g.tp.name))+'</span><h2>'+esc(g.tp.name)+'</h2><small>'+ts.length+' פתוחות</small></div>'+card+body+'</div>';
     }).join('');
   } else {
     list.forEach(t => (groups[ownerGroup(t)] = groups[ownerGroup(t)] || []).push(t));
@@ -513,6 +543,7 @@ function taskHtml(t){
   const byTopic = !done && st.group==='topic';
   if(byTopic) tags.push('<span class="tag own" style="--oc:'+ownerColor(ownerGroup(t))+'"><i class="dot"></i>'+esc(ownerGroup(t))+'</span>');
   if(t.topic && !(byTopic && superTopic(t).name===t.topic)) tags.push('<span class="tag topic">'+esc(t.topic)+'</span>');
+  if(t.subtopic && !byTopic) tags.push('<span class="tag sub">'+esc(t.subtopic)+'</span>');
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
   if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');
   const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(s.text)+(s.close?' · <b>ביקשת לסגור</b>':'')+'</li>').join('');

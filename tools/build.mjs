@@ -1,6 +1,6 @@
 // Build the encrypted data for the Beit Horon committee viewer site.
 // Usage: node build.mjs bundle.json outDir
-// bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms}] }
+// bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms}], topics:{...} }
 // perms: { report: 'all' | 'own' } lets a member send progress reports from the site (see index.html).
 // Output: outDir/data.enc.txt and outDir/keys.json
 // Each run draws a fresh random data key. Every active member's code wraps that key,
@@ -35,6 +35,7 @@ const payload = {
   logUrl: bundle.logUrl || '',
   tasks: (bundle.tasks || []).filter((t) => t.approved !== false),
   meetings: bundle.meetings || [],
+  topics: bundle.topics || {},   // { '<super-topic>': { goal, lead } } from meta/topics
   people: (bundle.members || []).map((m) => ({ id: m.id, name: m.name, role: m.role || '', perms: (m.active !== false && m.perms) || null })),
 };
 

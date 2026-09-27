@@ -298,7 +298,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 <script>
 (function(){
 const STATUS = {open:'פתוחה', progress:'בטיפול', waiting:"ממתינה לצד ג'", done:'נסגרה'};
-const OWNER_ORDER = ['מנכ"לית','מזכירות','ועד'];
+const LEGACY_OWNER = {'מנכ"לית':'m-limor','מזכירות':'m-limor'};
 const OWNER_COLORS = ['#6B4FA0','#0E7A6B','#2463A6','#B8457A','#B06200','#3F7D2E','#7A5C2E','#5B5FC7'];
 // נושאי על: סדר התצוגה, צבע, ומילות מפתח לזיהוי הנושא של המשימה
 const TOPICS = [
@@ -372,7 +372,7 @@ $('logout').addEventListener('click', () => { try { localStorage.removeItem('bhv
 function canReport(t){
   if(!PERMS || !PERMS.report || t.status === 'done') return false;
   if(PERMS.report === 'all') return true;
-  if(PERMS.report === 'own') return t.createdBy === ME.id || t.ownerId === ME.id;
+  if(PERMS.report === 'own') return isMine(t);
   return false;
 }
 function sentList(){ try { return JSON.parse(localStorage.getItem('bhv-sent-'+ME.id) || '[]'); } catch(e){ return []; } }
@@ -393,7 +393,18 @@ async function sendReport(t, text, status, close){
 // ─── helpers ───
 function isOverdue(t){ return t.status !== 'done' && t.due && t.due < todayISO(); }
 function soon(t){ if(t.status==='done'||!t.due) return false; const d=(new Date(t.due)-new Date(todayISO()))/864e5; return d>=0 && d<=7; }
-function ownerGroup(t){ return t.owner || 'ללא אחראי'; }
+// ─── אחראים מרובים (מודל ג'): owners = מזהי חברי ועד שווי מעמד; approvals = מי מהם אישר שבוצעה ───
+const personById = (id) => (DATA.people||[]).find(p => p.id === id) || null;
+const nameOf = (id) => { const p = personById(id); return p ? p.name : String(id); };
+function ownerIds(t){
+  if(Array.isArray(t.owners) && t.owners.length) return t.owners.slice();
+  const ids = []; if(t.ownerId) ids.push(t.ownerId);
+  String(t.owner||'').split(/\s*,\s*/).forEach(n => { n = n.trim(); if(!n) return; const p = (DATA.people||[]).find(x => x.name === n); const id = p ? p.id : LEGACY_OWNER[n]; if(id && !ids.includes(id)) ids.push(id); });
+  return ids;
+}
+function approvalsOf(t){ const a = Object.assign({}, t.approvals || {}); const cr = t.closeRequest; if(cr && cr.by && !a[cr.by]) a[cr.by] = {at: cr.at, text: cr.text||''}; return a; }
+const pendingOwners = (t) => { const a = approvalsOf(t); return ownerIds(t).filter(id => !a[id]); };
+function ownerGroup(t){ return ownerIds(t).map(nameOf).join(', ') || 'ללא אחראי'; }
 function ownerColor(o){ const i = OWNERS.indexOf(o); return OWNER_COLORS[(i<0?0:i) % OWNER_COLORS.length]; }
 function leadsOf(v){ return String(v||'').split(/[,;\/]+/).map(s=>s.trim()).filter(Boolean); }
 function superTopic(t){
@@ -403,19 +414,14 @@ function superTopic(t){
 function topicIndex(tp){ const i = TOPICS.indexOf(tp); return i<0 ? TOPICS.length : i; }
 function meetingLabel(id){ const m = (DATA.meetings||[]).find(x=>x.id===id); return m ? ('ישיבה ' + (m.number? m.number+' · ' : '') + fmtD(m.date)) : ''; }
 const closedAt = (t) => t.doneAt || t.updatedAt || '';
-const isMine = (t) => !!ME && (t.ownerId === ME.id || t.createdBy === ME.id);
+const isMine = (t) => !!ME && (ownerIds(t).includes(ME.id) || t.createdBy === ME.id);
 
 // ─── reminders: WhatsApp (wa.me) and email (mailto) to the task owner, with the text prepared ───
 const ICON_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7L4 20z"/><path d="M9.5 9.5c.3 2 2.7 4.3 4.9 4.9l1.2-1.2 1.9.9-.5 1.7c-3.5.4-8.4-4.4-8-8l1.7-.5.9 1.9-1.2 1.2z"/></svg>';
 const ICON_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
-function personForOwner(t){
-  const P = DATA.people || [];
-  if(t.ownerId){ const p = P.find(x => x.id === t.ownerId); if(p) return p; }
-  const o = String(t.owner||'').trim(); if(!o) return null;
-  return P.find(x => x.name === o) || (o === 'מנכ"לית' ? P.find(x => /מנכ/.test(x.role||'')) : null) || null;
-}
-const firstName = (p) => String(p.name||'').replace(/\(.*?\)/g,'').trim().split(/\s+/)[0] || '';
+// שם קצר: כינוי בסוגריים אם יש ("אברהם (אבי) שמלה" ← אבי), אחרת השם הפרטי
+function firstName(p){ const n = String((p && p.name)||''); const nick = n.match(/\(([^)]+)\)/); return nick ? nick[1].trim() : (n.trim().split(/\s+/)[0] || ''); }
 function remindText(ts, p){
   const url = location.origin + location.pathname;
   const lines = ['היי ' + firstName(p) + ', תזכורת מדאשבורד ועד בית חורון:', ''];
@@ -443,19 +449,20 @@ function start(){
   $('hello').textContent = 'שלום, ' + ME.name;
   $('updated').textContent = 'עודכן ' + new Date(DATA.generatedAt).toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short', timeZone:'Asia/Jerusalem'});
   pruneSent();
-  OWNERS = Array.from(new Set(DATA.tasks.map(ownerGroup)));
-  OWNERS.sort((a,b)=>{ const ia=OWNER_ORDER.indexOf(a), ib=OWNER_ORDER.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b,'he'); });
+  // OWNERS: מזהי האחראים שמופיעים במשימות; לימור ראשונה, השאר לפי שם
+  OWNERS = Array.from(new Set([].concat.apply([], DATA.tasks.map(ownerIds))));
+  OWNERS.sort((a,b) => (a==='m-limor'?-1:b==='m-limor'?1:0) || nameOf(a).localeCompare(nameOf(b),'he'));
   try { const h = location.hash.slice(1); if(['tasks','closed','meetings'].includes(h)) st.tab = h; } catch(e){}
   setTab(st.tab);
 }
 
 function ownerChips(sel, key, list){
-  const counts = {}; list.forEach(t => counts[ownerGroup(t)] = (counts[ownerGroup(t)]||0)+1);
+  const counts = {}; list.forEach(t => ownerIds(t).forEach(id => counts[id] = (counts[id]||0)+1));
   const owners = OWNERS.filter(o => counts[o]);
   const nMine = list.filter(isMine).length;
   return '<button class="chip" data-'+key+'="all" aria-pressed="'+(sel==='all')+'">כל האחראים</button>' +
     (nMine ? '<button class="chip mine" data-'+key+'="__mine" aria-pressed="'+(sel==='__mine')+'">'+ICON_USER+'המשימות שלי · '+nMine+'</button>' : '') +
-    owners.map(o => '<button class="chip" style="--oc:'+ownerColor(o)+'" data-'+key+'="'+esc(o)+'" aria-pressed="'+(sel===o)+'"><span class="dot"></span>'+esc(o)+' · '+counts[o]+'</button>').join('');
+    owners.map(o => '<button class="chip" style="--oc:'+ownerColor(o)+'" data-'+key+'="'+esc(o)+'" aria-pressed="'+(sel===o)+'"><span class="dot"></span>'+esc(nameOf(o))+' · '+counts[o]+'</button>').join('');
 }
 
 function filtered(){
@@ -465,7 +472,7 @@ function filtered(){
     if(st.stat==='overdue' && !isOverdue(t)) return false;
     if(st.stat==='waiting' && t.status!=='waiting') return false;
     if(!st.stat && st.status!=='active' && t.status!==st.status) return false;
-    if(st.owner==='__mine'){ if(!isMine(t)) return false; } else if(st.owner!=='all' && ownerGroup(t)!==st.owner) return false;
+    if(st.owner==='__mine'){ if(!isMine(t)) return false; } else if(st.owner!=='all' && !ownerIds(t).includes(st.owner)) return false;
     if(st.meeting!=='all' && t.meetingId!==st.meeting) return false;
     if(q && !((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')+' '+(t.subtopic||'')).includes(q)) return false;
     return true;
@@ -538,12 +545,13 @@ function render(){
       return '<div class="group topic" style="--oc:'+g.tp.color+'"><div class="group-h"><span class="av" style="--oc:'+g.tp.color+'">'+esc(initial(g.tp.name))+'</span><h2>'+esc(g.tp.name)+'</h2><small>'+ts.length+' פתוחות</small></div>'+card+body+'</div>';
     }).join('');
   } else {
-    list.forEach(t => (groups[ownerGroup(t)] = groups[ownerGroup(t)] || []).push(t));
+    // משימה משותפת מופיעה בקבוצה של כל אחד מהאחראים
+    list.forEach(t => ownerIds(t).forEach(id => (groups[id] = groups[id] || []).push(t)));
     const order = OWNERS.filter(o=>groups[o]);
     html = order.map(o => {
       const ts = groups[o].sort(byDue);
-      const p = personForOwner(ts[0]), rem = p ? remindHtml(ts, p, true) : '';
-      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(o))+'</span><h2>'+esc(o)+'</h2><small>'+ts.length+' משימות</small>'+rem+'</div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
+      const p = personById(o), rem = p ? remindHtml(ts.filter(t => !approvalsOf(t)[o]), p, true) : '';
+      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(nameOf(o)))+'</span><h2>'+esc(nameOf(o))+'</h2><small>'+ts.length+' משימות</small>'+rem+'</div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
     }).join('');
   }
   $('groups').innerHTML = html || '<div class="empty">אין משימות פתוחות שמתאימות לסינון.</div>';
@@ -553,7 +561,7 @@ function render(){
   $('c-owner-chips').innerHTML = ownerChips(st.cowner, 'cowner', closed);
   $('c-owner-chips').querySelectorAll('[data-cowner]').forEach(b => b.onclick = () => { st.cowner = b.dataset.cowner; render(); });
   const cq = st.cq.trim();
-  const cl = closed.filter(t => (st.cowner==='all' || (st.cowner==='__mine' ? isMine(t) : ownerGroup(t)===st.cowner)) && (!cq || ((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(cq)))
+  const cl = closed.filter(t => (st.cowner==='all' || (st.cowner==='__mine' ? isMine(t) : ownerIds(t).includes(st.cowner))) && (!cq || ((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(cq)))
     .sort((a,b) => closedAt(b).localeCompare(closedAt(a)));
   const months = []; cl.forEach(t => { const d = closedAt(t); const key = d ? d.slice(0,7) : ''; let m = months[months.length-1]; if(!m || m.key!==key){ m = {key, items:[]}; months.push(m); } m.items.push(t); });
   $('closed').innerHTML = months.length ? months.map(m => '<div class="month-block"><h3 class="month">'+(m.key ? MONTHS[+m.key.slice(5,7)-1]+' '+m.key.slice(0,4) : 'ללא תאריך סגירה')+' · '+m.items.length+'</h3><div class="grid">'+m.items.map(taskHtml).join('')+'</div></div>').join('')
@@ -582,15 +590,18 @@ function taskHtml(t){
   const done = t.status === 'done', late = isOverdue(t);
   const last = (t.updates||[]).slice(-1)[0];
   const mine = (PERMS && PERMS.report) ? pendingFor(t.id) : [];
-  const closeReq = !done && (!!t.closeRequest || mine.some(s => s.close));
+  const ids = ownerIds(t), apr = approvalsOf(t), nOk = ids.filter(id => apr[id]).length, iSent = mine.some(s => s.close);
   const tags = [];
   tags.push('<span class="tag status">'+(done?ICON.check:'')+esc(STATUS[t.status]||t.status)+'</span>');
-  if(closeReq) tags.push('<span class="tag pend">דווח כבוצע, ממתין לאישור אסף</span>');
+  if(!done && ids.length && nOk === ids.length) tags.push('<span class="tag pend">כל האחראים אישרו שבוצעה, ממתין לאישור אסף</span>');
+  else if(!done && (nOk || Object.keys(apr).length)) tags.push('<span class="tag pend">'+(ids.length > 1 ? 'אישרו שבוצעה: '+nOk+' מתוך '+ids.length : 'דווח כבוצע, ממתין לאישור אסף')+'</span>');
+  if(!done && iSent && !apr[ME.id]) tags.push('<span class="tag pend">אישרת שבוצעה, יופיע בעדכון הבא</span>');
   if(done) tags.push('<span class="tag">'+ICON.cal+'נסגרה '+fmtD(closedAt(t))+'</span>');
   else if(t.due) tags.push('<span class="tag '+(late?'late':soon(t)?'soon':'')+'">'+ICON.cal+(late?'באיחור · ':'יעד ')+fmtD(t.due)+'</span>');
   if(isMine(t)) tags.push('<span class="tag topic">'+ICON_USER+'באחריותי</span>');
   const byTopic = !done && st.group==='topic';
-  if(byTopic) tags.push('<span class="tag own" style="--oc:'+ownerColor(ownerGroup(t))+'"><i class="dot"></i>'+esc(ownerGroup(t))+'</span>');
+  // אחראים: בקיבוץ לפי נושא כולם; בקיבוץ לפי אחראי רק כשהמשימה משותפת. ✓ למי שאישר שבוצעה
+  if(!done && (byTopic || ids.length > 1)) ids.forEach(id => tags.push('<span class="tag own" style="--oc:'+ownerColor(id)+'"><i class="dot"></i>'+esc(firstName(personById(id)||{name:id}))+(apr[id]?' ✓':'')+'</span>'));
   if(t.topic && !(byTopic && superTopic(t).name===t.topic)) tags.push('<span class="tag topic">'+esc(t.topic)+'</span>');
   if(t.subtopic && !byTopic) tags.push('<span class="tag sub">'+esc(t.subtopic)+'</span>');
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
@@ -607,7 +618,9 @@ function taskHtml(t){
     '<div class="task-body"'+(expanded?'':' hidden')+'>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
     (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
-    (!done ? remindHtml([t], personForOwner(t), false) : '')+
+    (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);
+      const h = who.map(id => remindHtml([t], personById(id), true)).join('');
+      return h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h : ''; })() : '')+
     '</div></article>';
 }
 
@@ -619,8 +632,10 @@ function openForm(id){
     '<div><label class="l" for="'+fid+'-text">מה התקדם?</label><textarea id="'+fid+'-text" required placeholder="למשל: נשלחה פנייה למועצה, ממתינים לתשובה עד סוף השבוע."></textarea></div>'+
     '<div><span class="l" style="font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">סטטוס</span><div class="seg" role="radiogroup" aria-label="סטטוס">'+
       ['open','progress','waiting'].map(k => '<label><input type="radio" name="'+fid+'-st" value="'+k+'"'+(k===t.status?' checked':'')+'><span class="s-'+k+'">'+(k==='waiting'?'ממתינה':STATUS[k])+'</span></label>').join('')+'</div></div>'+
-    '<label class="close-chk"><input type="checkbox" id="'+fid+'-close"> <span>המשימה בוצעה. לבקש מאסף לסגור אותה</span></label>'+
-    '<p class="hint">העדכון יופיע לחברי הוועד בעדכון הבא של האתר. משימה נסגרת רק באישור אסף.</p>'+
+    (function(){ const ids = ownerIds(t), owner = ids.includes(ME.id), multi = ids.length > 1;
+      if(approvalsOf(t)[ME.id]) return '<p class="hint">כבר אישרת שהמשימה בוצעה. היא נסגרת באישור אסף'+(multi ? ', בדרך כלל אחרי שכל האחראים אישרו' : '')+'.</p>';
+      return '<label class="close-chk"><input type="checkbox" id="'+fid+'-close"> <span>'+(owner ? 'מבחינתי המשימה בוצעה' : 'המשימה בוצעה. לבקש מאסף לסגור אותה')+'</span></label>'+
+        '<p class="hint">העדכון יופיע לחברי הוועד בעדכון הבא של האתר. '+(multi ? 'למשימה כמה אחראים; היא מגיעה לאסף לסגירה עם האישורים של כולם, ונסגרת רק באישורו.' : 'משימה נסגרת רק באישור אסף.')+'</p>'; })()+
     '<div class="row2"><button type="button" class="btn" id="'+fid+'-cancel">ביטול</button><button type="submit" class="btn primary" id="'+fid+'-send">שליחה</button></div>'+
     '</form>';
   $(fid+'-text').focus();

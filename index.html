@@ -188,6 +188,17 @@ button{cursor:pointer}
 .rep .row2 .btn{flex:1}
 .rep-msg{font-size:15px;color:var(--done);font-weight:700;margin-top:10px;background:var(--done-soft);border-radius:10px;padding:8px 12px}
 .rep-msg.err{color:var(--bad);background:var(--bad-soft)}
+/* reminders (wa.me / mailto open WhatsApp and the mail app on phone and desktop alike) */
+.remind{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.remind .lbl{font-size:13.5px;color:var(--muted);font-weight:700;flex-basis:100%}
+.remind .btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:14.5px;padding:8px 12px;color:var(--ink)}
+.remind .btn svg{width:18px;height:18px;flex:none}
+.remind .btn.wa{border-color:#25D366;color:#128C7E}
+.remind .btn.ml{border-color:var(--open);color:var(--open)}
+:root:not([data-theme="light"]) .remind .btn.wa{color:#5FE0A0;border-color:#2E8B5E}
+.group-h .remind{margin:0 0 0 auto;margin-inline-start:auto}
+.group-h .remind .lbl{display:none}
+.group-h .remind .btn{padding:6px 10px;font-size:13.5px;min-height:36px}
 
 /* closed */
 .month{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;color:var(--done);margin:6px 0 10px}
@@ -221,6 +232,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
   body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   .grid{grid-template-columns:1fr}
   .main{padding-top:16px}
+  .group-h{flex-wrap:wrap}
+  .group-h .remind{flex-basis:100%;margin:2px 0 0}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -391,6 +404,37 @@ function topicIndex(tp){ const i = TOPICS.indexOf(tp); return i<0 ? TOPICS.lengt
 function meetingLabel(id){ const m = (DATA.meetings||[]).find(x=>x.id===id); return m ? ('ישיבה ' + (m.number? m.number+' · ' : '') + fmtD(m.date)) : ''; }
 const closedAt = (t) => t.doneAt || t.updatedAt || '';
 const isMine = (t) => !!ME && (t.ownerId === ME.id || t.createdBy === ME.id);
+
+// ─── reminders: WhatsApp (wa.me) and email (mailto) to the task owner, with the text prepared ───
+const ICON_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7L4 20z"/><path d="M9.5 9.5c.3 2 2.7 4.3 4.9 4.9l1.2-1.2 1.9.9-.5 1.7c-3.5.4-8.4-4.4-8-8l1.7-.5.9 1.9-1.2 1.2z"/></svg>';
+const ICON_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
+const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+function personForOwner(t){
+  const P = DATA.people || [];
+  if(t.ownerId){ const p = P.find(x => x.id === t.ownerId); if(p) return p; }
+  const o = String(t.owner||'').trim(); if(!o) return null;
+  return P.find(x => x.name === o) || (o === 'מנכ"לית' ? P.find(x => /מנכ/.test(x.role||'')) : null) || null;
+}
+const firstName = (p) => String(p.name||'').replace(/\(.*?\)/g,'').trim().split(/\s+/)[0] || '';
+function remindText(ts, p){
+  const url = location.origin + location.pathname;
+  const lines = ['היי ' + firstName(p) + ', תזכורת מדאשבורד ועד בית חורון:', ''];
+  ts.forEach(t => lines.push((ts.length > 1 ? '• ' : '') + t.title + (t.due ? ' (יעד ' + fmtD(t.due) + (isOverdue(t) ? ', באיחור' : '') + ')' : '') + ' · ' + (STATUS[t.status]||t.status)));
+  lines.push('', 'אפשר לעדכן סטטוס באתר הוועד: ' + url, '', 'תודה, ' + (ME ? firstName(ME) : ''));
+  return lines.join('\n');
+}
+function remindHtml(ts, p, compact){
+  if(!p || !ts.length || (!p.phone && !p.email) || (ME && p.id === ME.id)) return ''; // אין תזכורת לעצמך
+  const text = remindText(ts, p), subj = ts.length === 1 ? 'תזכורת: ' + ts[0].title : 'תזכורת: ' + ts.length + ' משימות פתוחות בוועד בית חורון', n = firstName(p);
+  return '<div class="remind">'+(compact ? '' : '<span class="lbl">תזכורת לאחראי</span>')+
+    (p.phone ? '<a class="btn wa" href="https://wa.me/'+esc(p.phone)+'?text='+encodeURIComponent(text)+'" target="_blank" rel="noopener">'+ICON_WA+'וואטסאפ ל'+esc(n)+'</a>' : '')+
+    (p.email ? '<a class="btn ml" href="mailto:'+esc(p.email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(text)+'">'+ICON_MAIL+'מייל ל'+esc(n)+'</a>' : '')+
+    '<button type="button" class="btn" data-remcopy="'+esc(encodeURIComponent(text))+'">'+ICON_COPY+'העתק</button></div>';
+}
+function wireRemind(root){
+  root.querySelectorAll('[data-remcopy]').forEach(b => b.onclick = async (e) => { e.stopPropagation(); const txt = decodeURIComponent(b.dataset.remcopy);
+    try { await navigator.clipboard.writeText(txt); b.lastChild.textContent = 'הועתק'; setTimeout(() => { b.lastChild.textContent = 'העתק'; }, 1800); } catch(err){ prompt('העתק את הנוסח:', txt); } });
+}
 const ICON_USER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>';
 const initial = (s) => { const w = String(s||'').replace(/["׳״']/g,'').trim(); return w ? w[0] : '?'; };
 
@@ -498,7 +542,8 @@ function render(){
     const order = OWNERS.filter(o=>groups[o]);
     html = order.map(o => {
       const ts = groups[o].sort(byDue);
-      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(o))+'</span><h2>'+esc(o)+'</h2><small>'+ts.length+' משימות</small></div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
+      const p = personForOwner(ts[0]), rem = p ? remindHtml(ts, p, true) : '';
+      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(o))+'</span><h2>'+esc(o)+'</h2><small>'+ts.length+' משימות</small>'+rem+'</div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
     }).join('');
   }
   $('groups').innerHTML = html || '<div class="empty">אין משימות פתוחות שמתאימות לסינון.</div>';
@@ -530,6 +575,7 @@ function render(){
 function wireTasks(root){
   root.querySelectorAll('.task-head').forEach(b => b.onclick = () => { const id = b.dataset.id; st.open[id] = !st.open[id]; const body = b.nextElementSibling; body.hidden = !st.open[id]; b.setAttribute('aria-expanded', String(!!st.open[id])); });
   root.querySelectorAll('[data-rep]').forEach(b => b.onclick = () => openForm(b.dataset.rep));
+  wireRemind(root);
 }
 
 function taskHtml(t){
@@ -561,6 +607,7 @@ function taskHtml(t){
     '<div class="task-body"'+(expanded?'':' hidden')+'>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
     (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
+    (!done ? remindHtml([t], personForOwner(t), false) : '')+
     '</div></article>';
 }
 

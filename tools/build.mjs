@@ -1,7 +1,8 @@
 // Build the encrypted data for the Beit Horon committee viewer site.
 // Usage: node build.mjs bundle.json outDir
-// bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms}], topics:{...} }
+// bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms,phone,email}], topics:{...} }
 // perms: { report: 'all' | 'own' } lets a member send progress reports from the site (see index.html).
+// phone (digits with country code, e.g. 972501234567) and email feed the reminder buttons (wa.me / mailto) on the site.
 // Output: outDir/data.enc.txt and outDir/keys.json
 // Each run draws a fresh random data key. Every active member's code wraps that key,
 // so a code removed from the list stops working on the next build.
@@ -13,6 +14,7 @@ const ITER = 300000;
 const enc = new TextEncoder();
 const b64 = (u8) => Buffer.from(u8).toString('base64');
 export const normCode = (c) => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+const normPhone = (v) => { let d = String(v || '').replace(/\D/g, ''); if (d.startsWith('00')) d = d.slice(2); if (d.startsWith('0')) d = '972' + d.slice(1); return d; };
 
 async function lookupId(code) {
   const h = await crypto.subtle.digest('SHA-256', enc.encode('bhv1:' + normCode(code)));
@@ -36,7 +38,9 @@ const payload = {
   tasks: (bundle.tasks || []).filter((t) => t.approved !== false),
   meetings: bundle.meetings || [],
   topics: bundle.topics || {},   // { '<super-topic>': { goal, lead } } from meta/topics
-  people: (bundle.members || []).map((m) => ({ id: m.id, name: m.name, role: m.role || '', perms: (m.active !== false && m.perms) || null })),
+  // people: contact details for reminders are included only for active members
+  people: (bundle.members || []).map((m) => ({ id: m.id, name: m.name, role: m.role || '', perms: (m.active !== false && m.perms) || null,
+    phone: (m.active !== false && normPhone(m.phone)) || '', email: (m.active !== false && String(m.email || '').trim()) || '' })),
 };
 
 const rawKey = crypto.getRandomValues(new Uint8Array(32));

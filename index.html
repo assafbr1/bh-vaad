@@ -127,7 +127,8 @@ button{cursor:pointer}
 .topic-card .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px;color:var(--muted);align-items:center}
 .topic-card .bar{flex:1;min-width:120px;margin:0;height:8px}
 .topic-card .bar i{background:var(--oc)}
-.sub-h{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);margin:14px 0 8px}
+.sub-h{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);margin:14px 0 8px;flex-wrap:wrap}
+.sub-h .sub-lead{font-size:13px;font-weight:500;color:var(--muted);margin-inline-start:auto}
 .sub-h::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--oc)}
 .sub-h small{color:var(--muted);font-weight:500;font-size:13.5px}
 .sub-h::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -381,6 +382,7 @@ function isOverdue(t){ return t.status !== 'done' && t.due && t.due < todayISO()
 function soon(t){ if(t.status==='done'||!t.due) return false; const d=(new Date(t.due)-new Date(todayISO()))/864e5; return d>=0 && d<=7; }
 function ownerGroup(t){ return t.owner || 'ללא אחראי'; }
 function ownerColor(o){ const i = OWNERS.indexOf(o); return OWNER_COLORS[(i<0?0:i) % OWNER_COLORS.length]; }
+function leadsOf(v){ return String(v||'').split(/[,;\/]+/).map(s=>s.trim()).filter(Boolean); }
 function superTopic(t){
   const hit = (s) => { s = String(s||''); if(!s) return null; return TOPICS.find(tp => tp.keys.some(k => s.includes(k))) || null; };
   return hit(t.topic) || (t.topic ? null : hit(t.title)) || TOPIC_OTHER;
@@ -477,7 +479,7 @@ function render(){
       const lastAt = allT.reduce((m,t)=>{ const u=(t.updates||[]).slice(-1)[0]; const d=u?u.at:(t.updatedAt||''); return d>m?d:m; }, '');
       const card = (info.goal || info.lead) ? '<div class="topic-card" style="--oc:'+g.tp.color+'">'+
         (info.goal ? '<p class="goal"><b>המטרה:</b> '+esc(info.goal)+'</p>' : '')+
-        '<div class="meta">'+(info.lead ? '<span>מוביל: '+esc(info.lead)+'</span>' : '')+
+        '<div class="meta">'+(function(){ const L = leadsOf(info.lead); return L.length ? '<span>'+(L.length>1?'מובילים: ':'מוביל: ')+esc(L.join(', '))+'</span>' : ''; })()+
         '<span>'+doneT+' מתוך '+allT.length+' נסגרו</span><div class="bar" role="img" aria-label="'+pct+' אחוז"><i style="width:'+pct+'%"></i></div>'+
         (lastAt ? '<span>עדכון אחרון '+fmtD(lastAt)+'</span>' : '')+'</div></div>' : '';
       // תתי נושאים: משימות עם אותו subtopic מוצגות יחד; משימות בלי תת נושא בסוף
@@ -485,7 +487,8 @@ function render(){
       const keys = Object.keys(subs).filter(k=>k).sort((a,b)=>a.localeCompare(b,'he'));
       let body = '';
       if(keys.length){
-        keys.forEach(k => { body += '<h3 class="sub-h">'+esc(k)+'<small>'+subs[k].length+'</small></h3><div class="grid">'+subs[k].map(taskHtml).join('')+'</div>'; });
+        keys.forEach(k => { const sl = leadsOf(((info.subs||{})[k]||{}).lead);
+          body += '<h3 class="sub-h">'+esc(k)+'<small>'+subs[k].length+'</small>'+(sl.length ? '<span class="sub-lead">'+(sl.length>1?'מובילים: ':'מוביל: ')+esc(sl.join(', '))+'</span>' : '')+'</h3><div class="grid">'+subs[k].map(taskHtml).join('')+'</div>'; });
         if(subs['']) body += '<h3 class="sub-h">נושאים נוספים<small>'+subs[''].length+'</small></h3><div class="grid">'+subs[''].map(taskHtml).join('')+'</div>';
       } else body = '<div class="grid">' + ts.map(taskHtml).join('') + '</div>';
       return '<div class="group topic" style="--oc:'+g.tp.color+'"><div class="group-h"><span class="av" style="--oc:'+g.tp.color+'">'+esc(initial(g.tp.name))+'</span><h2>'+esc(g.tp.name)+'</h2><small>'+ts.length+' פתוחות</small></div>'+card+body+'</div>';

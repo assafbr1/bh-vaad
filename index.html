@@ -227,6 +227,11 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 /* גרסה 1.5 */
 .task.flash{outline:3px solid var(--brand);outline-offset:2px;scroll-margin-top:16px}
 .tl .edited{color:var(--muted);font-size:12.5px}
+/* גרסה 1.6: מקור המידע */
+.src{display:inline-block;border-radius:999px;padding:0 7px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--muted);white-space:nowrap;vertical-align:middle;margin-inline-start:6px}
+.src.whatsapp{color:var(--ok);border-color:var(--ok)} .src.mail{color:var(--sky);border-color:var(--sky)} .src.protocol{color:var(--pend);border-color:var(--pend)} .src.site{color:var(--warn);border-color:var(--warn)} .src.manual{color:var(--accent);border-color:var(--accent)}
+.src.guess{border-style:dashed}
+.srcline{font-size:13px;color:var(--muted);margin:0 0 10px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
 .mg-link{background:none;border:none;color:var(--brand);text-decoration:underline;padding:0;font-size:14px;font-weight:700}
 .mg-pick{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px}
 .mg-pick input{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:15px;background:var(--surface2)}
@@ -279,7 +284,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.5 · 29.9.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.6 · 29.9.2026</summary><ul>
+        <li><b>1.6:</b> לכל משימה ולכל עדכון מוצג מקור המידע (וואטסאפ, מייל, פרוטוקול ישיבה, אתר הוועד או לוח העריכה של אסף) ותאריך המידע עצמו.</li>
         <li><b>1.5:</b> קישור ישיר למשימה (במייל הדחיפות ובהודעות מאסף); הצעת איחוד משימות כפולות מטופס העדכון; סימון "נערך" על עדכון שאסף תיקן; מספר הגרסה בראש העמוד.</li>
         <li><b>1.4:</b> בקרת תקינות: המערכת בודקת את עצמה בכל ריצה ומתריעה לאסף על תקלות ועל משימות שנתקעו; מי שדיווח על משימה והדיווח לא נקלט מקבל על כך מייל עם הסיבה.</li>
         <li><b>1.3:</b> משימה דחופה: אסף או אחראי על המשימה מסמנים "דחופה" בטופס העדכון, והסימון מופיע לכולם מיד; שורת האחראים נשברת לשורות במקום להיחתך.</li>
@@ -454,6 +460,13 @@ const URG_ON = '#דחוף ', URG_OFF = '#לא-דחוף ';
 const MERGE_TOK = '#איחוד ';
 const mergeTarget = (text) => { const m = String(text||'').match(/^#איחוד\s+(\S+)\s*/); return m ? m[1] : null; };
 const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|איחוד\s+\S+)\s*/, '');
+// מקור ותאריך המידע (גרסה 1.6): לכל עדכון src ו-ref; עדכון ישן בלי src מוצג לפי מקור המשימה (תג מקווקו)
+const SRC_LABEL = { whatsapp:'וואטסאפ', mail:'מייל', protocol:'פרוטוקול ישיבה', site:'אתר הוועד', manual:'לוח העריכה (אסף)' };
+function srcOf(t, u){ if(u && u.src) return { type: u.src, ref: u.ref || '', guess: false }; if(u && u.by) return { type: u.by === 'אסף ברקוביץ' ? 'manual' : 'site', ref: '', guess: false }; return { type: (t && t.source) || 'manual', ref: (t && t.sourceRef) || '', guess: !!u }; }
+function srcRefText(type, ref){ ref = String(ref||''); if(!ref) return ''; if(type === 'whatsapp'){ const m = ref.match(/^(.*?),\s*([\d.\-]+)\s*$/); return 'קבוצת ' + (m ? m[1] : ref); } if(type === 'mail') return /^https?:/.test(ref) ? '' : ref; return ref; }
+function srcTag(t, u, withRef){ const x = srcOf(t, u), lbl = SRC_LABEL[x.type] || x.type, rt = withRef ? srcRefText(x.type, x.ref) : '';
+  const title = (x.guess ? 'לפי מקור המשימה: ' : 'מקור המידע: ') + lbl + (srcRefText(x.type, x.ref) ? ', ' + srcRefText(x.type, x.ref) : '');
+  return '<span class="src ' + esc(x.type) + (x.guess ? ' guess' : '') + '" title="' + esc(title) + '">' + esc(lbl) + (rt ? ' · ' + esc(rt) : '') + '</span>'; }
 const canUrgent = (t) => !!ME && t.status !== 'done' && (ME.id === 'm-assaf' || ownerIds(t).includes(ME.id));
 function isUrgent(t){
   const gen = DATA.generatedAt || ''; let u = !!t.urgent, at = gen;
@@ -672,7 +685,7 @@ function taskHtml(t){
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
   if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');
   const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(stripTok(s.text))+(s.close?' · <b>ביקשת לסגור</b>':'')+(s.urg===1?' · <b>סימנת כדחופה</b>':s.urg===0?' · <b>הסרת את סימון הדחיפות</b>':'')+(s.merge?' · <b>הצעת לאחד עם: '+esc((DATA.tasks.find(x => x.id === s.merge)||{}).title || s.merge)+'</b>':'')+'</li>').join('');
-  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+'</time>'+esc(stripTok(u.text))+(u.editedAt?' <span class="edited" title="העדכון תוקן בידי אסף">(נערך '+fmtD(u.editedAt)+')</span>':'')+'</li>').join('');
+  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+srcTag(t, u, false)+'</time>'+esc(stripTok(u.text))+(u.editedAt?' <span class="edited" title="העדכון תוקן בידי אסף">(נערך '+fmtD(u.editedAt)+')</span>':'')+'</li>').join('');
   const expanded = !!st.open[t.id];
   const cls = 'task st-'+esc(t.status)+(late?' overdue':'')+(urg?' urgent':'');
   return '<article class="'+cls+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'">'+
@@ -680,7 +693,7 @@ function taskHtml(t){
     '<span class="tags">'+tags.join('')+'</span>'+
     (last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(stripTok(last.text))+'</span>' : '')+
     '</button>'+
-    '<div class="task-body"'+(expanded?'':' hidden')+'>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
+    '<div class="task-body"'+(expanded?'':' hidden')+'>'+'<div class="srcline"><span>מקור המידע:</span>'+srcTag(t, null, true)+'<span>· תאריך המידע: '+fmtD(t.createdAt)+'</span></div>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
     (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
     (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);

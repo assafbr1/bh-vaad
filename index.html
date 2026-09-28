@@ -93,8 +93,7 @@ button{cursor:pointer}
 .search{position:relative}
 .search input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 44px 12px 14px;min-height:48px;font-size:16px}
 .search svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted);pointer-events:none}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.chips::-webkit-scrollbar{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:2px}
 .chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:14.5px;font-weight:500;min-height:40px;display:flex;align-items:center;gap:7px;white-space:nowrap}
 .chip .dot{width:10px;height:10px;border-radius:50%;background:var(--oc,var(--muted))}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -138,6 +137,14 @@ button{cursor:pointer}
 .task.st-open{--sc:var(--open);--ss:var(--open-soft)} .task.st-progress{--sc:var(--prog);--ss:var(--prog-soft)}
 .task.st-waiting{--sc:var(--wait);--ss:var(--wait-soft)} .task.st-done{--sc:var(--done);--ss:var(--done-soft)}
 .task.overdue{--sc:var(--bad)}
+.task.urgent{--sc:var(--bad);border-inline-start-width:12px}
+.tag.urgent{background:var(--bad);color:#fff}
+.urgent-box{display:flex;align-items:center;gap:10px;width:100%;text-align:right;border:2px solid var(--bad);background:var(--bad-soft);color:var(--bad);border-radius:14px;padding:10px 14px;font-weight:800;font-size:16px;margin-bottom:14px;min-height:48px}
+.urgent-box[aria-pressed="true"]{background:var(--bad);color:#fff}
+.urgent-box .n{background:rgba(127,127,127,.18);border-radius:999px;padding:0 10px;font-size:14px}
+.urgent-box small{font-weight:500;font-size:13.5px;opacity:.9;margin-inline-start:auto}
+.urg-chk{display:flex;gap:10px;align-items:flex-start;font-size:15px;font-weight:700;background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:10px 12px}
+.urg-chk input{width:20px;height:20px;flex:none;margin-top:2px}
 .task-head{width:100%;text-align:right;background:none;border:none;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
 .task-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;width:100%}
 .task-title{font-weight:700;font-size:17px;line-height:1.4}
@@ -282,6 +289,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
         <div class="chips grp-row" id="group-chips" role="group" aria-label="קיבוץ המשימות"></div>
         <div id="active-filter"></div>
       </div>
+      <div id="urgent-box"></div>
       <div id="groups"></div>
     </section>
     <section id="view-closed" hidden>
@@ -293,7 +301,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
     </section>
     <section id="view-meetings" hidden><div id="meetings" class="grid"></div></section>
     <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה נעשית באישור אסף ברקוביץ.
-      <details class="ver"><summary>גרסה 1.1 · 27.9.2026</summary><ul>
+      <details class="ver"><summary>גרסה 1.3 · 28.9.2026</summary><ul>
+        <li><b>1.3:</b> משימה דחופה: אסף או אחראי על המשימה מסמנים "דחופה" בטופס העדכון, והסימון מופיע לכולם מיד; שורת האחראים נשברת לשורות במקום להיחתך.</li>
         <li><b>1.1:</b> מספר גרסה ורשימת שינויים.</li>
         <li><b>1.0:</b> תזכורות בוואטסאפ ובמייל לאחראים; כמה אחראים למשימה, וכל אחראי מאשר בנפרד שהמשימה בוצעה.</li>
       </ul></details></footer>
@@ -332,7 +341,8 @@ const ub64 = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const hex = (buf) => Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 const todayISO = () => new Date(Date.now() + 3*3600e3).toISOString().slice(0,10);
 const fmtD = (iso) => { if(!iso) return ''; const [y,m,d] = String(iso).slice(0,10).split('-'); return +d + '.' + +m + '.' + y; };
-let DATA = null, ME = null, CODE = '', PERMS = null, OWNERS = [];
+let DATA = null, ME = null, CODE = '', PERMS = null, OWNERS = [], LIVE = {};
+// LIVE: רשימת הדחיפות המיידית מהסקריפט {taskId:{u:1|0,t,by}}; רשומה חדשה מזמן הבנייה גוברת על הנתונים המוצפנים
 const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'', cq:'', cowner:'all', group:'topic', open:{} };
 try { const g = localStorage.getItem('bhv-group'); if(g==='owner'||g==='topic') st.group = g; } catch(e){}
 
@@ -358,6 +368,10 @@ async function post(obj){
   try { await fetch(DATA.logUrl, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(obj)}); return true; } catch(e){ return false; }
 }
 function logVisit(){ post({id:ME.id, n:ME.name, t:new Date().toISOString(), ua:navigator.userAgent.slice(0,120)}); }
+async function fetchUrgent(){
+  if(!DATA.logUrl) return;
+  try { const r = await fetch(DATA.logUrl + (DATA.logUrl.includes('?') ? '&' : '?') + 'urgent=1&t=' + Date.now(), {cache:'no-store'}); const j = await r.json(); if(j && typeof j === 'object' && !Array.isArray(j)){ LIVE = j; if(!$('app').hidden) render(); } } catch(e){ /* הסקריפט טרם עודכן או אין רשת: מציגים לפי הנתונים המוצפנים */ }
+}
 
 $('login-form').addEventListener('submit', async (ev) => {
   ev.preventDefault();
@@ -366,7 +380,7 @@ $('login-form').addEventListener('submit', async (ev) => {
     const r = await unlock(code); DATA = r.data; ME = r.me; CODE = norm(code);
     const me = (DATA.people||[]).find(p => p.id === ME.id); PERMS = (me && me.perms) || null;
     try { if($('remember').checked) localStorage.setItem('bhv-code', CODE); else localStorage.removeItem('bhv-code'); } catch(e){}
-    logVisit(); start();
+    logVisit(); start(); fetchUrgent();
   } catch(e){
     $('err').textContent = e.message === 'bad-code' ? 'הקוד שהוזן אינו מוכר. בדוק שהקלדת אותו כפי שקיבלת.' : 'לא ניתן לפתוח את הנתונים כרגע. נסה שוב בעוד דקה.';
   } finally { $('go').disabled = false; $('go').textContent = 'כניסה'; }
@@ -386,12 +400,13 @@ function pendingFor(taskId){ const gen = DATA.generatedAt || ''; return sentList
 function pruneSent(){ const gen = DATA.generatedAt || ''; saveSent(sentList().filter(s => s.t > gen)); }
 
 const canon = (s) => String(s||'').replace(/[^\p{L}\p{N}]/gu, '');
-async function sendReport(t, text, status, close){
+async function sendReport(t, text, status, close, urg){
   const ts = new Date().toISOString();
+  if(urg != null) text = (urg ? URG_ON : URG_OFF) + text; // הסקריפט מזהה את התו ומפרסם את הדחיפות מיד; הריצה מסירה אותו
   // חתימה על צורה קנונית: ספרות הזמן בלבד ואותיות וספרות של הטקסט, כדי שעיצוב הגיליון לא ישבור את האימות
   const sig = hex(await crypto.subtle.digest('SHA-256', enc.encode(['bhv-rep2', CODE, ME.id, t.id, canon(ts), status, close?1:0, canon(text)].join('|'))));
   const ok = await post({type:'progress', v:1, id:ME.id, n:ME.name, task:t.id, title:t.title, text, status, close:!!close, t:ts, sig});
-  if(ok){ const arr = sentList(); arr.push({task:t.id, text, status, close:!!close, t:ts}); saveSent(arr); }
+  if(ok){ const arr = sentList(); arr.push({task:t.id, text, status, close:!!close, urg: urg == null ? null : (urg ? 1 : 0), t:ts}); saveSent(arr); }
   return ok;
 }
 
@@ -420,6 +435,17 @@ function topicIndex(tp){ const i = TOPICS.indexOf(tp); return i<0 ? TOPICS.lengt
 function meetingLabel(id){ const m = (DATA.meetings||[]).find(x=>x.id===id); return m ? ('ישיבה ' + (m.number? m.number+' · ' : '') + fmtD(m.date)) : ''; }
 const closedAt = (t) => t.doneAt || t.updatedAt || '';
 const isMine = (t) => !!ME && (ownerIds(t).includes(ME.id) || t.createdBy === ME.id);
+// ─── דחיפות (גרסה 1.3): אסף או אחראי על המשימה מסמנים; הסקריפט מפרסם מיד, הריצה מקבעת בנתונים ───
+const URG_ON = '#דחוף ', URG_OFF = '#לא-דחוף ';
+const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף)\s*/, '');
+const canUrgent = (t) => !!ME && t.status !== 'done' && (ME.id === 'm-assaf' || ownerIds(t).includes(ME.id));
+function isUrgent(t){
+  const gen = DATA.generatedAt || ''; let u = !!t.urgent, at = gen;
+  const live = LIVE[t.id]; if(live && String(live.t||'') > at){ u = live.u === 1 || live.u === true; at = String(live.t); }
+  (PERMS && PERMS.report ? pendingFor(t.id) : []).forEach(s => { if(s.urg != null && s.t > at){ u = !!s.urg; at = s.t; } });
+  return u;
+}
+function urgentBy(t){ const live = LIVE[t.id]; return (live && String(live.t||'') > (DATA.generatedAt||'') ) ? live.by : (t.urgentByName || ''); }
 
 // ─── reminders: WhatsApp (wa.me) and email (mailto) to the task owner, with the text prepared ───
 const ICON_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7L4 20z"/><path d="M9.5 9.5c.3 2 2.7 4.3 4.9 4.9l1.2-1.2 1.9.9-.5 1.7c-3.5.4-8.4-4.4-8-8l1.7-.5.9 1.9-1.2 1.2z"/></svg>';
@@ -430,7 +456,7 @@ function firstName(p){ const n = String((p && p.name)||''); const nick = n.match
 function remindText(ts, p){
   const url = location.origin + location.pathname;
   const lines = ['היי ' + firstName(p) + ', תזכורת מדאשבורד ועד בית חורון:', ''];
-  ts.forEach(t => lines.push((ts.length > 1 ? '• ' : '') + t.title + (t.due ? ' (יעד ' + fmtD(t.due) + (isOverdue(t) ? ', באיחור' : '') + ')' : '') + ' · ' + (STATUS[t.status]||t.status)));
+  ts.forEach(t => lines.push((ts.length > 1 ? '• ' : '') + (isUrgent(t) ? 'דחוף: ' : '') + t.title + (t.due ? ' (יעד ' + fmtD(t.due) + (isOverdue(t) ? ', באיחור' : '') + ')' : '') + ' · ' + (STATUS[t.status]||t.status)));
   lines.push('', 'אפשר לעדכן סטטוס באתר הוועד: ' + url, '', 'תודה, ' + (ME ? firstName(ME) : ''));
   return lines.join('\n');
 }
@@ -476,6 +502,7 @@ function filtered(){
     if(t.status === 'done') return false;
     if(st.stat==='overdue' && !isOverdue(t)) return false;
     if(st.stat==='waiting' && t.status!=='waiting') return false;
+    if(st.stat==='urgent' && !isUrgent(t)) return false;
     if(!st.stat && st.status!=='active' && t.status!==st.status) return false;
     if(st.owner==='__mine'){ if(!isMine(t)) return false; } else if(st.owner!=='all' && !ownerIds(t).includes(st.owner)) return false;
     if(st.meeting!=='all' && t.meetingId!==st.meeting) return false;
@@ -509,6 +536,7 @@ function render(){
   const af = [];
   if(st.stat==='overdue') af.push('מוצגות משימות באיחור בלבד');
   if(st.stat==='waiting') af.push("מוצגות משימות שממתינות לצד ג' בלבד");
+  if(st.stat==='urgent') af.push('מוצגות משימות דחופות בלבד');
   if(st.meeting!=='all') af.push('מוצגות משימות מ'+meetingLabel(st.meeting));
   $('active-filter').innerHTML = af.length ? '<div class="active-filter"><span>'+esc(af.join(' · '))+'</span><button type="button" id="clear-f">ניקוי</button></div>' : '';
   if(af.length) $('clear-f').onclick = () => { st.stat=''; st.meeting='all'; render(); };
@@ -519,9 +547,13 @@ function render(){
     '<button class="chip grp" data-group="owner" aria-pressed="'+(st.group==='owner')+'">לפי אחראי</button>';
   $('group-chips').querySelectorAll('[data-group]').forEach(b => b.onclick = () => { st.group = b.dataset.group; try { localStorage.setItem('bhv-group', st.group); } catch(e){} render(); });
 
+  // דחופות: קופסה בראש הרשימה, לחיצה מסננת רק אותן
+  const nUrg = active.filter(isUrgent).length;
+  $('urgent-box').innerHTML = nUrg ? '<button type="button" class="urgent-box" id="urg-btn" aria-pressed="'+(st.stat==='urgent')+'">דחופות <span class="n">'+nUrg+'</span><small>'+(st.stat==='urgent' ? 'לחיצה מחזירה לכל המשימות' : 'לחיצה מציגה רק אותן')+'</small></button>' : '';
+  if(nUrg) $('urg-btn').onclick = () => { st.stat = st.stat==='urgent' ? '' : 'urgent'; render(); };
   // open tasks
   const list = filtered(), groups = {};
-  const byDue = (a,b) => (isOverdue(b)-isOverdue(a)) || (a.due||'9').localeCompare(b.due||'9');
+  const byDue = (a,b) => (isUrgent(b)-isUrgent(a)) || (isOverdue(b)-isOverdue(a)) || (a.due||'9').localeCompare(b.due||'9');
   let html = '';
   if(st.group === 'topic'){
     list.forEach(t => { const tp = superTopic(t); (groups[tp.name] = groups[tp.name] || {tp, items:[]}).items.push(t); });
@@ -596,7 +628,8 @@ function taskHtml(t){
   const last = (t.updates||[]).slice(-1)[0];
   const mine = (PERMS && PERMS.report) ? pendingFor(t.id) : [];
   const ids = ownerIds(t), apr = approvalsOf(t), nOk = ids.filter(id => apr[id]).length, iSent = mine.some(s => s.close);
-  const tags = [];
+  const tags = [], urg = !done && isUrgent(t);
+  if(urg) tags.push('<span class="tag urgent" title="'+esc(urgentBy(t) ? 'סימן/ה: '+urgentBy(t) : '')+'">דחוף</span>');
   tags.push('<span class="tag status">'+(done?ICON.check:'')+esc(STATUS[t.status]||t.status)+'</span>');
   if(!done && ids.length && nOk === ids.length) tags.push('<span class="tag pend">כל האחראים אישרו שבוצעה, ממתין לאישור אסף</span>');
   else if(!done && (nOk || Object.keys(apr).length)) tags.push('<span class="tag pend">'+(ids.length > 1 ? 'אישרו שבוצעה: '+nOk+' מתוך '+ids.length : 'דווח כבוצע, ממתין לאישור אסף')+'</span>');
@@ -611,14 +644,14 @@ function taskHtml(t){
   if(t.subtopic && !byTopic) tags.push('<span class="tag sub">'+esc(t.subtopic)+'</span>');
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
   if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');
-  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(s.text)+(s.close?' · <b>ביקשת לסגור</b>':'')+'</li>').join('');
-  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+'</time>'+esc(u.text)+'</li>').join('');
+  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(stripTok(s.text))+(s.close?' · <b>ביקשת לסגור</b>':'')+(s.urg===1?' · <b>סימנת כדחופה</b>':s.urg===0?' · <b>הסרת את סימון הדחיפות</b>':'')+'</li>').join('');
+  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+'</time>'+esc(stripTok(u.text))+'</li>').join('');
   const expanded = !!st.open[t.id];
-  const cls = 'task st-'+esc(t.status)+(late?' overdue':'');
+  const cls = 'task st-'+esc(t.status)+(late?' overdue':'')+(urg?' urgent':'');
   return '<article class="'+cls+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'">'+
     '<span class="task-top"><span class="task-title">'+esc(t.title)+'</span>'+ICON.chev+'</span>'+
     '<span class="tags">'+tags.join('')+'</span>'+
-    (last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(last.text)+'</span>' : '')+
+    (last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(stripTok(last.text))+'</span>' : '')+
     '</button>'+
     '<div class="task-body"'+(expanded?'':' hidden')+'>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
@@ -634,26 +667,29 @@ function openForm(id){
   const box = $('rep-'+id); if(!box) return;
   const fid = 'r-'+id.replace(/[^a-zA-Z0-9_-]/g,'');
   box.innerHTML = '<form class="rep" id="'+fid+'-form">'+
-    '<div><label class="l" for="'+fid+'-text">מה התקדם?</label><textarea id="'+fid+'-text" required placeholder="למשל: נשלחה פנייה למועצה, ממתינים לתשובה עד סוף השבוע."></textarea></div>'+
+    '<div><label class="l" for="'+fid+'-text">מה התקדם?</label><textarea id="'+fid+'-text" placeholder="למשל: נשלחה פנייה למועצה, ממתינים לתשובה עד סוף השבוע."></textarea></div>'+
     '<div><span class="l" style="font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">סטטוס</span><div class="seg" role="radiogroup" aria-label="סטטוס">'+
       ['open','progress','waiting'].map(k => '<label><input type="radio" name="'+fid+'-st" value="'+k+'"'+(k===t.status?' checked':'')+'><span class="s-'+k+'">'+(k==='waiting'?'ממתינה':STATUS[k])+'</span></label>').join('')+'</div></div>'+
     (function(){ const ids = ownerIds(t), owner = ids.includes(ME.id), multi = ids.length > 1;
       if(approvalsOf(t)[ME.id]) return '<p class="hint">כבר אישרת שהמשימה בוצעה. היא נסגרת באישור אסף'+(multi ? ', בדרך כלל אחרי שכל האחראים אישרו' : '')+'.</p>';
       return '<label class="close-chk"><input type="checkbox" id="'+fid+'-close"> <span>'+(owner ? 'מבחינתי המשימה בוצעה' : 'המשימה בוצעה. לבקש מאסף לסגור אותה')+'</span></label>'+
         '<p class="hint">העדכון יופיע לחברי הוועד בעדכון הבא של האתר. '+(multi ? 'למשימה כמה אחראים; היא מגיעה לאסף לסגירה עם האישורים של כולם, ונסגרת רק באישורו.' : 'משימה נסגרת רק באישור אסף.')+'</p>'; })()+
+    (canUrgent(t) ? '<label class="urg-chk"><input type="checkbox" id="'+fid+'-urg"'+(isUrgent(t)?' checked':'')+'> <span>משימה דחופה</span></label><p class="hint">סימון דחיפות (או הסרתו) מופיע לכל חברי הוועד מיד, ואסף מקבל על כך מייל. אפשר לשלוח אותו גם בלי טקסט.</p>' : '')+
     '<div class="row2"><button type="button" class="btn" id="'+fid+'-cancel">ביטול</button><button type="submit" class="btn primary" id="'+fid+'-send">שליחה</button></div>'+
     '</form>';
   $(fid+'-text').focus();
   $(fid+'-cancel').onclick = () => render();
   $(fid+'-form').onsubmit = async (ev) => {
     ev.preventDefault();
-    const text = $(fid+'-text').value.trim(); if(!text){ $(fid+'-text').focus(); return; }
+    const uEl = $(fid+'-urg'); const urg = (uEl && uEl.checked !== isUrgent(t)) ? uEl.checked : null;
+    const text = $(fid+'-text').value.trim(); if(!text && urg == null){ $(fid+'-text').focus(); return; }
     const sel = box.querySelector('input[name="'+fid+'-st"]:checked');
     $(fid+'-send').disabled = true; $(fid+'-send').textContent = 'שולח…';
-    const ok = await sendReport(t, text.replace(/\s+/g,' ').trim().slice(0,2000), sel ? sel.value : t.status, $(fid+'-close').checked);
-    st.open[id] = true; render();
+    const closeEl = $(fid+'-close');
+    const ok = await sendReport(t, text.replace(/\s+/g,' ').trim().slice(0,2000), sel ? sel.value : t.status, !!(closeEl && closeEl.checked), urg);
+    st.open[id] = true; render(); if(urg != null) setTimeout(fetchUrgent, 1500);
     const b = $('rep-'+id);
-    if(b) b.insertAdjacentHTML('afterbegin', ok ? '<div class="rep-msg" role="status">העדכון נשלח. הוא יופיע באתר בעדכון הבא.</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>');
+    if(b) b.insertAdjacentHTML('afterbegin', ok ? '<div class="rep-msg" role="status">'+(urg != null ? 'סימון הדחיפות עודכן ומופיע לכולם. ' : '')+(text ? 'העדכון נשלח. הוא יופיע באתר בעדכון הבא.' : '')+'</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>');
   };
 }
 

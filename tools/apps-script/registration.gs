@@ -1,5 +1,5 @@
 /**
- * ועד בית חורון: קליטת רישומים מאתר הצפייה. גרסה 3.1 (28.9.2026).
+ * ועד בית חורון: קליטת רישומים מאתר הצפייה. גרסה 3.2 (29.9.2026).
  * קובץ זה מחליף את כל התוכן של פרויקט ה-Apps Script "סקריפט הרישום ועד בית חורון".
  *
  * שלושה סוגי רישום:
@@ -8,6 +8,8 @@
  *   3. סימון דחיפות (גרסה 1.3): דיווח התקדמות שהטקסט שלו מתחיל ב-"#דחוף " או "#לא-דחוף ".
  *      נרשם כמו כל דיווח, ובנוסף נשמר ברשימה זמנית שהאתר קורא מיד (?urgent=1), ונשלח מייל לאסף.
  *      הריצה הלילית או ריצת הצהריים מאמתת את החתימה ומקבעת את הסימון בנתונים.
+ *   4. הצעת איחוד (גרסה 1.5): דיווח שהטקסט שלו מתחיל ב-"#איחוד <מזהה משימה> ". נרשם כמו כל דיווח; הריצה יוצרת מזה הצעה בלוח העריכה.
+ *   גרסה 3.2: המייל לאסף על דחיפות כולל קישור ישיר למשימה באתר הוועד ולוח העריכה.
  *
  * בדיקה בדפדפן: <כתובת הסקריפט>/exec מחזירה "bh-log v3"; <כתובת הסקריפט>/exec?urgent=1 מחזירה את רשימת הדחיפות.
  */
@@ -15,13 +17,15 @@ var BH_LOGIN_SHEET_ID = '1Q5n79EMrGYIFoNBr4rNG6O_IjaSTJD24GVGn7c3VPQ4';       //
 var BH_PROGRESS_SHEET_ID = '1JnY5Wo6yGX-t1VN93nVeL8DbhuljIZqPiSWkOfh7sOw';    // עדכוני התקדמות מאתר הוועד
 var BH_PROGRESS_HEADER = ['זמן קבלה', 'זמן שליחה', 'מזהה', 'שם', 'מזהה משימה', 'משימה', 'סטטוס', 'בקשת סגירה', 'עדכון', 'חתימה'];
 var BHV_URGENT_MAIL = 'assafbr1@gmail.com';   // כתובת המייל שמקבלת הודעה על כל סימון דחיפות
+var BHV_SITE_URL = 'https://assafbr1.github.io/bh-vaad/';                 // אתר הוועד; #task=<מזהה> פותח משימה
+var BHV_BOARD_URL = 'https://claude.ai/artifact/YafynhN6LgzVRUW9HP3CwY';   // לוח העריכה של אסף
 
 function doGet(e) {
   if (e && e.parameter && e.parameter.urgent) {
     var list = PropertiesService.getScriptProperties().getProperty('bhv_urgent') || '{}';
     return ContentService.createTextOutput(list).setMimeType(ContentService.MimeType.JSON);
   }
-  return ContentService.createTextOutput('bh-log v3.1');
+  return ContentService.createTextOutput('bh-log v3.2');
 }
 
 function doPost(e) {
@@ -119,7 +123,9 @@ function bhvUrgentHook(e) {
   var body = (b.n || 'חבר ועד') + (on ? ' סימן/ה כדחופה את המשימה' : ' הסיר/ה את סימון הדחיפות מהמשימה') +
     ': ' + (b.title || b.task) + '\n' +
     (text ? 'עדכון: ' + text + '\n' : '') +
-    'זמן: ' + when + '\n' +
+    'זמן: ' + when + '\n\n' +
+    'המשימה באתר הוועד (לוודא, להסיר או להוסיף סימון מהטופס): ' + BHV_SITE_URL + '#task=' + encodeURIComponent(String(b.task)) + '\n' +
+    'לוח העריכה: ' + BHV_BOARD_URL + '\n\n' +
     'הסימון כבר מוצג באתר הוועד. הוא ייקלט בלוח העריכה בריצה הבאה.';
   try { MailApp.sendEmail(BHV_URGENT_MAIL, subject, body); }
   catch (err) { console.error('bhv mail failed: ' + err); }

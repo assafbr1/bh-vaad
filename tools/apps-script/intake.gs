@@ -14,7 +14,7 @@
  * backfillStatus()    : מציג את התקדמות הסריקה ההיסטורית.
  * וואטסאפ            : קובץ ייצוא צ'אט (txt או zip) ששומרים בתיקייה "ועד בית חורון/וואטסאפ" מומר כל שעה
  *                       למסמכי Google בשם "וואטסאפ - <שם השיחה> - חלק NN (<מתאריך> עד <תאריך>)" (ייצוא חדש מחליף את הקודמים),
- *                       והמקור עובר לתת התיקייה "מקור".
+ *                       והמקור עובר לתת התיקייה "מקור". החלקים נוצרים מהאחרון (ההודעות החדשות) אחורה.
  * convertWhatsAppNow(): הרצה ידנית של המרת הוואטסאפ, בלי לחכות לטריגר השעתי.
  * cleanupNoise()      : מעביר מיילים רועשים (קבלות, ארנונה, פנסיה וכו') מ"ועד/לבדיקה" ל"ועד/לא רלוונטי". רץ גם כל שעה.
  * כללי סינון.json   : קובץ בתיקיית ועד בית חורון ש-Claude מעדכן עם שולחים נוספים שלמד שאינם רלוונטיים.
@@ -263,7 +263,7 @@ function convertWhatsAppNow() {
   if (job) {
     ScriptApp.newTrigger('convertWhatsAppNow').timeBased().after(60 * 1000).create();
     var j = JSON.parse(job);
-    Logger.log('וואטסאפ "' + j.chat + '": נוצרו ' + j.done + ' מתוך ' + j.parts + ' חלקים. ממשיך אוטומטית בעוד דקה.');
+    Logger.log('וואטסאפ "' + j.chat + '": נוצרו ' + (j.done + (j.hi || 0)) + ' מתוך ' + j.parts + ' חלקים (מהחדש לישן). ממשיך אוטומטית בעוד דקה.');
   } else {
     Logger.log('הומרו ' + n + ' ייצואי וואטסאפ. ההמרה הושלמה.');
   }
@@ -400,7 +400,11 @@ function convertWhatsAppLocked_(deadline) {
       job = { fileId: f.getId(), chat: chat, exportedAt: new Date().toISOString(), done: 0, parts: chunks.length };
       props.setProperty('WA_JOB', JSON.stringify(job));
     }
-    for (var i = job.done; i < chunks.length; i++) {
+    // כלל (החלטת אסף 29.9.2026): ההודעות החדשות קודם. החלקים נוצרים מהאחרון (החדש ביותר) אחורה,
+    // כך שהריצה הבאה של Claude מוצאת קודם את מה שחדש, וההיסטוריה מושלמת אחר כך.
+    // job.done = חלקים שנוצרו מההתחלה (המרות ישנות שהתחילו בסדר עולה), job.hi = חלקים שנוצרו מהסוף.
+    job.hi = job.hi || 0;
+    for (var i = chunks.length - 1 - job.hi; i >= job.done; i--) {
       if (Date.now() > deadline) return n;
       var c = chunks[i], part = ('0' + (i + 1)).slice(-2);
       var docName = WA_DOC_PREFIX + chat + ' - חלק ' + part + ' (' + c.first + ' עד ' + c.last + ')';
@@ -408,7 +412,7 @@ function convertWhatsAppLocked_(deadline) {
       var file = DriveApp.getFileById(id);
       file.moveTo(wa);
       file.setDescription(JSON.stringify({ chat: chat, part: i + 1, parts: chunks.length, first: c.first, last: c.last, exportedAt: job.exportedAt, source: name }));
-      job.done = i + 1;
+      job.hi++;
       props.setProperty('WA_JOB', JSON.stringify(job));
     }
     f.moveTo(archive);

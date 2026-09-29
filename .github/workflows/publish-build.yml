@@ -1,0 +1,51 @@
+# פרסום אוטומטי של בניית נתוני האתר (דאשבורד ועד בית חורון)
+# הריצות המתוזמנות דוחפות את data.enc.txt ו-keys.json לענף build-*; הפעולה הזו מעתיקה
+# את שני הקבצים בלבד ל-main (אף פעם לא index.html או קובץ אחר) ומוחקת את הענף.
+name: publish-build
+on:
+  push:
+    branches: ['build-**']
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: publish-build
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: העתקת קובצי הנתונים בלבד ל-main
+        env:
+          BRANCH: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          git fetch origin "$BRANCH"
+          changed=$(git diff --name-only main "origin/$BRANCH")
+          echo "changed files: $changed"
+          for f in $changed; do
+            case "$f" in
+              data.enc.txt|keys.json) ;;
+              *) echo "הענף משנה קובץ שאינו קובץ נתונים ($f); לא מפורסם אוטומטית"; exit 1 ;;
+            esac
+          done
+          if [ -z "$changed" ]; then echo "אין שינוי"; exit 0; fi
+          git checkout "origin/$BRANCH" -- data.enc.txt keys.json
+          git config user.name "bh-vaad publish"
+          git config user.email "noreply@github.com"
+          git commit -m "פרסום בנייה מ-$BRANCH" -- data.enc.txt keys.json
+          git push origin HEAD:main
+      - name: סגירת PR (אם נפתח) ומחיקת הענף
+        env:
+          BRANCH: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number'); do
+            gh pr close "$n" --comment "פורסם אוטומטית ל-main" || true
+          done
+          git push origin --delete "$BRANCH" || true

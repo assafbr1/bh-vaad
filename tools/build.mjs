@@ -3,7 +3,7 @@
 // bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms,phone,email}], topics:{...} }
 // perms: { report: 'all' | 'own' } lets a member send progress reports from the site (see index.html).
 // phone (digits with country code, e.g. 972501234567) and email feed the reminder buttons (wa.me / mailto) on the site.
-// Output: outDir/data.enc.txt and outDir/keys.json
+// Output: outDir/data.enc.txt, outDir/keys.json and outDir/parts/data.enc.part-NN.txt (30,000-char slices of data.enc.txt)
 // Each run draws a fresh random data key. Every active member's code wraps that key,
 // so a code removed from the list stops working on the next build.
 import { webcrypto as crypto } from 'node:crypto';
@@ -60,6 +60,15 @@ for (const m of members) {
 }
 
 mkdirSync(outDir, { recursive: true });
-writeFileSync(outDir + '/data.enc.txt', b64(blob));
+const dataText = b64(blob);
+writeFileSync(outDir + '/data.enc.txt', dataText);
 writeFileSync(outDir + '/keys.json', JSON.stringify({ v: 1, iter: ITER, builtAt: payload.generatedAt, entries }));
-console.log(`OK: ${payload.tasks.length} tasks, ${payload.meetings.length} meetings, ${members.length} member keys, ${b64(blob).length} bytes`);
+// Parts for the scheduled runs: data.enc.txt is too large to pass through one GitHub push_files call,
+// so the run pushes data.enc.part-NN.txt (each <= PART_SIZE chars) to a build-* branch and the
+// publish-build workflow concatenates them back into data.enc.txt on main. Concatenation is byte-exact.
+const PART_SIZE = 30000;
+const parts = [];
+for (let i = 0; i * PART_SIZE < dataText.length; i++) parts.push(dataText.slice(i * PART_SIZE, (i + 1) * PART_SIZE));
+mkdirSync(outDir + '/parts', { recursive: true });
+parts.forEach((t, i) => writeFileSync(`${outDir}/parts/data.enc.part-${String(i + 1).padStart(2, '0')}.txt`, t));
+console.log(`OK: ${payload.tasks.length} tasks, ${payload.meetings.length} meetings, ${members.length} member keys, ${dataText.length} bytes, ${parts.length} parts in ${outDir}/parts`);

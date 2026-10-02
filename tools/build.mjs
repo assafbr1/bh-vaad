@@ -1,8 +1,12 @@
 // Build the encrypted data for the Beit Horon committee viewer site.
 // Usage: node build.mjs bundle.json outDir
-// bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms,phone,email}], topics:{...} }
-// perms: { report: 'all' | 'own' } lets a member send progress reports from the site (see index.html).
+// bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms,phone,email,lastLoginAt}], topics:{...}, agenda:{next,free} }
+// perms: { report: 'all' | 'own', agenda: 'direct' } lets a member send progress reports from the site, and (agenda) put items on the next meeting's agenda without Assaf's approval (see index.html).
 // phone (digits with country code, e.g. 972501234567) and email feed the reminder buttons (wa.me / mailto) on the site.
+// lastLoginAt (version 1.7): the member's latest login as recorded by the runs from the login log; the site uses it as the
+// "since my previous visit" baseline for the "what's new" marking, so the marking is the same on phone and desktop.
+// agenda (version 1.7): meta/agenda from the editing board; only approved free items are published, and a task's
+// agenda mark is published only when approved (proposals wait for Assaf and never reach the site).
 // Output: outDir/data.enc.txt, outDir/keys.json and outDir/parts/data.enc.part-NN.txt (30,000-char slices of data.enc.txt)
 // Each run draws a fresh random data key. Every active member's code wraps that key,
 // so a code removed from the list stops working on the next build.
@@ -31,16 +35,22 @@ const bundle = JSON.parse(readFileSync(bundlePath, 'utf8'));
 const members = (bundle.members || []).filter((m) => m.active !== false && normCode(m.code).length >= 10);
 if (!members.length) { console.error('No active members with codes'); process.exit(1); }
 
+// a task's agenda mark reaches the site only once approved
+const publishTask = (t) => { if (t.agenda && t.agenda.status !== 'approved') { const c = Object.assign({}, t); delete c.agenda; return c; } return t; };
+const agenda = bundle.agenda || {};
+
 const payload = {
   v: 1,
   generatedAt: bundle.generatedAt || new Date().toISOString(),
   logUrl: bundle.logUrl || '',
-  tasks: (bundle.tasks || []).filter((t) => t.approved !== false),
+  tasks: (bundle.tasks || []).filter((t) => t.approved !== false).map(publishTask),
   meetings: bundle.meetings || [],
   topics: bundle.topics || {},   // { '<super-topic>': { goal, lead } } from meta/topics
+  agenda: { next: agenda.next || {}, free: (agenda.free || []).filter((x) => x.status === 'approved'), lastAttached: agenda.lastAttached || null },
   // people: contact details for reminders are included only for active members
   people: (bundle.members || []).map((m) => ({ id: m.id, name: m.name, role: m.role || '', perms: (m.active !== false && m.perms) || null,
-    phone: (m.active !== false && normPhone(m.phone)) || '', email: (m.active !== false && String(m.email || '').trim()) || '' })),
+    phone: (m.active !== false && normPhone(m.phone)) || '', email: (m.active !== false && String(m.email || '').trim()) || '',
+    lastLoginAt: m.lastLoginAt || '' })),
 };
 
 const rawKey = crypto.getRandomValues(new Uint8Array(32));

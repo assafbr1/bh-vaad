@@ -240,6 +240,45 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 .mg-sel{display:flex;gap:8px;align-items:center;background:var(--brand-soft);color:var(--brand);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700}
 .mg-sel button{margin-inline-start:auto;background:none;border:none;color:inherit;text-decoration:underline;font-size:13px}
 
+/* גרסה 1.7: מה התחדש, ישיבה קרובה */
+.task.fresh{box-shadow:var(--shadow),inset -5px 0 0 var(--open)}
+.tag.fresh{background:var(--open);color:#fff}
+.tag.agenda{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand)}
+.fresh-line{font-size:13px;color:var(--open);font-weight:700}
+.group-h .nnew{font-size:13px;color:var(--open);font-weight:700;background:var(--open-soft);border-radius:999px;padding:1px 9px}
+.freshrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.freshrow select,.freshrow input[type=date]{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;min-height:44px;max-width:100%}
+.freshrow .cnt2{font-size:14px;color:var(--muted);font-weight:500}
+.chip.fresh{border-color:var(--open);color:var(--open);font-weight:700}
+.chip.fresh[aria-pressed="true"]{background:var(--open);border-color:var(--open);color:#fff}
+.tl li.fresh{background:var(--open-soft);border-radius:10px;padding:6px 18px 6px 8px;margin-bottom:6px}
+.tl li.fresh::before{background:var(--open)}
+.tl .fresh-tag{color:var(--open);font-weight:800;font-size:12.5px}
+.ag-card{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.ag-card h2{font-size:20px;font-weight:800;color:var(--brand)}
+:root:not([data-theme="light"]) .ag-card h2{color:var(--ink)}
+.ag-card .when{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:15px;margin:6px 0 4px;color:var(--ink)}
+.ag-card .when span{display:inline-flex;align-items:center;gap:6px}
+.ag-card .when svg{width:18px;height:18px;color:var(--muted)}
+.ag-topic{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:800;margin:16px 0 8px;color:var(--ink)}
+.ag-topic::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--oc)}
+.ag-topic small{color:var(--muted);font-weight:500;font-size:13.5px}
+.ag-topic::after{content:"";flex:1;height:1px;background:var(--line)}
+.ag-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:8px;border-inline-start:5px solid var(--oc)}
+.ag-item .num{font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums;min-width:22px;padding-top:2px}
+.ag-item .body{flex:1}
+.ag-item .ttl{font-weight:700;font-size:16.5px}
+.ag-item .ttl a{color:var(--ink)}
+.ag-item .sub2{font-size:13.5px;color:var(--muted);margin-top:2px}
+.ag-item.free{border-inline-start-style:dashed}
+.ag-item.pending{opacity:.85;border-inline-start-color:var(--pend)}
+.ag-form{margin-top:14px;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ag-form input{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;width:100%;font-size:16px}
+.ag-form .l{font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+.ag-form .seg2{display:flex;gap:6px}
+.ag-form .seg2 button{flex:1}
+.ag-form .seg2 button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+
 /* ── phone ── */
 @media (max-width:720px){
   .hero .wrap{padding-block:14px 58px}
@@ -257,6 +296,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
   .main{padding-top:16px}
   .group-h{flex-wrap:wrap}
   .group-h .remind{flex-basis:100%;margin:2px 0 0}
+  .freshrow select{flex:1 1 140px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -284,7 +324,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.6 · 29.9.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.7 · 2.10.2026</summary><ul>
+        <li><b>1.7:</b> לשונית "ישיבה קרובה": מועד הישיבה וסדר היום לפי נושאים; כל חבר ועד יכול להציע סעיף (משימה קיימת או נושא חדש) והוא נכנס לאחר אישור אסף. סימון "חדש" על כל משימה שהתעדכנה מאז הכניסה הקודמת שלך (עם המקור ומי עדכן), מונה בכל נושא, הדגשת העדכונים החדשים בכרטיס, מסנן "מה התחדש" עם בחירת מועד התחלה ומקור, סימון כנקרא בפתיחת הכרטיס ו"סמן הכול כנקרא".</li>
         <li><b>1.6:</b> לכל משימה ולכל עדכון מוצג מקור המידע (וואטסאפ, מייל, פרוטוקול ישיבה, אתר הוועד או לוח העריכה של אסף) ותאריך המידע עצמו.</li>
         <li><b>1.5:</b> קישור ישיר למשימה (במייל הדחיפות ובהודעות מאסף); הצעת איחוד משימות כפולות מטופס העדכון; סימון "נערך" על עדכון שאסף תיקן; מספר הגרסה בראש העמוד.</li>
         <li><b>1.4:</b> בקרת תקינות: המערכת בודקת את עצמה בכל ריצה ומתריעה לאסף על תקלות ועל משימות שנתקעו; מי שדיווח על משימה והדיווח לא נקלט מקבל על כך מייל עם הסיבה.</li>
@@ -301,6 +342,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
     <nav class="tabs" role="tablist" aria-label="תצוגה">
       <button class="tab" role="tab" data-tab="tasks" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg><span>משימות פתוחות</span><span class="cnt" id="cnt-tasks"></span></button>
       <button class="tab" role="tab" data-tab="closed" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>נסגרו</span><span class="cnt" id="cnt-closed"></span></button>
+      <button class="tab" role="tab" data-tab="agenda" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg><span>ישיבה קרובה</span><span class="cnt" id="cnt-agenda"></span></button>
       <button class="tab" role="tab" data-tab="meetings" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>ישיבות ועד</span></button>
     </nav>
 
@@ -310,6 +352,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
         <div class="chips" id="owner-chips" role="group" aria-label="סינון לפי אחראי"></div>
         <div class="chips" id="status-chips" role="group" aria-label="סינון לפי סטטוס"></div>
         <div class="chips grp-row" id="group-chips" role="group" aria-label="קיבוץ המשימות"></div>
+        <div class="freshrow" id="fresh-row"></div>
         <div id="active-filter"></div>
       </div>
       <div id="urgent-box"></div>
@@ -322,6 +365,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       </div>
       <div id="closed"></div>
     </section>
+    <section id="view-agenda" hidden><div id="agenda"></div></section>
     <section id="view-meetings" hidden><div id="meetings" class="grid"></div></section>
     <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה נעשית באישור אסף ברקוביץ.</footer>
   </div>
@@ -361,7 +405,7 @@ const todayISO = () => new Date(Date.now() + 3*3600e3).toISOString().slice(0,10)
 const fmtD = (iso) => { if(!iso) return ''; const [y,m,d] = String(iso).slice(0,10).split('-'); return +d + '.' + +m + '.' + y; };
 let DATA = null, ME = null, CODE = '', PERMS = null, OWNERS = [], LIVE = {};
 // LIVE: רשימת הדחיפות המיידית מהסקריפט {taskId:{u:1|0,t,by}}; רשומה חדשה מזמן הבנייה גוברת על הנתונים המוצפנים
-const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'', cq:'', cowner:'all', group:'topic', open:{} };
+const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'', cq:'', cowner:'all', group:'topic', open:{}, fresh:false, since:'login', sinceDate:'', newsrc:'all' };
 try { const g = localStorage.getItem('bhv-group'); if(g==='owner'||g==='topic') st.group = g; } catch(e){}
 
 async function lookupId(code){ return hex(await crypto.subtle.digest('SHA-256', enc.encode('bhv1:'+norm(code)))).slice(0,24); }
@@ -459,7 +503,7 @@ const URG_ON = '#דחוף ', URG_OFF = '#לא-דחוף ';
 // הצעת איחוד (גרסה 1.5): הטקסט מתחיל ב-'#איחוד <מזהה המשימה האחרת> '. הריצה יוצרת מזה הצעה בלוח העריכה; אסף מחליט.
 const MERGE_TOK = '#איחוד ';
 const mergeTarget = (text) => { const m = String(text||'').match(/^#איחוד\s+(\S+)\s*/); return m ? m[1] : null; };
-const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|איחוד\s+\S+)\s*/, '');
+const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|לישיבה|איחוד\s+\S+)\s*/, '');
 // מקור ותאריך המידע (גרסה 1.6): לכל עדכון src ו-ref; עדכון ישן בלי src מוצג לפי מקור המשימה (תג מקווקו)
 const SRC_LABEL = { whatsapp:'וואטסאפ', mail:'מייל', protocol:'פרוטוקול ישיבה', site:'אתר הוועד', manual:'לוח העריכה (אסף)' };
 function srcOf(t, u){ if(u && u.src) return { type: u.src, ref: u.ref || '', guess: false }; if(u && u.by) return { type: u.by === 'אסף ברקוביץ' ? 'manual' : 'site', ref: '', guess: false }; return { type: (t && t.source) || 'manual', ref: (t && t.sourceRef) || '', guess: !!u }; }
@@ -475,6 +519,99 @@ function isUrgent(t){
   return u;
 }
 function urgentBy(t){ const live = LIVE[t.id]; return (live && String(live.t||'') > (DATA.generatedAt||'') ) ? live.by : (t.urgentByName || ''); }
+
+// ─── מה התחדש מאז כניסתי הקודמת (גרסה 1.7, החלטת אסף 2.10.2026) ───
+// הבסיס: הכניסה הקודמת של הצופה כפי שנרשמה ביומן הכניסות ונכללה בבנייה (people[].lastLoginAt), ולכן זהה בטלפון ובמחשב.
+// "סמן הכול כנקרא" ופתיחת כרטיס נשמרים במכשיר (localStorage). לכל עדכון addedAt (מועד הקליטה); עדכון ישן בלי addedAt נמדד לפי at.
+const updStamp = (u) => u.addedAt || (u.at ? (String(u.at).length === 10 ? u.at + 'T12:00:00Z' : String(u.at)) : '');
+const taskStamp = (t) => t.addedAt || (t.createdAt ? (String(t.createdAt).length === 10 ? t.createdAt + 'T12:00:00Z' : String(t.createdAt)) : '');
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
+function lastMeetingDate(){ const today = todayISO(); return (DATA.meetings||[]).filter(m => m.date && m.date <= today).map(m => m.date).sort().pop() || ''; }
+function loginBase(){ const me = (DATA.people||[]).find(p => p.id === ME.id); const a = (me && me.lastLoginAt) || ''; const b = lsGet('bhv-base-' + ME.id, ''); return b > a ? b : (a || new Date(Date.now() - 7*864e5).toISOString()); }
+function sinceStamp(){ if(st.since === 'meeting'){ const d = lastMeetingDate(); return d ? d + 'T00:00:00Z' : ''; } if(st.since === 'date') return st.sinceDate ? st.sinceDate + 'T00:00:00Z' : ''; return loginBase(); }
+const SRC_KINDS = { site:'חבר ועד', guest:'עובד', mail:'מייל', whatsapp:'וואטסאפ', protocol:'פרוטוקול ישיבה', manual:'אסף' };
+const SRC_ICON = { site:'👤', guest:'🛠', mail:'✉️', whatsapp:'💬', protocol:'📋', manual:'✎' };
+function srcKind(t, u){ const x = srcOf(t, u); return x.type === 'site' && u && u.byKind === 'guest' ? 'guest' : (x.type || 'manual'); }
+function matchSrc(kind){ return st.newsrc === 'all' || (st.newsrc === 'people' ? (kind === 'site' || kind === 'guest') : kind === st.newsrc); }
+function freshInfo(t){
+  const since = sinceStamp(); if(!since || !ME) return { n:0, items:[] };
+  const readTo = st.since === 'login' ? (lsGet('bhv-read-' + ME.id, {})[t.id] || '') : '';
+  const floor = readTo > since ? readTo : since;
+  const items = (t.updates||[]).filter(u => u.by !== ME.name && updStamp(u) > floor && matchSrc(srcKind(t, u)));
+  if(taskStamp(t) > floor && matchSrc(srcKind(t, null))) items.push({ at: t.createdAt, text: 'משימה חדשה', by: '', _created: true, addedAt: taskStamp(t) });
+  items.sort((a,b) => updStamp(b).localeCompare(updStamp(a)));
+  return { n: items.length, items, latest: items[0] || null };
+}
+const isFresh = (t) => t.status !== 'done' && freshInfo(t).n > 0;
+function freshTagHtml(t){ const f = freshInfo(t); if(!f.n) return ''; const u = f.latest, kind = srcKind(t, u._created ? null : u);
+  return '<span class="tag fresh" title="'+esc('מקור: ' + (SRC_KINDS[kind]||kind))+'">'+(SRC_ICON[kind]||'')+' חדש'+(f.n > 1 ? ' · ' + f.n : '')+'</span>'; }
+function freshLine(t){ const f = freshInfo(t); if(!f.n) return ''; const u = f.latest, kind = srcKind(t, u._created ? null : u);
+  const who = u._created ? 'משימה חדשה' + (kind !== 'manual' ? ' מ' + (SRC_KINDS[kind]||'') : '') : 'עדכון של ' + (u.by || SRC_KINDS[kind] || '');
+  return '<span class="fresh-line">'+esc(who)+', '+esc(new Date(updStamp(u)).toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short', timeZone:'Asia/Jerusalem'}))+'</span>'; }
+function markRead(t){ if(st.since !== 'login' || !ME) return; const k = 'bhv-read-' + ME.id, r = lsGet(k, {}); const top = (t.updates||[]).map(updStamp).concat([taskStamp(t)]).filter(Boolean).sort().pop() || new Date().toISOString(); if((r[t.id]||'') < top){ r[t.id] = top; lsSet(k, r); } }
+function markAllRead(){ lsSet('bhv-base-' + ME.id, new Date().toISOString()); lsSet('bhv-read-' + ME.id, {}); render(); }
+function freshRowHtml(active){
+  const n = active.filter(isFresh).length, base = sinceStamp();
+  const sinceOpts = [['login','מאז הכניסה הקודמת שלי'],['meeting','מאז הישיבה הקודמת'],['date','מתאריך…']];
+  const srcOpts = [['all','מכל המקורות'],['people','דיווחי חברי ועד'],['mail','מיילים'],['whatsapp','וואטסאפ'],['protocol','פרוטוקולים']];
+  return '<button type="button" class="chip fresh" id="fresh-btn" aria-pressed="'+st.fresh+'">מה התחדש · '+n+'</button>'+
+    '<select id="f-since" aria-label="מועד התחלה">'+sinceOpts.map(([v,l]) => '<option value="'+v+'"'+(st.since===v?' selected':'')+'>'+l+'</option>').join('')+'</select>'+
+    (st.since === 'date' ? '<input type="date" id="f-sincedate" value="'+esc(st.sinceDate)+'" aria-label="תאריך התחלה">' : '')+
+    '<select id="f-newsrc" aria-label="מקור">'+srcOpts.map(([v,l]) => '<option value="'+v+'"'+(st.newsrc===v?' selected':'')+'>'+l+'</option>').join('')+'</select>'+
+    (base ? '<span class="cnt2">מ-'+esc(new Date(base).toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short', timeZone:'Asia/Jerusalem'}))+'</span>' : '')+
+    (st.since === 'login' && n ? '<button type="button" class="linkbtn" id="mark-read">סמן הכול כנקרא</button>' : '');
+}
+
+// ─── ישיבה קרובה וסדר יום (גרסה 1.7, החלטת אסף 2.10.2026) ───
+// DATA.agenda = {next:{date,time,place,note}, free:[סעיפים חופשיים מאושרים]}; משימה בסדר היום: t.agenda (מאושר בלבד מגיע לאתר).
+// הצעה מהאתר: דיווח עם הטקסט "#לישיבה <הערה>" על המשימה, או על המזהה 'agenda' עם "#לישיבה <כותרת הסעיף>" לסעיף חדש.
+// הריצה רושמת את ההצעה; אסף מאשר בלוח העריכה (למי שיש הרשאת סימון ישיר, הסעיף נכנס מיד).
+const AGENDA_TOK = '#לישיבה ';
+const AGENDA_TASK = { id: 'agenda', title: 'סדר יום' };
+function agendaItems(){
+  const ag = DATA.agenda || {}, items = [];
+  DATA.tasks.filter(t => t.agenda && t.agenda.status === 'approved' && t.status !== 'done').forEach(t => items.push({ kind:'task', id:t.id, title:t.title, note:t.agenda.note||'', topic: superTopic(t), order: t.agenda.order||0, carried: !!t.agenda.carried, task:t }));
+  (ag.free||[]).forEach(x => { const tp = TOPICS.find(z => z.name === x.topic) || TOPIC_OTHER; items.push({ kind:'free', id:x.id, title:x.title, note:x.note||'', topic: tp, order: x.order||0, carried: !!x.carried }); });
+  items.sort((a,b) => topicIndex(a.topic) - topicIndex(b.topic) || (a.order - b.order) || String(a.title).localeCompare(String(b.title),'he'));
+  return items;
+}
+function myAgendaPending(){ const gen = DATA.generatedAt || ''; return sentList().filter(s => s.t > gen && String(s.text||'').startsWith(AGENDA_TOK)); }
+function renderAgenda(){
+  const ag = DATA.agenda || {}, nx = ag.next || {}, items = agendaItems(), mine = myAgendaPending();
+  const when = nx.date ? '<div class="when"><span>'+ICON.cal+esc(fmtD(nx.date))+(nx.time ? ' בשעה ' + esc(nx.time) : '')+'</span>'+(nx.place ? '<span>'+esc(nx.place)+'</span>' : '')+'</div>' : '<div class="when"><span class="cnt2" style="color:var(--muted)">מועד הישיבה טרם נקבע</span></div>';
+  let html = '<div class="ag-card"><h2>ישיבת הוועד הקרובה</h2>'+when+(nx.note ? '<p style="margin:6px 0 0">'+esc(nx.note)+'</p>' : '')+'<p class="hint" style="margin:8px 0 0;font-size:13.5px;color:var(--muted)">'+items.length+' סעיפים בסדר היום. סדר היום נקבע בידי אסף; אפשר להציע סעיף בטופס שבתחתית העמוד.</p></div>';
+  let last = null, n = 0;
+  items.forEach(it => { if(it.topic !== last){ html += '<div class="ag-topic" style="--oc:'+it.topic.color+'">'+esc(it.topic.name)+'<small>'+items.filter(x => x.topic === it.topic).length+'</small></div>'; last = it.topic; } n++;
+    html += '<div class="ag-item '+it.kind+(it.carried?' carried':'')+'" style="--oc:'+it.topic.color+'"><span class="num">'+n+'.</span><div class="body"><div class="ttl">'+(it.kind === 'task' ? '<a href="#task='+encodeURIComponent(it.id)+'">'+esc(it.title)+'</a>' : esc(it.title))+'</div>'+
+      '<div class="sub2">'+(it.kind === 'task' ? esc(ownerGroup(it.task)) + ' · ' + esc(STATUS[it.task.status]||'') : 'סעיף לדיון')+(it.note ? ' · ' + esc(it.note) : '')+(it.carried ? ' · <b>הועבר מהישיבה הקודמת</b>' : '')+'</div></div></div>'; });
+  if(!items.length) html += '<div class="empty">סדר היום לישיבה הקרובה טרם נקבע.</div>';
+  if(mine.length) html += '<div class="ag-topic" style="--oc:var(--pend)">ההצעות שלי שממתינות לאישור אסף<small>'+mine.length+'</small></div>' + mine.map(s => { const t = s.task === 'agenda' ? null : DATA.tasks.find(x => x.id === s.task); return '<div class="ag-item pending" style="--oc:var(--pend)"><span class="num">•</span><div class="body"><div class="ttl">'+esc(t ? t.title : stripTok(s.text))+'</div><div class="sub2">'+(t ? 'הערה: ' + esc(stripTok(s.text) || 'ללא') : 'סעיף חדש')+' · נשלח '+esc(fmtD(s.t))+', ממתין לאישור אסף</div></div></div>'; }).join('');
+  html += '<form class="ag-form" id="ag-form"><div><span class="l">להציע סעיף לסדר היום</span><div class="seg2"><button type="button" class="btn" id="ag-mode-task" aria-pressed="true">משימה קיימת</button><button type="button" class="btn" id="ag-mode-free" aria-pressed="false">נושא חדש</button></div></div>'+
+    '<div id="ag-pick"></div><div><label class="l" for="ag-note">הערה (למה לדון, מה מבקשים להחליט)</label><input id="ag-note" maxlength="300"></div>'+
+    '<p class="hint" style="margin:0;font-size:13px;color:var(--muted)">ההצעה מגיעה לאסף ונכנסת לסדר היום לאחר אישורו'+(ME && PERMS && PERMS.agenda === 'direct' ? ' (ההצעות שלך נכנסות ישירות)' : '')+'.</p>'+
+    '<div class="row2" style="display:flex;gap:8px"><button type="submit" class="btn primary" id="ag-send" style="flex:1">שליחת ההצעה</button></div><div id="ag-msg"></div></form>';
+  $('agenda').innerHTML = html;
+  let mode = 'task', pick = null;
+  const drawPick = (q) => { q = String(q||'').trim(); const box = $('ag-pick');
+    if(mode === 'free'){ box.innerHTML = '<label class="l" for="ag-title">כותרת הסעיף</label><input id="ag-title" maxlength="200" placeholder="למשל: חניית אורחים ליד בית הכנסת">'; return; }
+    if(pick){ const o = DATA.tasks.find(x => x.id === pick); box.innerHTML = '<div class="mg-sel">משימה: '+esc(o ? o.title : pick)+'<button type="button" id="ag-clr">החלף</button></div>'; $('ag-clr').onclick = () => { pick = null; drawPick(''); }; return; }
+    const ls = DATA.tasks.filter(x => x.status !== 'done' && !(x.agenda && x.agenda.status === 'approved') && (!q || ((x.title||'')+' '+(x.topic||'')+' '+(x.subtopic||'')).includes(q))).slice(0, 12);
+    box.innerHTML = '<div class="mg-pick"><input id="ag-q" type="search" placeholder="חיפוש המשימה…" value="'+esc(q)+'">'+(ls.length ? ls.map(x => '<button type="button" class="opt" data-ag="'+esc(x.id)+'">'+esc(x.title)+(x.topic?' <span style="color:var(--muted)">· '+esc(x.topic)+'</span>':'')+'</button>').join('') : '<span class="hint">לא נמצאו משימות.</span>')+'</div>';
+    const inp = $('ag-q'); inp.oninput = (e) => { const v = e.target.value; drawPick(v); const i2 = $('ag-q'); if(i2){ i2.focus(); i2.setSelectionRange(v.length, v.length); } };
+    box.querySelectorAll('[data-ag]').forEach(b => b.onclick = () => { pick = b.dataset.ag; drawPick(''); }); };
+  $('ag-mode-task').onclick = () => { mode = 'task'; $('ag-mode-task').setAttribute('aria-pressed','true'); $('ag-mode-free').setAttribute('aria-pressed','false'); drawPick(''); };
+  $('ag-mode-free').onclick = () => { mode = 'free'; $('ag-mode-task').setAttribute('aria-pressed','false'); $('ag-mode-free').setAttribute('aria-pressed','true'); drawPick(''); };
+  drawPick('');
+  $('ag-form').onsubmit = async (ev) => { ev.preventDefault(); const note = $('ag-note').value.trim().replace(/\s+/g,' ');
+    let t, text;
+    if(mode === 'free'){ const title = $('ag-title').value.trim().replace(/\s+/g,' '); if(!title){ $('ag-title').focus(); return; } t = AGENDA_TASK; text = AGENDA_TOK + title + (note ? ' · ' + note : ''); }
+    else { if(!pick){ const i2 = $('ag-q'); if(i2) i2.focus(); return; } t = DATA.tasks.find(x => x.id === pick); text = AGENDA_TOK + note; }
+    $('ag-send').disabled = true; $('ag-send').textContent = 'שולח…';
+    const ok = await sendReport(t, text.slice(0, 2000), t.status || 'open', false, null, null);
+    renderAgenda(); const m = $('ag-msg'); if(m) m.innerHTML = ok ? '<div class="rep-msg" role="status">ההצעה נשלחה לאסף. היא תופיע בסדר היום לאחר אישורו.</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>';
+  };
+}
 
 // ─── reminders: WhatsApp (wa.me) and email (mailto) to the task owner, with the text prepared ───
 const ICON_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7L4 20z"/><path d="M9.5 9.5c.3 2 2.7 4.3 4.9 4.9l1.2-1.2 1.9.9-.5 1.7c-3.5.4-8.4-4.4-8-8l1.7-.5.9 1.9-1.2 1.2z"/></svg>';
@@ -512,7 +649,7 @@ function start(){
   // OWNERS: מזהי האחראים שמופיעים במשימות; לימור ראשונה, השאר לפי שם
   OWNERS = Array.from(new Set([].concat.apply([], DATA.tasks.map(ownerIds))));
   OWNERS.sort((a,b) => (a==='m-limor'?-1:b==='m-limor'?1:0) || nameOf(a).localeCompare(nameOf(b),'he'));
-  try { const h = location.hash.slice(1); if(['tasks','closed','meetings'].includes(h)) st.tab = h; } catch(e){}
+  try { const h = location.hash.slice(1); if(['tasks','closed','meetings','agenda'].includes(h)) st.tab = h; } catch(e){}
   setTab(st.tab);
   openFromHash(); window.addEventListener('hashchange', openFromHash);
 }
@@ -543,6 +680,7 @@ function filtered(){
     if(st.stat==='overdue' && !isOverdue(t)) return false;
     if(st.stat==='waiting' && t.status!=='waiting') return false;
     if(st.stat==='urgent' && !isUrgent(t)) return false;
+    if(st.fresh && !isFresh(t)) return false;
     if(!st.stat && st.status!=='active' && t.status!==st.status) return false;
     if(st.owner==='__mine'){ if(!isMine(t)) return false; } else if(st.owner!=='all' && !ownerIds(t).includes(st.owner)) return false;
     if(st.meeting!=='all' && t.meetingId!==st.meeting) return false;
@@ -578,9 +716,18 @@ function render(){
   if(st.stat==='waiting') af.push("מוצגות משימות שממתינות לצד ג' בלבד");
   if(st.stat==='urgent') af.push('מוצגות משימות דחופות בלבד');
   if(st.meeting!=='all') af.push('מוצגות משימות מ'+meetingLabel(st.meeting));
+  if(st.fresh) af.push('מוצגות משימות שהתחדשו בלבד');
   $('active-filter').innerHTML = af.length ? '<div class="active-filter"><span>'+esc(af.join(' · '))+'</span><button type="button" id="clear-f">ניקוי</button></div>' : '';
-  if(af.length) $('clear-f').onclick = () => { st.stat=''; st.meeting='all'; render(); };
+  if(af.length) $('clear-f').onclick = () => { st.stat=''; st.meeting='all'; st.fresh=false; render(); };
 
+  // מה התחדש (גרסה 1.7)
+  $('fresh-row').innerHTML = freshRowHtml(active);
+  $('fresh-btn').onclick = () => { st.fresh = !st.fresh; render(); };
+  $('f-since').onchange = (e) => { st.since = e.target.value; if(st.since === 'date' && !st.sinceDate) st.sinceDate = lastMeetingDate() || todayISO(); render(); };
+  if($('f-sincedate')) $('f-sincedate').onchange = (e) => { st.sinceDate = e.target.value; render(); };
+  $('f-newsrc').onchange = (e) => { st.newsrc = e.target.value; render(); };
+  if($('mark-read')) $('mark-read').onclick = markAllRead;
+  $('cnt-agenda').textContent = agendaItems().length || '';
   // grouping toggle
   $('group-chips').innerHTML = '<span class="lbl">קיבוץ:</span>' +
     '<button class="chip grp" data-group="topic" aria-pressed="'+(st.group==='topic')+'">לפי נושא</button>' +
@@ -619,7 +766,8 @@ function render(){
           body += '<h3 class="sub-h">'+esc(k)+'<small>'+subs[k].length+'</small>'+(sl.length ? '<span class="sub-lead">'+(sl.length>1?'מובילים: ':'מוביל: ')+esc(sl.join(', '))+'</span>' : '')+'</h3><div class="grid">'+subs[k].map(taskHtml).join('')+'</div>'; });
         if(subs['']) body += '<h3 class="sub-h">נושאים נוספים<small>'+subs[''].length+'</small></h3><div class="grid">'+subs[''].map(taskHtml).join('')+'</div>';
       } else body = '<div class="grid">' + ts.map(taskHtml).join('') + '</div>';
-      return '<div class="group topic" style="--oc:'+g.tp.color+'"><div class="group-h"><span class="av" style="--oc:'+g.tp.color+'">'+esc(initial(g.tp.name))+'</span><h2>'+esc(g.tp.name)+'</h2><small>'+ts.length+' פתוחות</small></div>'+card+body+'</div>';
+      const nNew = ts.filter(isFresh).length;
+      return '<div class="group topic" style="--oc:'+g.tp.color+'"><div class="group-h"><span class="av" style="--oc:'+g.tp.color+'">'+esc(initial(g.tp.name))+'</span><h2>'+esc(g.tp.name)+'</h2><small>'+ts.length+' פתוחות</small>'+(nNew ? '<span class="nnew">'+nNew+' חדשים</span>' : '')+'</div>'+card+body+'</div>';
     }).join('');
   } else {
     // משימה משותפת מופיעה בקבוצה של כל אחד מהאחראים
@@ -628,7 +776,8 @@ function render(){
     html = order.map(o => {
       const ts = groups[o].sort(byDue);
       const p = personById(o), rem = p ? remindHtml(ts.filter(t => !approvalsOf(t)[o]), p, true) : '';
-      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(nameOf(o)))+'</span><h2>'+esc(nameOf(o))+'</h2><small>'+ts.length+' משימות</small>'+rem+'</div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
+      const nNew = ts.filter(isFresh).length;
+      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(nameOf(o)))+'</span><h2>'+esc(nameOf(o))+'</h2><small>'+ts.length+' משימות</small>'+(nNew ? '<span class="nnew">'+nNew+' חדשים</span>' : '')+rem+'</div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
     }).join('');
   }
   $('groups').innerHTML = html || '<div class="empty">אין משימות פתוחות שמתאימות לסינון.</div>';
@@ -645,6 +794,7 @@ function render(){
     : '<div class="empty">'+(closed.length ? 'אין משימות סגורות שמתאימות לסינון.' : 'עדיין לא נסגרו משימות. משימה שתיסגר תופיע כאן, עם תאריך הסגירה.')+'</div>';
   wireTasks($('closed'));
 
+  renderAgenda();
   // meetings
   const ms = (DATA.meetings||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   $('meetings').innerHTML = ms.length ? ms.map(m => {
@@ -658,7 +808,7 @@ function render(){
 }
 
 function wireTasks(root){
-  root.querySelectorAll('.task-head').forEach(b => b.onclick = () => { const id = b.dataset.id; st.open[id] = !st.open[id]; const body = b.nextElementSibling; body.hidden = !st.open[id]; b.setAttribute('aria-expanded', String(!!st.open[id])); });
+  root.querySelectorAll('.task-head').forEach(b => b.onclick = () => { const id = b.dataset.id; st.open[id] = !st.open[id]; const body = b.nextElementSibling; body.hidden = !st.open[id]; b.setAttribute('aria-expanded', String(!!st.open[id])); if(st.open[id]){ const t = DATA.tasks.find(x => x.id === id); if(t && isFresh(t)){ markRead(t); if(!st.fresh) render(); } } });
   root.querySelectorAll('[data-rep]').forEach(b => b.onclick = () => openForm(b.dataset.rep));
   wireRemind(root);
 }
@@ -668,7 +818,10 @@ function taskHtml(t){
   const last = (t.updates||[]).slice(-1)[0];
   const mine = (PERMS && PERMS.report) ? pendingFor(t.id) : [];
   const ids = ownerIds(t), apr = approvalsOf(t), nOk = ids.filter(id => apr[id]).length, iSent = mine.some(s => s.close);
-  const tags = [], urg = !done && isUrgent(t);
+  const tags = [], urg = !done && isUrgent(t), fresh = isFresh(t), fi = fresh ? freshInfo(t) : null;
+  const freshSet = new Set(fi ? fi.items.filter(u => !u._created).map(u => updStamp(u) + '|' + u.text) : []);
+  if(fresh) tags.push(freshTagHtml(t));
+  if(!done && t.agenda && t.agenda.status === 'approved') tags.push('<span class="tag agenda" title="'+esc(t.agenda.note||'')+'">לישיבה הקרובה</span>');
   if(urg) tags.push('<span class="tag urgent" title="'+esc(urgentBy(t) ? 'סימן/ה: '+urgentBy(t) : '')+'">דחוף</span>');
   tags.push('<span class="tag status">'+(done?ICON.check:'')+esc(STATUS[t.status]||t.status)+'</span>');
   if(!done && ids.length && nOk === ids.length) tags.push('<span class="tag pend">כל האחראים אישרו שבוצעה, ממתין לאישור אסף</span>');
@@ -684,14 +837,14 @@ function taskHtml(t){
   if(t.subtopic && !byTopic) tags.push('<span class="tag sub">'+esc(t.subtopic)+'</span>');
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
   if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');
-  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(stripTok(s.text))+(s.close?' · <b>ביקשת לסגור</b>':'')+(s.urg===1?' · <b>סימנת כדחופה</b>':s.urg===0?' · <b>הסרת את סימון הדחיפות</b>':'')+(s.merge?' · <b>הצעת לאחד עם: '+esc((DATA.tasks.find(x => x.id === s.merge)||{}).title || s.merge)+'</b>':'')+'</li>').join('');
-  const upd = (t.updates||[]).slice().reverse().map(u=>'<li><time>'+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+srcTag(t, u, false)+'</time>'+esc(stripTok(u.text))+(u.editedAt?' <span class="edited" title="העדכון תוקן בידי אסף">(נערך '+fmtD(u.editedAt)+')</span>':'')+'</li>').join('');
+  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(stripTok(s.text))+(s.close?' · <b>ביקשת לסגור</b>':'')+(s.urg===1?' · <b>סימנת כדחופה</b>':s.urg===0?' · <b>הסרת את סימון הדחיפות</b>':'')+(s.merge?' · <b>הצעת לאחד עם: '+esc((DATA.tasks.find(x => x.id === s.merge)||{}).title || s.merge)+'</b>':'')+(String(s.text||'').startsWith(AGENDA_TOK)?' · <b>הצעת לסדר היום של הישיבה הקרובה</b>':'')+'</li>').join('');
+  const upd = (t.updates||[]).slice().reverse().map(u=>{ const fr = freshSet.has(updStamp(u) + '|' + u.text); return '<li'+(fr?' class="fresh"':'')+'><time>'+(fr?'<span class="fresh-tag">חדש · </span>':'')+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+srcTag(t, u, false)+'</time>'+esc(stripTok(u.text))+(u.editedAt?' <span class="edited" title="העדכון תוקן בידי אסף">(נערך '+fmtD(u.editedAt)+')</span>':'')+'</li>'; }).join('');
   const expanded = !!st.open[t.id];
-  const cls = 'task st-'+esc(t.status)+(late?' overdue':'')+(urg?' urgent':'');
+  const cls = 'task st-'+esc(t.status)+(late?' overdue':'')+(urg?' urgent':'')+(fresh?' fresh':'');
   return '<article class="'+cls+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'">'+
     '<span class="task-top"><span class="task-title">'+esc(t.title)+'</span>'+ICON.chev+'</span>'+
     '<span class="tags">'+tags.join('')+'</span>'+
-    (last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(stripTok(last.text))+'</span>' : '')+
+    (fresh && !expanded ? freshLine(t) : '')+(last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(stripTok(last.text))+'</span>' : '')+
     '</button>'+
     '<div class="task-body"'+(expanded?'':' hidden')+'>'+'<div class="srcline"><span>מקור המידע:</span>'+srcTag(t, null, true)+'<span>· תאריך המידע: '+fmtD(t.createdAt)+'</span></div>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
@@ -748,7 +901,7 @@ function openForm(id){
 function setTab(k){
   st.tab = k;
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab===k)));
-  $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings';
+  $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings'; $('view-agenda').hidden = k!=='agenda';
   render();
 }
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => { if(b.dataset.tab==='tasks') st.stat=''; setTab(b.dataset.tab); window.scrollTo({top:0}); });

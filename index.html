@@ -279,6 +279,21 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 .ag-form .seg2 button{flex:1}
 .ag-form .seg2 button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
 
+/* גרסה 1.8: מבצעים חיצוניים */
+.tag.guest{background:var(--wait-soft);color:var(--wait)}
+.tag.noreport{background:var(--bad-soft);color:var(--bad)}
+.gins{background:var(--wait-soft);border-radius:10px;padding:8px 12px;margin:0 0 10px;font-size:14.5px}
+.gins b{color:var(--wait)}
+.gins .gmeta{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.tl .guestby{color:var(--wait);font-weight:700}
+.gw-modal{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.45);z-index:50;padding:16px}
+.gw-box{background:var(--surface);border-radius:16px;padding:20px;max-width:440px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.gw-box h3{font-size:18px;font-weight:800;color:var(--brand)}
+:root:not([data-theme="light"]) .gw-box h3{color:var(--ink)}
+.gw-box p{margin:8px 0 14px;font-size:15px}
+.gw-box .row2{display:flex;flex-wrap:wrap;gap:8px}
+.gw-box .row2 .btn{flex:1;text-decoration:none;text-align:center;display:inline-flex;justify-content:center;align-items:center}
+.gw-box .hint{font-size:12.5px;color:var(--muted);margin:10px 0 0}
 /* ── phone ── */
 @media (max-width:720px){
   .hero .wrap{padding-block:14px 58px}
@@ -324,7 +339,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.7 · 2.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.8 · 2.10.2026</summary><ul>
+        <li><b>1.8:</b> עובדים וגורמים חיצוניים: משימה יכולה להיות משויכת למבצע חיצוני (עובד, יועץ, קבלן) עם הנחיה; המבצע רואה באתר נפרד רק את המשימות שלו, את ההנחיה ואת העדכונים שאסף סימן כגלויים, ומדווח משם. באתר הוועד: "מבצע חיצוני" וההנחיה בכרטיס המשימה, קיבוץ "לפי משתתף" ("השולחן של"), תג "ללא דיווח N ימים" אחרי 14 יום, וכפתורי וואטסאפ ומייל למבצע שמזכירים קודם שהניהול מול העובדים נעשה דרך לימור.</li>
         <li><b>1.7:</b> לשונית "ישיבה קרובה": מועד הישיבה וסדר היום לפי נושאים; כל חבר ועד יכול להציע סעיף (משימה קיימת או נושא חדש) והוא נכנס לאחר אישור אסף. סימון "חדש" על כל משימה שהתעדכנה מאז הכניסה הקודמת שלך (עם המקור ומי עדכן), מונה בכל נושא, הדגשת העדכונים החדשים בכרטיס, מסנן "מה התחדש" עם בחירת מועד התחלה ומקור, סימון כנקרא בפתיחת הכרטיס ו"סמן הכול כנקרא".</li>
         <li><b>1.6:</b> לכל משימה ולכל עדכון מוצג מקור המידע (וואטסאפ, מייל, פרוטוקול ישיבה, אתר הוועד או לוח העריכה של אסף) ותאריך המידע עצמו.</li>
         <li><b>1.5:</b> קישור ישיר למשימה (במייל הדחיפות ובהודעות מאסף); הצעת איחוד משימות כפולות מטופס העדכון; סימון "נערך" על עדכון שאסף תיקן; מספר הגרסה בראש העמוד.</li>
@@ -406,7 +422,7 @@ const fmtD = (iso) => { if(!iso) return ''; const [y,m,d] = String(iso).slice(0,
 let DATA = null, ME = null, CODE = '', PERMS = null, OWNERS = [], LIVE = {};
 // LIVE: רשימת הדחיפות המיידית מהסקריפט {taskId:{u:1|0,t,by}}; רשומה חדשה מזמן הבנייה גוברת על הנתונים המוצפנים
 const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'', cq:'', cowner:'all', group:'topic', open:{}, fresh:false, since:'login', sinceDate:'', newsrc:'all' };
-try { const g = localStorage.getItem('bhv-group'); if(g==='owner'||g==='topic') st.group = g; } catch(e){}
+try { const g = localStorage.getItem('bhv-group'); if(g==='owner'||g==='topic'||g==='participant') st.group = g; } catch(e){}
 
 async function lookupId(code){ return hex(await crypto.subtle.digest('SHA-256', enc.encode('bhv1:'+norm(code)))).slice(0,24); }
 async function fetchText(p){ const r = await fetch(p + '?t=' + Date.now(), {cache:'no-store'}); if(!r.ok) throw new Error('http'); return r.text(); }
@@ -615,6 +631,49 @@ function renderAgenda(){
   };
 }
 
+// ─── מבצעים חיצוניים (גרסה 1.8, החלטות אסף 1.10 ו-2.10.2026) ───
+// DATA.participants = [{id, name, role, org, phone, email, lastLoginAt, active}] (בלי קודים); במשימה t.participants = [{id, instruction, assignedAt, due}].
+// המבצע אינו רואה את האתר הזה; הוא רואה באתר המשתתפים רק את המשימות שלו, ההנחיה והעדכונים שסומנו גלויים. כאן: "השולחן של", ההנחיה, תג "ללא דיווח", וכפתורי תזכורת עם תזכורת שהניהול מול העובדים דרך לימור.
+const GUEST_NOREPORT_DAYS = 14;
+const participantById = (id) => (DATA.participants||[]).find(p => p.id === id) || null;
+const pNameOf = (id) => { const p = participantById(id); return p ? p.name : String(id); };
+const taskParts = (t) => Array.isArray(t.participants) ? t.participants.filter(x => x && x.id) : [];
+const partIds = (t) => taskParts(t).map(x => x.id);
+const isGuestUpd = (u, pid) => !!u && u.byKind === 'guest' && (!pid || u.byId === pid || (!u.byId && u.by === pNameOf(pid)));
+const daysSince = (iso) => iso ? (Date.now() - new Date(String(iso).length === 10 ? iso + 'T12:00:00Z' : iso).getTime()) / 864e5 : Infinity;
+function lastGuestReport(t, pid){ return (t.updates||[]).filter(u => isGuestUpd(u, pid)).sort((a,b) => updStamp(b).localeCompare(updStamp(a)))[0] || null; }
+function guestSilentDays(t, pid){ const a = taskParts(t).find(x => x.id === pid); const lr = lastGuestReport(t, pid); const from = lr ? updStamp(lr) : (a && a.assignedAt) || t.createdAt || ''; return from ? daysSince(from) : Infinity; }
+const guestOverdue = (t, pid) => t.status !== 'done' && guestSilentDays(t, pid) > GUEST_NOREPORT_DAYS;
+const partDue = (t, a) => (a && a.due) || t.due || null;
+const hasParticipants = () => DATA.tasks.some(t => t.status !== 'done' && partIds(t).length);
+function guestRemindText(ts, p){
+  const lines = ['היי ' + firstName(p) + ', תזכורת מוועד בית חורון:', ''];
+  ts.forEach(t => { const a = taskParts(t).find(x => x.id === p.id) || {}, d = partDue(t, a); lines.push((ts.length > 1 ? '• ' : '') + t.title + (d ? ' (עד ' + fmtD(d) + (d < todayISO() ? ', באיחור' : '') + ')' : '')); if(a.instruction) lines.push('  ' + a.instruction); });
+  lines.push('', 'אפשר לדווח על ההתקדמות באתר המשתתפים: ' + location.origin + location.pathname.replace(/[^\/]*$/, '') + 'worker.html', '', 'תודה, ' + (ME ? firstName(ME) : ''));
+  return lines.join('\n');
+}
+function guestRemindHtml(ts, p, compact){
+  if(!p || !ts.length || (!p.phone && !p.email)) return '';
+  const text = guestRemindText(ts, p), subj = 'ועד בית חורון: ' + (ts.length === 1 ? ts[0].title : ts.length + ' משימות'), n = firstName(p);
+  return '<div class="remind">'+(compact ? '' : '<span class="lbl">תזכורת למבצע החיצוני</span>')+
+    (p.phone ? '<a class="btn wa" href="https://wa.me/'+esc(p.phone)+'?text='+encodeURIComponent(text)+'" target="_blank" rel="noopener" data-gw="'+esc(p.id)+'" data-gt="'+esc(ts[0].id)+'">'+ICON_WA+'וואטסאפ ל'+esc(n)+'</a>' : '')+
+    (p.email ? '<a class="btn ml" href="mailto:'+esc(p.email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(text)+'" data-gw="'+esc(p.id)+'" data-gt="'+esc(ts[0].id)+'">'+ICON_MAIL+'מייל ל'+esc(n)+'</a>' : '')+
+    '<button type="button" class="btn" data-remcopy="'+esc(encodeURIComponent(text))+'">'+ICON_COPY+'העתק</button></div>';
+}
+// תזכורת לפני פנייה ישירה למבצע: הניהול מול העובדים דרך לימור. לימור פטורה; לאחרים מוצג חלון שאינו חוסם.
+function wireGuestWarn(root){
+  root.querySelectorAll('a[data-gw]').forEach(a => a.onclick = (e) => { e.stopPropagation(); if(ME && ME.id === 'm-limor') return; e.preventDefault();
+    const p = participantById(a.dataset.gw), t = DATA.tasks.find(x => x.id === a.dataset.gt), limor = personById('m-limor');
+    const toLimor = limor && limor.phone ? 'https://wa.me/' + limor.phone + '?text=' + encodeURIComponent('היי ' + firstName(limor) + ', לגבי המשימה "' + (t ? t.title : '') + '" שמבצע/ת ' + (p ? p.name : 'המבצע החיצוני') + ': אשמח שתבדקי מולו/ה את ההתקדמות ותעדכני. תודה, ' + (ME ? firstName(ME) : '')) : '';
+    const box = document.createElement('div'); box.className = 'gw-modal'; box.innerHTML = '<div class="gw-box" role="dialog" aria-modal="true"><h3>הניהול מול העובדים נעשה דרך לימור</h3><p>פנייה ישירה של חבר ועד לעובד עלולה לעקוף את המנכ"לית. אפשר לבקש מלימור לטפל, או להמשיך בכל זאת.</p><div class="row2">'+(toLimor ? '<a class="btn primary" id="gw-limor" href="'+esc(toLimor)+'" target="_blank" rel="noopener">פנה ללימור</a>' : '')+'<button type="button" class="btn" id="gw-go">המשך בכל זאת</button><button type="button" class="btn" id="gw-cancel">ביטול</button></div></div>';
+    document.body.appendChild(box);
+    const close = () => box.remove();
+    box.querySelector('#gw-cancel').onclick = close; box.onclick = (ev) => { if(ev.target === box) close(); };
+    box.querySelector('#gw-go').onclick = () => { close(); window.open(a.href, a.target || '_self'); };
+    const l = box.querySelector('#gw-limor'); if(l) l.onclick = () => setTimeout(close, 100);
+  });
+}
+
 // ─── reminders: WhatsApp (wa.me) and email (mailto) to the task owner, with the text prepared ───
 const ICON_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7L4 20z"/><path d="M9.5 9.5c.3 2 2.7 4.3 4.9 4.9l1.2-1.2 1.9.9-.5 1.7c-3.5.4-8.4-4.4-8-8l1.7-.5.9 1.9-1.2 1.2z"/></svg>';
 const ICON_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
@@ -639,6 +698,7 @@ function remindHtml(ts, p, compact){
 function wireRemind(root){
   root.querySelectorAll('[data-remcopy]').forEach(b => b.onclick = async (e) => { e.stopPropagation(); const txt = decodeURIComponent(b.dataset.remcopy);
     try { await navigator.clipboard.writeText(txt); b.lastChild.textContent = 'הועתק'; setTimeout(() => { b.lastChild.textContent = 'העתק'; }, 1800); } catch(err){ prompt('העתק את הנוסח:', txt); } });
+  wireGuestWarn(root);
 }
 const ICON_USER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>';
 const initial = (s) => { const w = String(s||'').replace(/["׳״']/g,'').trim(); return w ? w[0] : '?'; };
@@ -731,9 +791,11 @@ function render(){
   if($('mark-read')) $('mark-read').onclick = markAllRead;
   $('cnt-agenda').textContent = agendaItems().length || '';
   // grouping toggle
+  const hasP = hasParticipants(); if(st.group === 'participant' && !hasP) st.group = 'topic';
   $('group-chips').innerHTML = '<span class="lbl">קיבוץ:</span>' +
     '<button class="chip grp" data-group="topic" aria-pressed="'+(st.group==='topic')+'">לפי נושא</button>' +
-    '<button class="chip grp" data-group="owner" aria-pressed="'+(st.group==='owner')+'">לפי אחראי</button>';
+    '<button class="chip grp" data-group="owner" aria-pressed="'+(st.group==='owner')+'">לפי אחראי</button>' +
+    (hasP ? '<button class="chip grp" data-group="participant" aria-pressed="'+(st.group==='participant')+'">לפי משתתף (השולחן של)</button>' : '');
   $('group-chips').querySelectorAll('[data-group]').forEach(b => b.onclick = () => { st.group = b.dataset.group; try { localStorage.setItem('bhv-group', st.group); } catch(e){} render(); });
 
   // דחופות: קופסה בראש הרשימה, לחיצה מסננת רק אותן
@@ -765,12 +827,22 @@ function render(){
       let body = '';
       if(keys.length){
         keys.forEach(k => { const sl = leadsOf(((info.subs||{})[k]||{}).lead);
-          body += '<h3 class="sub-h">'+esc(k)+'<small>'+subs[k].length+'</small>'+(sl.length ? '<span class="sub-lead">'+(sl.length>1?'מובילים: ':'מוביל: ')+esc(sl.join(', '))+'</span>' : '')+'</h3><div class="grid">'+subs[k].map(taskHtml).join('')+'</div>'; });
-        if(subs['']) body += '<h3 class="sub-h">נושאים נוספים<small>'+subs[''].length+'</small></h3><div class="grid">'+subs[''].map(taskHtml).join('')+'</div>';
-      } else body = '<div class="grid">' + ts.map(taskHtml).join('') + '</div>';
+          body += '<h3 class="sub-h">'+esc(k)+'<small>'+subs[k].length+'</small>'+(sl.length ? '<span class="sub-lead">'+(sl.length>1?'מובילים: ':'מוביל: ')+esc(sl.join(', '))+'</span>' : '')+'</h3><div class="grid">'+subs[k].map(t => taskHtml(t)).join('')+'</div>'; });
+        if(subs['']) body += '<h3 class="sub-h">נושאים נוספים<small>'+subs[''].length+'</small></h3><div class="grid">'+subs[''].map(t => taskHtml(t)).join('')+'</div>';
+      } else body = '<div class="grid">' + ts.map(t => taskHtml(t)).join('') + '</div>';
       const nNew = ts.filter(isFresh).length;
       return '<div class="group topic" style="--oc:'+g.tp.color+'"><div class="group-h"><span class="av" style="--oc:'+g.tp.color+'">'+esc(initial(g.tp.name))+'</span><h2>'+esc(g.tp.name)+'</h2><small>'+ts.length+' פתוחות</small>'+(nNew ? '<span class="nnew">'+nNew+' חדשים</span>' : '')+'</div>'+card+body+'</div>';
     }).join('');
+  } else if(st.group === 'participant'){
+    // "השולחן של <שם>" (גרסה 1.8): קבוצה לכל מבצע חיצוני עם המשימות שלו; משימה בלי מבצע חיצוני אינה מוצגת כאן
+    list.forEach(t => partIds(t).forEach(pid => (groups[pid] = groups[pid] || []).push(t)));
+    const pord = Object.keys(groups).sort((a,b) => pNameOf(a).localeCompare(pNameOf(b),'he'));
+    html = pord.map(pid => {
+      const p = participantById(pid) || { id: pid, name: pid }, ts = groups[pid].sort((a,b) => (guestOverdue(b,pid)-guestOverdue(a,pid)) || byDue(a,b));
+      const nSil = ts.filter(t => guestOverdue(t, pid)).length, rem = guestRemindHtml(ts, p, true);
+      const label = p.name + (p.role ? ' · ' + p.role : '') + (p.org ? ' (' + p.org + ')' : '');
+      return '<div class="group"><div class="group-h"><span class="av" style="--oc:var(--wait)">'+esc(initial(p.name))+'</span><h2>השולחן של '+esc(label)+'</h2><small>'+ts.length+' משימות</small>'+(nSil ? '<span class="tag noreport">'+nSil+' ללא דיווח</span>' : '')+rem+'</div><div class="grid">' + ts.map(t => taskHtml(t, pid)).join('') + '</div></div>';
+    }).join('') || '<div class="empty">אין משימות פתוחות עם מבצע חיצוני שמתאימות לסינון.</div>';
   } else {
     // משימה משותפת מופיעה בקבוצה של כל אחד מהאחראים
     list.forEach(t => ownerIds(t).forEach(id => (groups[id] = groups[id] || []).push(t)));
@@ -779,7 +851,7 @@ function render(){
       const ts = groups[o].sort(byDue);
       const p = personById(o), rem = p ? remindHtml(ts.filter(t => !approvalsOf(t)[o]), p, true) : '';
       const nNew = ts.filter(isFresh).length;
-      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(nameOf(o)))+'</span><h2>'+esc(nameOf(o))+'</h2><small>'+ts.length+' משימות</small>'+(nNew ? '<span class="nnew">'+nNew+' חדשים</span>' : '')+rem+'</div><div class="grid">' + ts.map(taskHtml).join('') + '</div></div>';
+      return '<div class="group"><div class="group-h"><span class="av" style="--oc:'+ownerColor(o)+'">'+esc(initial(nameOf(o)))+'</span><h2>'+esc(nameOf(o))+'</h2><small>'+ts.length+' משימות</small>'+(nNew ? '<span class="nnew">'+nNew+' חדשים</span>' : '')+rem+'</div><div class="grid">' + ts.map(t => taskHtml(t)).join('') + '</div></div>';
     }).join('');
   }
   $('groups').innerHTML = html || '<div class="empty">אין משימות פתוחות שמתאימות לסינון.</div>';
@@ -792,7 +864,7 @@ function render(){
   const cl = closed.filter(t => (st.cowner==='all' || (st.cowner==='__mine' ? isMine(t) : ownerIds(t).includes(st.cowner))) && (!cq || ((t.title||'')+' '+(t.details||'')+' '+(t.topic||'')).includes(cq)))
     .sort((a,b) => closedAt(b).localeCompare(closedAt(a)));
   const months = []; cl.forEach(t => { const d = closedAt(t); const key = d ? d.slice(0,7) : ''; let m = months[months.length-1]; if(!m || m.key!==key){ m = {key, items:[]}; months.push(m); } m.items.push(t); });
-  $('closed').innerHTML = months.length ? months.map(m => '<div class="month-block"><h3 class="month">'+(m.key ? MONTHS[+m.key.slice(5,7)-1]+' '+m.key.slice(0,4) : 'ללא תאריך סגירה')+' · '+m.items.length+'</h3><div class="grid">'+m.items.map(taskHtml).join('')+'</div></div>').join('')
+  $('closed').innerHTML = months.length ? months.map(m => '<div class="month-block"><h3 class="month">'+(m.key ? MONTHS[+m.key.slice(5,7)-1]+' '+m.key.slice(0,4) : 'ללא תאריך סגירה')+' · '+m.items.length+'</h3><div class="grid">'+m.items.map(t => taskHtml(t)).join('')+'</div></div>').join('')
     : '<div class="empty">'+(closed.length ? 'אין משימות סגורות שמתאימות לסינון.' : 'עדיין לא נסגרו משימות. משימה שתיסגר תופיע כאן, עם תאריך הסגירה.')+'</div>';
   wireTasks($('closed'));
 
@@ -815,9 +887,11 @@ function wireTasks(root){
   wireRemind(root);
 }
 
-function taskHtml(t){
+// desk (לא חובה): בקיבוץ "לפי משתתף", המזהה של המבצע שהשולחן שלו מוצג; ההנחיה שלו מודגשת בכרטיס
+function taskHtml(t, desk){
   const done = t.status === 'done', late = isOverdue(t);
   const last = (t.updates||[]).slice(-1)[0];
+  const parts = taskParts(t), silent = done ? [] : parts.map(x => x.id).filter(id => guestOverdue(t, id));
   const mine = (PERMS && PERMS.report) ? pendingFor(t.id) : [];
   const ids = ownerIds(t), apr = approvalsOf(t), nOk = ids.filter(id => apr[id]).length, iSent = mine.some(s => s.close);
   const tags = [], urg = !done && isUrgent(t), fresh = isFresh(t), fi = fresh ? freshInfo(t) : null;
@@ -832,6 +906,9 @@ function taskHtml(t){
   if(done) tags.push('<span class="tag">'+ICON.cal+'נסגרה '+fmtD(closedAt(t))+'</span>');
   else if(t.due) tags.push('<span class="tag '+(late?'late':soon(t)?'soon':'')+'">'+ICON.cal+(late?'באיחור · ':'יעד ')+fmtD(t.due)+'</span>');
   if(isMine(t)) tags.push('<span class="tag topic">'+ICON_USER+'באחריותי</span>');
+  // מבצע חיצוני (גרסה 1.8): שם המבצע, ותג "ללא דיווח N ימים" כשעברו 14 יום מהדיווח האחרון שלו או מהשיוך
+  if(parts.length && st.group !== 'participant') tags.push('<span class="tag guest" title="'+esc(parts.map(x => (x.instruction ? pNameOf(x.id) + ': ' + x.instruction : pNameOf(x.id))).join(' · '))+'">מבצע חיצוני: '+esc(parts.map(x => pNameOf(x.id)).join(', '))+'</span>');
+  if(silent.length) tags.push('<span class="tag noreport" title="'+esc(silent.map(pNameOf).join(', '))+'">ללא דיווח '+Math.floor(Math.min.apply(null, silent.map(id => guestSilentDays(t, id))))+' ימים</span>');
   const byTopic = !done && st.group==='topic';
   // אחראים: בקיבוץ לפי נושא כולם; בקיבוץ לפי אחראי רק כשהמשימה משותפת. ✓ למי שאישר שבוצעה
   if(!done && (byTopic || ids.length > 1)) ids.forEach(id => tags.push('<span class="tag own" style="--oc:'+ownerColor(id)+'"><i class="dot"></i>'+esc(firstName(personById(id)||{name:id}))+(apr[id]?' ✓':'')+'</span>'));
@@ -840,7 +917,10 @@ function taskHtml(t){
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
   if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');
   const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(stripTok(s.text))+(s.close?' · <b>ביקשת לסגור</b>':'')+(s.urg===1?' · <b>סימנת כדחופה</b>':s.urg===0?' · <b>הסרת את סימון הדחיפות</b>':'')+(s.merge?' · <b>הצעת לאחד עם: '+esc((DATA.tasks.find(x => x.id === s.merge)||{}).title || s.merge)+'</b>':'')+(String(s.text||'').startsWith(AGENDA_TOK)?' · <b>הצעת לסדר היום של הישיבה הקרובה</b>':'')+'</li>').join('');
-  const upd = (t.updates||[]).slice().reverse().map(u=>{ const fr = freshSet.has(updStamp(u) + '|' + u.text); return '<li'+(fr?' class="fresh"':'')+'><time>'+(fr?'<span class="fresh-tag">חדש · </span>':'')+fmtD(u.at)+(u.by?' · '+esc(u.by):'')+srcTag(t, u, false)+'</time>'+esc(stripTok(u.text))+(u.editedAt?' <span class="edited" title="העדכון תוקן בידי אסף">(נערך '+fmtD(u.editedAt)+')</span>':'')+'</li>'; }).join('');
+  const upd = (t.updates||[]).slice().reverse().map(u=>{ const fr = freshSet.has(updStamp(u) + '|' + u.text); return '<li'+(fr?' class="fresh"':'')+'><time>'+(fr?'<span class="fresh-tag">חדש · </span>':'')+fmtD(u.at)+(u.by?' · '+(u.byKind==='guest'?'<span class="guestby">'+esc(u.by)+' (מבצע חיצוני)</span>':esc(u.by)):'')+srcTag(t, u, false)+'</time>'+esc(stripTok(u.text))+(u.editedAt?' <span class="edited" title="העדכון תוקן בידי אסף">(נערך '+fmtD(u.editedAt)+')</span>':'')+'</li>'; }).join('');
+  // ההנחיות למבצעים החיצוניים (גרסה 1.8); בשולחן של מבצע מוצגת ההנחיה שלו בלבד
+  const ginsHtml = parts.filter(a => !desk || a.id === desk).map(a => { const p = participantById(a.id), lr = lastGuestReport(t, a.id), d = partDue(t, a);
+    return '<div class="gins"><b>מבצע חיצוני: '+esc(p ? p.name + (p.role ? ' · ' + p.role : '') : a.id)+'</b>'+(a.instruction ? ' · ההנחיה: '+esc(a.instruction) : ' · <span style="color:var(--muted)">טרם נכתבה הנחיה</span>')+'<span class="gmeta">'+(d ? 'עד '+esc(fmtD(d))+' · ' : '')+(lr ? 'דיווח אחרון '+esc(fmtD(lr.at))+': '+esc(String(lr.text||'').slice(0,90)) : 'טרם דיווח'+(a.assignedAt ? ' (שויך '+esc(fmtD(a.assignedAt))+')' : ''))+'</span></div>'; }).join('');
   const expanded = !!st.open[t.id];
   const cls = 'task st-'+esc(t.status)+(late?' overdue':'')+(urg?' urgent':'')+(fresh?' fresh':'');
   return '<article class="'+cls+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'">'+
@@ -848,12 +928,13 @@ function taskHtml(t){
     '<span class="tags">'+tags.join('')+'</span>'+
     (fresh && !expanded ? freshLine(t) : '')+(last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(stripTok(last.text))+'</span>' : '')+
     '</button>'+
-    '<div class="task-body"'+(expanded?'':' hidden')+'>'+'<div class="srcline"><span>מקור המידע:</span>'+srcTag(t, null, true)+'<span>· תאריך המידע: '+fmtD(t.createdAt)+'</span></div>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+
+    '<div class="task-body"'+(expanded?'':' hidden')+'>'+'<div class="srcline"><span>מקור המידע:</span>'+srcTag(t, null, true)+'<span>· תאריך המידע: '+fmtD(t.createdAt)+'</span></div>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+ginsHtml+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
     (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
     (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);
       const h = who.map(id => remindHtml([t], personById(id), true)).join('');
       return h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h : ''; })() : '')+
+    (!done && parts.length ? parts.filter(a => !desk || a.id === desk).map(a => guestRemindHtml([t], participantById(a.id), false)).join('') : '')+
     '</div></article>';
 }
 

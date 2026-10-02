@@ -1,8 +1,10 @@
 # פרסום אוטומטי של בניית נתוני האתר (דאשבורד ועד בית חורון)
 # הריצות המתוזמנות דוחפות לענף build-* את keys.json ואת data.enc.txt, או את חלקיו
-# data.enc.part-NN.txt (פרוסות של 30,000 תווים, כי הקובץ המלא גדול מדי לקריאה אחת של push_files).
-# הפעולה מאחה את החלקים ל-data.enc.txt, מעתיקה רק את data.enc.txt ו-keys.json ל-main
-# (אף פעם לא index.html או קובץ אחר), סוגרת PR אם נפתח ומוחקת את הענף.
+# data.enc.part-NN.txt (פרוסות של 30,000 תווים, כי הקובץ המלא גדול מדי לקריאה אחת של push_files),
+# ומגרסה 1.8 גם את guestkeys.json ואת guests/<id>.enc.txt (חבילה מוצפנת לכל משתתף חיצוני).
+# הפעולה מאחה את החלקים ל-data.enc.txt, מעתיקה רק את קובצי הנתונים ל-main
+# (אף פעם לא index.html, worker.html או קובץ אחר), מוחקת מ-main קובצי משתתפים שאינם מופיעים עוד
+# ב-guestkeys.json (משתתף שהושבת או הוסר), סוגרת PR אם נפתח ומוחקת את הענף.
 name: publish-build
 on:
   push:
@@ -31,7 +33,7 @@ jobs:
           echo "changed files: $changed"
           for f in $changed; do
             case "$f" in
-              data.enc.txt|keys.json|data.enc.part-[0-9][0-9].txt) ;;
+              data.enc.txt|keys.json|data.enc.part-[0-9][0-9].txt|guestkeys.json|guests/*.enc.txt) ;;
               *) echo "הענף משנה קובץ שאינו קובץ נתונים ($f); לא מפורסם אוטומטית"; exit 1 ;;
             esac
           done
@@ -46,9 +48,24 @@ jobs:
             git checkout "origin/$BRANCH" -- data.enc.txt
           fi
           echo "data.enc.txt blob sha: $(git hash-object data.enc.txt), $(wc -c < data.enc.txt) bytes"
+          # קובצי המשתתפים (גרסה 1.8): guestkeys.json קובע אילו קבצים חיים; השאר נמחקים מ-main
+          if git cat-file -e "origin/$BRANCH:guestkeys.json" 2>/dev/null; then
+            git checkout "origin/$BRANCH" -- guestkeys.json
+            live=$(python3 -c "import json;d=json.load(open('guestkeys.json'));print('\n'.join(sorted(e.get('f','') for e in d.get('entries',{}).values() if e.get('f'))))")
+            mkdir -p guests
+            for f in guests/*.enc.txt; do
+              [ -e "$f" ] || continue
+              echo "$live" | grep -qx "$f" || { echo "removing stale $f"; git rm -q --ignore-unmatch "$f"; rm -f "$f"; }
+            done
+            for f in $live; do
+              case "$f" in guests/*.enc.txt) git checkout "origin/$BRANCH" -- "$f" ;; *) echo "guestkeys.json מפנה לקובץ לא צפוי ($f)"; exit 1 ;; esac
+            done
+            echo "guest files: $(echo "$live" | grep -c . || true)"
+          fi
           git config user.name "bh-vaad publish"
           git config user.email "noreply@github.com"
-          git add data.enc.txt keys.json
+          git add -A -- data.enc.txt keys.json
+          if [ -e guestkeys.json ]; then git add -A -- guestkeys.json; git add -A -- guests 2>/dev/null || true; fi
           if git diff --cached --quiet; then echo "אין שינוי מול main"; exit 0; fi
           git commit -m "פרסום בנייה מ-$BRANCH"
           git push origin HEAD:main

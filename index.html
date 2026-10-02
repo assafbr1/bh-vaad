@@ -524,6 +524,7 @@ function urgentBy(t){ const live = LIVE[t.id]; return (live && String(live.t||''
 // הבסיס: הכניסה הקודמת של הצופה כפי שנרשמה ביומן הכניסות ונכללה בבנייה (people[].lastLoginAt), ולכן זהה בטלפון ובמחשב.
 // "סמן הכול כנקרא" ופתיחת כרטיס נשמרים במכשיר (localStorage). לכל עדכון addedAt (מועד הקליטה); עדכון ישן בלי addedAt נמדד לפי at.
 const updStamp = (u) => u.addedAt || (u.at ? (String(u.at).length === 10 ? u.at + 'T12:00:00Z' : String(u.at)) : '');
+const lastActivity = (t) => { const u = (t.updates||[]).map(x => String(x.addedAt || x.at || '')).sort().pop() || ''; return [u, String(t.updatedAt||''), String(t.createdAt||'')].sort().pop() || ''; };
 const taskStamp = (t) => t.addedAt || (t.createdAt ? (String(t.createdAt).length === 10 ? t.createdAt + 'T12:00:00Z' : String(t.createdAt)) : '');
 const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
@@ -596,7 +597,8 @@ function renderAgenda(){
   const drawPick = (q) => { q = String(q||'').trim(); const box = $('ag-pick');
     if(mode === 'free'){ box.innerHTML = '<label class="l" for="ag-title">כותרת הסעיף</label><input id="ag-title" maxlength="200" placeholder="למשל: חניית אורחים ליד בית הכנסת">'; return; }
     if(pick){ const o = DATA.tasks.find(x => x.id === pick); box.innerHTML = '<div class="mg-sel">משימה: '+esc(o ? o.title : pick)+'<button type="button" id="ag-clr">החלף</button></div>'; $('ag-clr').onclick = () => { pick = null; drawPick(''); }; return; }
-    const ls = DATA.tasks.filter(x => x.status !== 'done' && !(x.agenda && x.agenda.status === 'approved') && (!q || ((x.title||'')+' '+(x.topic||'')+' '+(x.subtopic||'')).includes(q))).slice(0, 12);
+    // נושאים שעלו לאחרונה ראשונים (החלטת אסף 2.10.2026): לפי הפעילות האחרונה במשימה (עדכון, שינוי או יצירה)
+    const ls = DATA.tasks.filter(x => x.status !== 'done' && !(x.agenda && x.agenda.status === 'approved') && (!q || ((x.title||'')+' '+(x.topic||'')+' '+(x.subtopic||'')).includes(q))).sort((a,b) => lastActivity(b).localeCompare(lastActivity(a))).slice(0, 12);
     box.innerHTML = '<div class="mg-pick"><input id="ag-q" type="search" placeholder="חיפוש המשימה…" value="'+esc(q)+'">'+(ls.length ? ls.map(x => '<button type="button" class="opt" data-ag="'+esc(x.id)+'">'+esc(x.title)+(x.topic?' <span style="color:var(--muted)">· '+esc(x.topic)+'</span>':'')+'</button>').join('') : '<span class="hint">לא נמצאו משימות.</span>')+'</div>';
     const inp = $('ag-q'); inp.oninput = (e) => { const v = e.target.value; drawPick(v); const i2 = $('ag-q'); if(i2){ i2.focus(); i2.setSelectionRange(v.length, v.length); } };
     box.querySelectorAll('[data-ag]').forEach(b => b.onclick = () => { pick = b.dataset.ag; drawPick(''); }); };

@@ -294,6 +294,27 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 .gw-box .row2{display:flex;flex-wrap:wrap;gap:8px}
 .gw-box .row2 .btn{flex:1;text-decoration:none;text-align:center;display:inline-flex;justify-content:center;align-items:center}
 .gw-box .hint{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+/* גרסה 1.9: ניהול עובדים מהאתר */
+.gm-card{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px}
+.gm-card h3{font-size:17px;font-weight:800;color:var(--brand)}
+:root:not([data-theme="light"]) .gm-card h3{color:var(--ink)}
+.gm-row{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.gm-row:first-of-type{border-top:none}
+.gm-row .nm{font-weight:700;flex:1 1 180px}
+.gm-row .mt{color:var(--muted);font-size:13.5px;flex:1 1 200px}
+.gm-row .btn{padding:6px 10px;min-height:36px;font-size:14px}
+.gm-row.off{opacity:.6}
+.gm-pend{background:var(--pend-soft);color:var(--pend);border-radius:10px;padding:6px 12px;font-size:14px;font-weight:700;margin:6px 0}
+.gm-form{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.gm-form .l{font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+.gm-form input,.gm-form select,.gm-form textarea{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;width:100%;font-size:16px}
+.gm-form textarea{min-height:80px;resize:vertical}
+.gm-form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gm-form .row2{display:flex;gap:8px}
+.gm-form .row2 .btn{flex:1}
+.gm-form .hint{font-size:13px;color:var(--muted);margin:0}
+.gm-open{margin-top:10px;width:100%;background:var(--wait-soft);color:var(--wait);border:1px solid var(--wait);font-weight:700}
+@media (max-width:560px){.gm-form .two{grid-template-columns:1fr}}
 /* ── phone ── */
 @media (max-width:720px){
   .hero .wrap{padding-block:14px 58px}
@@ -339,7 +360,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.8 · 2.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.9 · 4.10.2026</summary><ul>
+        <li><b>1.9:</b> ניהול העובדים מאתר הוועד, למי שקיבל הרשאת "ניהול עובדים" (המנכ"לית): לשונית "עובדים" להוספת עובד, השבתה וקוד חדש; "משימה חדשה למבצע"; בכרטיס המשימה "ניהול מבצעים" לשיוך, לעריכת ההנחיה והמועד ולהסרה. הכל נכנס בעדכון הבא של האתר בלי אישור של אסף; קוד הכניסה של עובד חדש נשלח למנהלת במייל.</li>
         <li><b>1.8:</b> עובדים וגורמים חיצוניים: משימה יכולה להיות משויכת למבצע חיצוני (עובד, יועץ, קבלן) עם הנחיה; המבצע רואה באתר נפרד רק את המשימות שלו, את ההנחיה ואת העדכונים שאסף סימן כגלויים, ומדווח משם. באתר הוועד: "מבצע חיצוני" וההנחיה בכרטיס המשימה, קיבוץ "לפי משתתף" ("השולחן של"), תג "ללא דיווח N ימים" אחרי 14 יום, וכפתורי וואטסאפ ומייל למבצע שמזכירים קודם שהניהול מול העובדים נעשה דרך לימור.</li>
         <li><b>1.7:</b> לשונית "ישיבה קרובה": מועד הישיבה וסדר היום לפי נושאים; כל חבר ועד יכול להציע סעיף (משימה קיימת או נושא חדש) והוא נכנס לאחר אישור אסף. סימון "חדש" על כל משימה שהתעדכנה מאז הכניסה הקודמת שלך (עם המקור ומי עדכן), מונה בכל נושא, הדגשת העדכונים החדשים בכרטיס, מסנן "מה התחדש" עם בחירת מועד התחלה ומקור, סימון כנקרא בפתיחת הכרטיס ו"סמן הכול כנקרא".</li>
         <li><b>1.6:</b> לכל משימה ולכל עדכון מוצג מקור המידע (וואטסאפ, מייל, פרוטוקול ישיבה, אתר הוועד או לוח העריכה של אסף) ותאריך המידע עצמו.</li>
@@ -359,6 +381,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <button class="tab" role="tab" data-tab="tasks" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg><span>משימות פתוחות</span><span class="cnt" id="cnt-tasks"></span></button>
       <button class="tab" role="tab" data-tab="closed" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>נסגרו</span><span class="cnt" id="cnt-closed"></span></button>
       <button class="tab" role="tab" data-tab="agenda" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg><span>ישיבה קרובה</span><span class="cnt" id="cnt-agenda"></span></button>
+      <button class="tab" role="tab" data-tab="guests" aria-selected="false" id="tab-guests" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 11l2 2 4-4"/></svg><span>עובדים</span><span class="cnt" id="cnt-guests"></span></button>
       <button class="tab" role="tab" data-tab="meetings" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>ישיבות ועד</span></button>
     </nav>
 
@@ -382,6 +405,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div id="closed"></div>
     </section>
     <section id="view-agenda" hidden><div id="agenda"></div></section>
+    <section id="view-guests" hidden><div id="guests"></div></section>
     <section id="view-meetings" hidden><div id="meetings" class="grid"></div></section>
     <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה נעשית באישור אסף ברקוביץ.</footer>
   </div>
@@ -519,7 +543,7 @@ const URG_ON = '#דחוף ', URG_OFF = '#לא-דחוף ';
 // הצעת איחוד (גרסה 1.5): הטקסט מתחיל ב-'#איחוד <מזהה המשימה האחרת> '. הריצה יוצרת מזה הצעה בלוח העריכה; אסף מחליט.
 const MERGE_TOK = '#איחוד ';
 const mergeTarget = (text) => { const m = String(text||'').match(/^#איחוד\s+(\S+)\s*/); return m ? m[1] : null; };
-const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|לישיבה|איחוד\s+\S+)\s*/, '');
+const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|לישיבה|איחוד\s+\S+|עובד|שיוך|משימה)\s*/, '');
 // מקור ותאריך המידע (גרסה 1.6): לכל עדכון src ו-ref; עדכון ישן בלי src מוצג לפי מקור המשימה (תג מקווקו)
 const SRC_LABEL = { whatsapp:'וואטסאפ', mail:'מייל', protocol:'פרוטוקול ישיבה', site:'אתר הוועד', manual:'לוח העריכה (אסף)' };
 function srcOf(t, u){ if(u && u.src) return { type: u.src, ref: u.ref || '', guess: false }; if(u && u.by) return { type: u.by === 'אסף ברקוביץ' ? 'manual' : 'site', ref: '', guess: false }; return { type: (t && t.source) || 'manual', ref: (t && t.sourceRef) || '', guess: !!u }; }
@@ -674,6 +698,91 @@ function wireGuestWarn(root){
   });
 }
 
+// ─── ניהול עובדים מאתר הוועד (גרסה 1.9, החלטת אסף 4.10.2026) ───
+// למי שיש perms.guests === 'manage' (המנכ"לית). כל פעולה נשלחת בערוץ הדיווחים עם תו ו-JSON, בחתימה הרגילה, ונקלטת בריצה הבאה בלי אישור אסף:
+//   '#עובד {op:add|edit|off|on|code, id?, name, role, org, phone, email}' על המזהה 'guest';
+//   '#שיוך {op:set|remove, id, instruction, due}' על משימה קיימת;
+//   '#משימה {title, topic, due, details, participant, instruction}' על המזהה 'new' (נוצרת משימה חדשה עם המנהלת כאחראית).
+// קוד הכניסה של עובד חדש נוצר בריצה ונשלח למנהלת במייל (ולעובד אם יש לו מייל); הוא לעולם אינו נכנס לחבילת האתר.
+const GUEST_TOK = '#עובד ', ASSIGN_TOK = '#שיוך ', NEWTASK_TOK = '#משימה ';
+const GUEST_TASK = { id: 'guest', title: 'ניהול עובדים' }, NEW_TASK = { id: 'new', title: 'משימה חדשה' };
+const canManage = () => !!(PERMS && PERMS.guests === 'manage');
+const parseOp = (text, tok) => { const t = String(text||''); if(!t.startsWith(tok)) return null; try { return JSON.parse(t.slice(tok.length)); } catch(e){ return null; } };
+function pendOps(tok, taskId){ const gen = DATA.generatedAt || ''; return sentList().filter(s => s.t > gen && (!taskId || s.task === taskId) && String(s.text||'').startsWith(tok)).map(s => Object.assign({ _t: s.t, _task: s.task }, parseOp(s.text, tok) || {})); }
+async function sendOp(t, tok, payload){ return sendReport(t, tok + JSON.stringify(payload), 'open', false, null, null); }
+const activeGuests = () => (DATA.participants||[]).filter(p => p.active !== false);
+function pendLabel(s){
+  const a = parseOp(s.text, ASSIGN_TOK); if(a) return a.op === 'remove' ? 'ביקשת להסיר את ' + pNameOf(a.id) + ' מהמשימה' : 'שייכת את ' + pNameOf(a.id) + (a.instruction ? ' עם הנחיה: ' + a.instruction : '');
+  const g = parseOp(s.text, GUEST_TOK); if(g) return ({ add:'עובד חדש: ' + (g.name||''), edit:'עדכון פרטים: ' + (g.name||pNameOf(g.id)), off:'השבתה: ' + pNameOf(g.id), on:'הפעלה מחדש: ' + pNameOf(g.id), code:'קוד חדש ל' + pNameOf(g.id) })[g.op] || 'פעולה על עובד';
+  const n = parseOp(s.text, NEWTASK_TOK); if(n) return 'משימה חדשה: ' + (n.title||'') + (n.participant ? ' (למבצע ' + pNameOf(n.participant) + ')' : '');
+  return '';
+}
+function renderGuests(){
+  const tab = $('tab-guests'); if(!tab) return; tab.hidden = !canManage(); if(!canManage()){ if(st.tab === 'guests') st.tab = 'tasks'; return; }
+  const ps = (DATA.participants||[]).slice().sort((a,b) => (a.active===false)-(b.active===false) || String(a.name).localeCompare(String(b.name),'he'));
+  $('cnt-guests').textContent = ps.filter(p => p.active !== false).length || '';
+  const pend = pendOps(GUEST_TOK, 'guest'), pendNew = pendOps(NEWTASK_TOK, 'new');
+  let html = '<div class="gm-card"><h3>העובדים והגורמים החיצוניים</h3><p class="hint" style="margin:4px 0 10px;font-size:14px;color:var(--muted)">כל שינוי כאן נכנס בעדכון הבא של האתר (לילה וצהריים). קוד כניסה לעובד חדש יישלח אלייך במייל אחרי העדכון, ואת מעבירה אותו לעובד בוואטסאפ פרטי.</p>' +
+    (ps.length ? ps.map(p => { const mine = DATA.tasks.filter(t => t.status !== 'done' && partIds(t).includes(p.id)); const lr = mine.map(t => lastGuestReport(t, p.id)).filter(Boolean).sort((a,b) => updStamp(b).localeCompare(updStamp(a)))[0];
+      return '<div class="gm-row'+(p.active===false?' off':'')+'"><span class="nm">'+esc(p.name)+(p.role?' <span style="font-weight:400;color:var(--muted)">· '+esc(p.role)+'</span>':'')+(p.active===false?' <span class="tag">מושבת</span>':'')+'</span><span class="mt">'+(p.phone?esc(p.phone.replace(/^972/,'0'))+' · ':'')+mine.length+' משימות פתוחות'+(lr?' · דיווח אחרון '+esc(fmtD(lr.at)):' · טרם דיווח')+(p.lastLoginAt?' · נכנס '+esc(fmtD(p.lastLoginAt)):' · טרם נכנס לאתר')+'</span>'+
+        '<button type="button" class="btn" data-gedit="'+esc(p.id)+'">עריכה</button>'+(p.active===false?'<button type="button" class="btn" data-gon="'+esc(p.id)+'">הפעל מחדש</button>':'<button type="button" class="btn" data-gcode="'+esc(p.id)+'">קוד חדש</button><button type="button" class="btn" data-goff="'+esc(p.id)+'">השבת</button>')+'</div>'; }).join('') : '<p class="hint" style="font-size:15px">עדיין אין עובדים. הוסיפי את הראשון בטופס שלמטה.</p>') +
+    pend.map(o => '<div class="gm-pend">נשלח, ייכנס בעדכון הבא: '+esc(pendLabel({text: GUEST_TOK + JSON.stringify(o)}))+'</div>').join('') +
+    '<button type="button" class="btn gm-open" id="gm-addbtn">+ עובד חדש</button><div id="gm-addbox"></div></div>';
+  html += '<div class="gm-card"><h3>משימה חדשה לעובד</h3><p class="hint" style="margin:4px 0 6px;font-size:14px;color:var(--muted)">המשימה נפתחת על שמך בוועד, והעובד רואה את הכותרת, המועד וההנחיה.</p>' + pendNew.map(o => '<div class="gm-pend">נשלח, ייכנס בעדכון הבא: '+esc(pendLabel({text: NEWTASK_TOK + JSON.stringify(o)}))+'</div>').join('') + '<button type="button" class="btn gm-open" id="gm-newbtn">+ משימה חדשה לעובד</button><div id="gm-newbox"></div></div>';
+  $('guests').innerHTML = html;
+  const root = $('guests');
+  const drawAdd = (p) => { const box = $('gm-addbox'); const v = (k) => esc((p && p[k]) || '');
+    box.innerHTML = '<form class="gm-form" id="gm-addf"><div class="two"><div><label class="l" for="ga-name">שם מלא</label><input id="ga-name" value="'+v('name')+'" required></div><div><label class="l" for="ga-role">תפקיד</label><input id="ga-role" value="'+v('role')+'" placeholder="למשל: אב בית, גנן, קבלן"></div></div>'+
+      '<div class="two"><div><label class="l" for="ga-phone">טלפון נייד (לוואטסאפ)</label><input id="ga-phone" dir="ltr" value="'+esc(p && p.phone ? p.phone.replace(/^972/,'0') : '')+'" placeholder="05X-XXXXXXX"></div><div><label class="l" for="ga-email">מייל (לא חובה)</label><input id="ga-email" dir="ltr" value="'+v('email')+'"></div></div>'+
+      '<div><label class="l" for="ga-org">גוף או מעסיק (לא חובה)</label><input id="ga-org" value="'+v('org')+'"></div>'+
+      '<p class="hint">'+(p ? 'העדכון ייכנס בעדכון הבא של האתר.' : 'אחרי העדכון הבא של האתר תקבלי במייל את קוד הכניסה שלו, ותעבירי לו אותו עם הקישור לאתר המשתתפים.')+'</p>'+
+      '<div class="row2"><button type="button" class="btn" id="ga-cancel">ביטול</button><button type="submit" class="btn primary" id="ga-send">'+(p ? 'שמירת השינויים' : 'הוספת העובד')+'</button></div><div id="ga-msg"></div></form>';
+    $('ga-cancel').onclick = () => { box.innerHTML = ''; };
+    $('ga-name').focus();
+    $('gm-addf').onsubmit = async (ev) => { ev.preventDefault(); const name = $('ga-name').value.trim().replace(/\s+/g,' '); if(!name){ $('ga-name').focus(); return; }
+      let phone = $('ga-phone').value.replace(/\D/g,''); if(phone.startsWith('00')) phone = phone.slice(2); if(phone.startsWith('0')) phone = '972' + phone.slice(1);
+      const payload = { op: p ? 'edit' : 'add', name, role: $('ga-role').value.trim(), org: $('ga-org').value.trim(), phone, email: $('ga-email').value.trim() }; if(p) payload.id = p.id;
+      $('ga-send').disabled = true; $('ga-send').textContent = 'שולח…';
+      const ok = await sendOp(GUEST_TASK, GUEST_TOK, payload);
+      if(ok){ render(); setTab('guests'); } else { $('ga-send').disabled = false; $('ga-send').textContent = p ? 'שמירת השינויים' : 'הוספת העובד'; $('ga-msg').innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } }; };
+  $('gm-addbtn').onclick = () => drawAdd(null);
+  root.querySelectorAll('[data-gedit]').forEach(b => b.onclick = () => { drawAdd(participantById(b.dataset.gedit)); $('gm-addbox').scrollIntoView({ block: 'nearest' }); });
+  const simple = (op, id, msg) => async () => { if(!confirm(msg)) return; const ok = await sendOp(GUEST_TASK, GUEST_TOK, { op, id }); if(ok){ render(); setTab('guests'); } else alert('השליחה נכשלה. בדקי את החיבור ונסי שוב.'); };
+  root.querySelectorAll('[data-goff]').forEach(b => b.onclick = simple('off', b.dataset.goff, 'להשבית את ' + pNameOf(b.dataset.goff) + '? הקוד שלו יפסיק לעבוד בעדכון הבא, והמשימות שלו נשארות.'));
+  root.querySelectorAll('[data-gon]').forEach(b => b.onclick = simple('on', b.dataset.gon, 'להפעיל מחדש את ' + pNameOf(b.dataset.gon) + '? הקוד הקודם יחזור לעבוד בעדכון הבא.'));
+  root.querySelectorAll('[data-gcode]').forEach(b => b.onclick = simple('code', b.dataset.gcode, 'להחליף את הקוד של ' + pNameOf(b.dataset.gcode) + '? הקוד הנוכחי יפסיק לעבוד בעדכון הבא, והקוד החדש יישלח אלייך במייל.'));
+  $('gm-newbtn').onclick = () => { const box = $('gm-newbox'); const gs = activeGuests();
+    box.innerHTML = '<form class="gm-form" id="gm-newf"><div><label class="l" for="gn-title">מה המשימה (כותרת קצרה)</label><input id="gn-title" required maxlength="200"></div>'+
+      '<div class="two"><div><label class="l" for="gn-p">מי מבצע</label><select id="gn-p"><option value="">בלי מבצע חיצוני (בינתיים)</option>'+gs.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+'</select></div><div><label class="l" for="gn-due">עד מתי</label><input id="gn-due" type="date"></div></div>'+
+      '<div class="two"><div><label class="l" for="gn-topic">נושא</label><select id="gn-topic">'+TOPICS.map(tp => '<option>'+esc(tp.name)+'</option>').join('')+'<option>נושאים נוספים</option></select></div><div></div></div>'+
+      '<div><label class="l" for="gn-ins">ההנחיה לעובד (זה מה שהוא רואה)</label><textarea id="gn-ins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea></div>'+
+      '<div><label class="l" for="gn-det">הערה פנימית לוועד (לא חובה, העובד לא רואה)</label><textarea id="gn-det" maxlength="1000" style="min-height:56px"></textarea></div>'+
+      '<div class="row2"><button type="button" class="btn" id="gn-cancel">ביטול</button><button type="submit" class="btn primary" id="gn-send">יצירת המשימה</button></div><div id="gn-msg"></div></form>';
+    $('gn-cancel').onclick = () => { box.innerHTML = ''; }; $('gn-title').focus();
+    $('gm-newf').onsubmit = async (ev) => { ev.preventDefault(); const title = $('gn-title').value.trim().replace(/\s+/g,' '); if(!title){ $('gn-title').focus(); return; }
+      const payload = { title, topic: $('gn-topic').value, due: $('gn-due').value || '', details: $('gn-det').value.trim(), participant: $('gn-p').value || '', instruction: $('gn-ins').value.trim() };
+      $('gn-send').disabled = true; $('gn-send').textContent = 'שולח…';
+      const ok = await sendOp(NEW_TASK, NEWTASK_TOK, payload);
+      if(ok){ render(); setTab('guests'); } else { $('gn-send').disabled = false; $('gn-send').textContent = 'יצירת המשימה'; $('gn-msg').innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } }; };
+}
+// ניהול המבצעים של משימה אחת (למנהלת): שיוך, עריכת הנחיה ומועד, הסרה
+function openGuestManage(id){
+  const t = DATA.tasks.find(x => x.id === id); const box = $('gm-'+id); if(!t || !box) return;
+  const parts = taskParts(t), gs = activeGuests(), free = gs.filter(p => !parts.some(a => a.id === p.id));
+  const fid = 'gm-' + id.replace(/[^a-zA-Z0-9_-]/g,'');
+  box.innerHTML = '<div class="gm-form">'+(parts.length ? parts.map((a,i) => { const p = participantById(a.id); return '<div><b>'+esc(p ? p.name : a.id)+'</b>'+(p && p.role ? ' <span style="color:var(--muted)">· '+esc(p.role)+'</span>' : '')+
+      '<label class="l" for="'+fid+'-ins'+i+'" style="margin-top:6px">ההנחיה</label><textarea id="'+fid+'-ins'+i+'" maxlength="1000">'+esc(a.instruction||'')+'</textarea>'+
+      '<div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-due'+i+'">עד מתי</label><input id="'+fid+'-due'+i+'" type="date" value="'+esc(a.due||'')+'"></div><div style="display:flex;gap:6px;align-items:flex-end"><button type="button" class="btn primary" data-gsave="'+i+'" style="flex:1">שמירה</button><button type="button" class="btn" data-grm="'+i+'">הסרה</button></div></div></div>'; }).join('') : '<p class="hint" style="font-size:15px">למשימה הזו עדיין אין מבצע חיצוני.</p>')+
+    (free.length ? '<div style="border-top:1px solid var(--line);padding-top:10px"><label class="l" for="'+fid+'-sel">לשייך מבצע</label><select id="'+fid+'-sel"><option value="">בחרי עובד…</option>'+free.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+'</select>'+
+      '<label class="l" for="'+fid+'-nins" style="margin-top:6px">ההנחיה לעובד</label><textarea id="'+fid+'-nins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea><div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-ndue">עד מתי (ריק: המועד של המשימה)</label><input id="'+fid+'-ndue" type="date"></div><div style="display:flex;align-items:flex-end"><button type="button" class="btn primary" id="'+fid+'-add" style="flex:1">שיוך</button></div></div></div>' : (gs.length ? '' : '<p class="hint">אין עובדים פעילים. מוסיפים בלשונית "עובדים".</p>'))+
+    '<p class="hint">השינויים נכנסים בעדכון הבא של האתר.</p><div class="row2"><button type="button" class="btn" id="'+fid+'-close">סגירה</button></div><div id="'+fid+'-msg"></div></div>';
+  const done = (ok) => { if(ok){ st.open[id] = true; render(); const b = $('gm-'+id); if(b) b.innerHTML = '<div class="rep-msg" role="status">נשלח. ייכנס בעדכון הבא של האתר.</div>'; } else { const m = $(fid+'-msg'); if(m) m.innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } };
+  box.querySelectorAll('[data-gsave]').forEach(b => b.onclick = async () => { const i = +b.dataset.gsave, a = parts[i]; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: a.id, instruction: $(fid+'-ins'+i).value.trim(), due: $(fid+'-due'+i).value || '' })); });
+  box.querySelectorAll('[data-grm]').forEach(b => b.onclick = async () => { const a = parts[+b.dataset.grm]; if(!confirm('להסיר את ' + pNameOf(a.id) + ' מהמשימה?')) return; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'remove', id: a.id })); });
+  const addB = $(fid+'-add'); if(addB) addB.onclick = async () => { const pid = $(fid+'-sel').value; if(!pid){ $(fid+'-sel').focus(); return; } addB.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: pid, instruction: $(fid+'-nins').value.trim(), due: $(fid+'-ndue').value || '' })); };
+  $(fid+'-close').onclick = () => render();
+}
+
 // ─── reminders: WhatsApp (wa.me) and email (mailto) to the task owner, with the text prepared ───
 const ICON_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7L4 20z"/><path d="M9.5 9.5c.3 2 2.7 4.3 4.9 4.9l1.2-1.2 1.9.9-.5 1.7c-3.5.4-8.4-4.4-8-8l1.7-.5.9 1.9-1.2 1.2z"/></svg>';
 const ICON_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
@@ -711,7 +820,7 @@ function start(){
   // OWNERS: מזהי האחראים שמופיעים במשימות; לימור ראשונה, השאר לפי שם
   OWNERS = Array.from(new Set([].concat.apply([], DATA.tasks.map(ownerIds))));
   OWNERS.sort((a,b) => (a==='m-limor'?-1:b==='m-limor'?1:0) || nameOf(a).localeCompare(nameOf(b),'he'));
-  try { const h = location.hash.slice(1); if(['tasks','closed','meetings','agenda'].includes(h)) st.tab = h; } catch(e){}
+  try { const h = location.hash.slice(1); if(['tasks','closed','meetings','agenda','guests'].includes(h)) st.tab = h; } catch(e){}
   setTab(st.tab);
   openFromHash(); window.addEventListener('hashchange', openFromHash);
 }
@@ -868,7 +977,7 @@ function render(){
     : '<div class="empty">'+(closed.length ? 'אין משימות סגורות שמתאימות לסינון.' : 'עדיין לא נסגרו משימות. משימה שתיסגר תופיע כאן, עם תאריך הסגירה.')+'</div>';
   wireTasks($('closed'));
 
-  renderAgenda();
+  renderAgenda(); renderGuests();
   // meetings
   const ms = (DATA.meetings||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   $('meetings').innerHTML = ms.length ? ms.map(m => {
@@ -884,6 +993,7 @@ function render(){
 function wireTasks(root){
   root.querySelectorAll('.task-head').forEach(b => b.onclick = () => { const id = b.dataset.id; st.open[id] = !st.open[id]; const body = b.nextElementSibling; body.hidden = !st.open[id]; b.setAttribute('aria-expanded', String(!!st.open[id])); if(st.open[id]){ const t = DATA.tasks.find(x => x.id === id); if(t && isFresh(t)){ markRead(t); if(!st.fresh) render(); } } });
   root.querySelectorAll('[data-rep]').forEach(b => b.onclick = () => openForm(b.dataset.rep));
+  root.querySelectorAll('[data-gm]').forEach(b => b.onclick = () => openGuestManage(b.dataset.gm));
   wireRemind(root);
 }
 
@@ -892,7 +1002,7 @@ function taskHtml(t, desk){
   const done = t.status === 'done', late = isOverdue(t);
   const last = (t.updates||[]).slice(-1)[0];
   const parts = taskParts(t), silent = done ? [] : parts.map(x => x.id).filter(id => guestOverdue(t, id));
-  const mine = (PERMS && PERMS.report) ? pendingFor(t.id) : [];
+  const mine = (PERMS && (PERMS.report || PERMS.guests)) ? pendingFor(t.id) : [];
   const ids = ownerIds(t), apr = approvalsOf(t), nOk = ids.filter(id => apr[id]).length, iSent = mine.some(s => s.close);
   const tags = [], urg = !done && isUrgent(t), fresh = isFresh(t), fi = fresh ? freshInfo(t) : null;
   const freshSet = new Set(fi ? fi.items.filter(u => !u._created).map(u => updStamp(u) + '|' + u.text) : []);
@@ -916,7 +1026,7 @@ function taskHtml(t, desk){
   if(t.subtopic && !byTopic) tags.push('<span class="tag sub">'+esc(t.subtopic)+'</span>');
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
   if(done && st.tab==='closed') tags.push('<span class="tag">'+esc(ownerGroup(t))+'</span>');
-  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+esc(stripTok(s.text))+(s.close?' · <b>ביקשת לסגור</b>':'')+(s.urg===1?' · <b>סימנת כדחופה</b>':s.urg===0?' · <b>הסרת את סימון הדחיפות</b>':'')+(s.merge?' · <b>הצעת לאחד עם: '+esc((DATA.tasks.find(x => x.id === s.merge)||{}).title || s.merge)+'</b>':'')+(String(s.text||'').startsWith(AGENDA_TOK)?' · <b>הצעת לסדר היום של הישיבה הקרובה</b>':'')+'</li>').join('');
+  const pend = mine.slice().reverse().map(s => '<li class="mine"><time>'+fmtD(s.t)+' · נשלח, יופיע באתר בעדכון הבא</time>'+(pendLabel(s) ? '<b>'+esc(pendLabel(s))+'</b>' : esc(stripTok(s.text)))+(s.close?' · <b>ביקשת לסגור</b>':'')+(s.urg===1?' · <b>סימנת כדחופה</b>':s.urg===0?' · <b>הסרת את סימון הדחיפות</b>':'')+(s.merge?' · <b>הצעת לאחד עם: '+esc((DATA.tasks.find(x => x.id === s.merge)||{}).title || s.merge)+'</b>':'')+(String(s.text||'').startsWith(AGENDA_TOK)?' · <b>הצעת לסדר היום של הישיבה הקרובה</b>':'')+'</li>').join('');
   const upd = (t.updates||[]).slice().reverse().map(u=>{ const fr = freshSet.has(updStamp(u) + '|' + u.text); return '<li'+(fr?' class="fresh"':'')+'><time>'+(fr?'<span class="fresh-tag">חדש · </span>':'')+fmtD(u.at)+(u.by?' · '+(u.byKind==='guest'?'<span class="guestby">'+esc(u.by)+' (מבצע חיצוני)</span>':esc(u.by)):'')+srcTag(t, u, false)+'</time>'+esc(stripTok(u.text))+(u.editedAt?' <span class="edited" title="העדכון תוקן בידי אסף">(נערך '+fmtD(u.editedAt)+')</span>':'')+'</li>'; }).join('');
   // ההנחיות למבצעים החיצוניים (גרסה 1.8); בשולחן של מבצע מוצגת ההנחיה שלו בלבד
   const ginsHtml = parts.filter(a => !desk || a.id === desk).map(a => { const p = participantById(a.id), lr = lastGuestReport(t, a.id), d = partDue(t, a);
@@ -931,6 +1041,7 @@ function taskHtml(t, desk){
     '<div class="task-body"'+(expanded?'':' hidden')+'>'+'<div class="srcline"><span>מקור המידע:</span>'+srcTag(t, null, true)+'<span>· תאריך המידע: '+fmtD(t.createdAt)+'</span></div>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+ginsHtml+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
     (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
+    (!done && canManage() ? '<div id="gm-'+esc(t.id)+'"><button class="btn gm-open" data-gm="'+esc(t.id)+'">'+(parts.length ? 'ניהול המבצעים החיצוניים' : 'לשייך מבצע חיצוני')+'</button></div>' : '')+
     (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);
       const h = who.map(id => remindHtml([t], personById(id), true)).join('');
       return h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h : ''; })() : '')+
@@ -982,9 +1093,10 @@ function openForm(id){
 }
 
 function setTab(k){
+  if(k === 'guests' && !canManage()) k = 'tasks';
   st.tab = k;
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab===k)));
-  $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings'; $('view-agenda').hidden = k!=='agenda';
+  $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings'; $('view-agenda').hidden = k!=='agenda'; $('view-guests').hidden = k!=='guests';
   render();
 }
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => { if(b.dataset.tab==='tasks') st.stat=''; setTab(b.dataset.tab); window.scrollTo({top:0}); });

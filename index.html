@@ -294,6 +294,25 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 .gw-box .row2{display:flex;flex-wrap:wrap;gap:8px}
 .gw-box .row2 .btn{flex:1;text-decoration:none;text-align:center;display:inline-flex;justify-content:center;align-items:center}
 .gw-box .hint{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+/* גרסה 1.10: שדות תאריך יום.חודש.שנה, בחירת ישיבה, קבוצת הוועד */
+.dfield{display:flex;align-items:stretch;width:100%}
+.dfield .dtext{flex:1 1 auto;min-width:0}
+.dfield .dpick{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 46px;width:46px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-inline-start:6px;cursor:pointer;font-size:18px;overflow:hidden}
+.dfield .dpick input{position:absolute;inset:0;width:100%!important;height:100%;opacity:0;cursor:pointer;border:0!important;padding:0!important;margin:0;background:transparent!important;min-height:0!important}
+.dfield .dpick input::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:auto;height:auto;margin:0;padding:0;cursor:pointer;opacity:0}
+.dfield.bad .dtext{border-color:var(--bad)!important;background:var(--bad-soft)!important}
+.dfield.inline{display:inline-flex;width:auto;vertical-align:middle}.dfield.inline .dtext{width:130px;flex:0 0 130px}
+.freshrow .dtext{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;min-height:44px}
+.ag-pms{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.ag-pms .btn{display:inline-flex;align-items:center;gap:8px}
+.ag-pms .btn small{background:rgba(0,0,0,.08);border-radius:999px;padding:0 8px;font-size:12.5px}
+.ag-form select{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;width:100%;font-size:16px;min-height:44px}
+.card-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.card-acts .btn{flex:1 1 160px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.card-acts .btn svg{width:18px;height:18px}
+.wg-text{width:100%;min-height:150px;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:16px;resize:vertical;color:var(--ink)}
+.hero-acts{display:flex;gap:8px;flex-wrap:wrap}
+.gw-box .row2 .btn svg{width:18px;height:18px;margin-inline-end:6px}
 /* גרסה 1.9: ניהול עובדים מהאתר */
 .gm-card{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px}
 .gm-card h3{font-size:17px;font-weight:800;color:var(--brand)}
@@ -360,7 +379,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.9 · 4.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.10 · 7.10.2026</summary><ul>
+        <li><b>1.10:</b> סדר יום לכל ישיבה מתוכננת: הלשונית "סדר יום" מציגה את הישיבה הקרובה, ואם נקבעו כמה ישיבות, בוחרים ביניהן; בהצעת סעיף בוחרים לאיזו ישיבה, ובכרטיס כל משימה פתוחה יש כפתור "להציע לסדר היום". שליחה לקבוצת הוועד בוואטסאפ: כפתור בראש העמוד להודעה חופשית, ובכרטיס המשימה נוסח מוכן עם קישור ישיר למשימה. שדות התאריך מוצגים ומוזנים בכתיב יום.חודש.שנה.</li>
         <li><b>1.9:</b> ניהול העובדים מאתר הוועד, למי שקיבל הרשאת "ניהול עובדים" (המנכ"לית): לשונית "עובדים" להוספת עובד, השבתה וקוד חדש; "משימה חדשה למבצע"; בכרטיס המשימה "ניהול מבצעים" לשיוך, לעריכת ההנחיה והמועד ולהסרה. הכל נכנס בעדכון הבא של האתר בלי אישור של אסף; קוד הכניסה של עובד חדש נשלח למנהלת במייל.</li>
         <li><b>1.8:</b> עובדים וגורמים חיצוניים: משימה יכולה להיות משויכת למבצע חיצוני (עובד, יועץ, קבלן) עם הנחיה; המבצע רואה באתר נפרד רק את המשימות שלו, את ההנחיה ואת העדכונים שאסף סימן כגלויים, ומדווח משם. באתר הוועד: "מבצע חיצוני" וההנחיה בכרטיס המשימה, קיבוץ "לפי משתתף" ("השולחן של"), תג "ללא דיווח N ימים" אחרי 14 יום, וכפתורי וואטסאפ ומייל למבצע שמזכירים קודם שהניהול מול העובדים נעשה דרך לימור.</li>
         <li><b>1.7:</b> לשונית "ישיבה קרובה": מועד הישיבה וסדר היום לפי נושאים; כל חבר ועד יכול להציע סעיף (משימה קיימת או נושא חדש) והוא נכנס לאחר אישור אסף. סימון "חדש" על כל משימה שהתעדכנה מאז הכניסה הקודמת שלך (עם המקור ומי עדכן), מונה בכל נושא, הדגשת העדכונים החדשים בכרטיס, מסנן "מה התחדש" עם בחירת מועד התחלה ומקור, סימון כנקרא בפתיחת הכרטיס ו"סמן הכול כנקרא".</li>
@@ -372,7 +392,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
         <li><b>1.0:</b> תזכורות בוואטסאפ ובמייל לאחראים; כמה אחראים למשימה, וכל אחראי מאשר בנפרד שהמשימה בוצעה.</li>
         </ul></details>
       </div>
-      <button class="logout" id="logout" type="button">יציאה</button>
+      <div class="hero-acts"><button class="logout" id="wa-group" type="button" title="הודעה לקבוצת הוועד בוואטסאפ">💬 לקבוצת הוועד</button><button class="logout" id="logout" type="button">יציאה</button></div>
     </div>
   </header>
   <div class="wrap main">
@@ -380,7 +400,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
     <nav class="tabs" role="tablist" aria-label="תצוגה">
       <button class="tab" role="tab" data-tab="tasks" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg><span>משימות פתוחות</span><span class="cnt" id="cnt-tasks"></span></button>
       <button class="tab" role="tab" data-tab="closed" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>נסגרו</span><span class="cnt" id="cnt-closed"></span></button>
-      <button class="tab" role="tab" data-tab="agenda" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg><span>ישיבה קרובה</span><span class="cnt" id="cnt-agenda"></span></button>
+      <button class="tab" role="tab" data-tab="agenda" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg><span>סדר יום</span><span class="cnt" id="cnt-agenda"></span></button>
       <button class="tab" role="tab" data-tab="guests" aria-selected="false" id="tab-guests" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 11l2 2 4-4"/></svg><span>עובדים</span><span class="cnt" id="cnt-guests"></span></button>
       <button class="tab" role="tab" data-tab="meetings" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>ישיבות ועד</span></button>
     </nav>
@@ -443,6 +463,18 @@ const ub64 = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const hex = (buf) => Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 const todayISO = () => new Date(Date.now() + 3*3600e3).toISOString().slice(0,10);
 const fmtD = (iso) => { if(!iso) return ''; const [y,m,d] = String(iso).slice(0,10).split('-'); return +d + '.' + +m + '.' + y; };
+// ─── שדות תאריך בכתיב יום.חודש.שנה (גרסה 1.10): שדה טקסט ולצדו כפתור לוח שנה; הערך נשלח תמיד כ-YYYY-MM-DD ───
+function parseDMY(s){ s = String(s||'').trim(); if(!s) return ''; let y, m, d, r = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(r){ y = +r[1]; m = +r[2]; d = +r[3]; } else { r = s.match(/^(\d{1,2})\s*[.\/\-]\s*(\d{1,2})\s*[.\/\-]\s*(\d{4}|\d{2})$/); if(!r) return null; d = +r[1]; m = +r[2]; y = +r[3]; if(y < 100) y += 2000; }
+  const dt = new Date(Date.UTC(y, m-1, d)); if(dt.getUTCFullYear() !== y || dt.getUTCMonth() !== m-1 || dt.getUTCDate() !== d) return null;
+  return y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0'); }
+function dateField(attrs, iso, cls){ return '<span class="dfield'+(cls?' '+cls:'')+'"><input type="text" class="dtext" '+attrs+' value="'+esc(fmtD(iso))+'" placeholder="יום.חודש.שנה" inputmode="numeric" autocomplete="off"><span class="dpick" title="בחירה בלוח שנה" aria-hidden="true">📅<input type="date" tabindex="-1" value="'+esc(iso ? String(iso).slice(0,10) : '')+'"></span></span>'; }
+function badDate(id){ const el = $(id); if(el && parseDMY(el.value) === null){ el.closest('.dfield').classList.add('bad'); el.focus(); alert('התאריך אינו תקין. כתבו יום.חודש.שנה, למשל 15.11.2026'); return true; } return false; }
+const dateVal = (id) => { const el = $(id); const v = el ? parseDMY(el.value) : ''; return v === null ? '' : v; };
+document.addEventListener('change', (e) => { const t = e.target; if(!t || !t.closest) return; const f = t.closest('.dfield'); if(!f) return;
+  const txt = f.querySelector('.dtext'), nat = f.querySelector('.dpick input');
+  if(t === nat){ e.stopPropagation(); txt.value = fmtD(nat.value); f.classList.remove('bad'); txt.dispatchEvent(new Event('change', { bubbles: true })); return; }
+  if(t === txt){ const v = parseDMY(txt.value); f.classList.toggle('bad', v === null); if(v !== null){ txt.value = fmtD(v); nat.value = v || ''; } } }, true);
 let DATA = null, ME = null, CODE = '', PERMS = null, OWNERS = [], LIVE = {};
 // LIVE: רשימת הדחיפות המיידית מהסקריפט {taskId:{u:1|0,t,by}}; רשומה חדשה מזמן הבנייה גוברת על הנתונים המוצפנים
 const st = { tab:'tasks', q:'', owner:'all', meeting:'all', status:'active', stat:'', cq:'', cowner:'all', group:'topic', open:{}, fresh:false, since:'login', sinceDate:'', newsrc:'all' };
@@ -487,6 +519,7 @@ $('login-form').addEventListener('submit', async (ev) => {
     $('err').textContent = e.message === 'bad-code' ? 'הקוד שהוזן אינו מוכר. בדוק שהקלדת אותו כפי שקיבלת.' : 'לא ניתן לפתוח את הנתונים כרגע. נסה שוב בעוד דקה.';
   } finally { $('go').disabled = false; $('go').textContent = 'כניסה'; }
 });
+$('wa-group').addEventListener('click', () => openGroupSend(''));
 $('logout').addEventListener('click', () => { try { localStorage.removeItem('bhv-code'); } catch(e){} location.reload(); });
 
 // ─── reporting ───
@@ -543,7 +576,7 @@ const URG_ON = '#דחוף ', URG_OFF = '#לא-דחוף ';
 // הצעת איחוד (גרסה 1.5): הטקסט מתחיל ב-'#איחוד <מזהה המשימה האחרת> '. הריצה יוצרת מזה הצעה בלוח העריכה; אסף מחליט.
 const MERGE_TOK = '#איחוד ';
 const mergeTarget = (text) => { const m = String(text||'').match(/^#איחוד\s+(\S+)\s*/); return m ? m[1] : null; };
-const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|לישיבה|איחוד\s+\S+|עובד|שיוך|משימה)\s*/, '');
+const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|לישיבה(?:\s+@pm-[A-Za-z0-9]+)?|איחוד\s+\S+|עובד|שיוך|משימה)\s*/, '');
 // מקור ותאריך המידע (גרסה 1.6): לכל עדכון src ו-ref; עדכון ישן בלי src מוצג לפי מקור המשימה (תג מקווקו)
 const SRC_LABEL = { whatsapp:'וואטסאפ', mail:'מייל', protocol:'פרוטוקול ישיבה', site:'אתר הוועד', manual:'לוח העריכה (אסף)' };
 function srcOf(t, u){ if(u && u.src) return { type: u.src, ref: u.ref || '', guess: false }; if(u && u.by) return { type: u.by === 'אסף ברקוביץ' ? 'manual' : 'site', ref: '', guess: false }; return { type: (t && t.source) || 'manual', ref: (t && t.sourceRef) || '', guess: !!u }; }
@@ -598,42 +631,58 @@ function freshRowHtml(active){
   const srcOpts = [['all','מכל המקורות'],['people','דיווחי חברי ועד'],['mail','מיילים'],['whatsapp','וואטסאפ'],['protocol','פרוטוקולים']];
   return '<button type="button" class="chip fresh" id="fresh-btn" aria-pressed="'+st.fresh+'">מה התחדש · '+n+'</button>'+
     '<select id="f-since" aria-label="מועד התחלה">'+sinceOpts.map(([v,l]) => '<option value="'+v+'"'+(st.since===v?' selected':'')+'>'+l+'</option>').join('')+'</select>'+
-    (st.since === 'date' ? '<input type="date" id="f-sincedate" value="'+esc(st.sinceDate)+'" aria-label="תאריך התחלה">' : '')+
+    (st.since === 'date' ? dateField('id="f-sincedate" aria-label="תאריך התחלה"', st.sinceDate, 'inline') : '')+
     '<select id="f-newsrc" aria-label="מקור">'+srcOpts.map(([v,l]) => '<option value="'+v+'"'+(st.newsrc===v?' selected':'')+'>'+l+'</option>').join('')+'</select>'+
     (base ? '<span class="cnt2">מ-'+esc(new Date(base).toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short', timeZone:'Asia/Jerusalem'}))+'</span>' : '')+
     (st.since === 'login' && n ? '<button type="button" class="linkbtn" id="mark-read">סמן הכול כנקרא</button>' : '');
 }
 
-// ─── ישיבה קרובה וסדר יום (גרסה 1.7, החלטת אסף 2.10.2026) ───
-// DATA.agenda = {next:{date,time,place,note}, free:[סעיפים חופשיים מאושרים]}; משימה בסדר היום: t.agenda (מאושר בלבד מגיע לאתר).
-// הצעה מהאתר: דיווח עם הטקסט "#לישיבה <הערה>" על המשימה, או על המזהה 'agenda' עם "#לישיבה <כותרת הסעיף>" לסעיף חדש.
-// הריצה רושמת את ההצעה; אסף מאשר בלוח העריכה (למי שיש הרשאת סימון ישיר, הסעיף נכנס מיד).
+// ─── סדר יום לישיבות מתוכננות (גרסה 1.7; ישיבה מסוימת מגרסה 1.10, החלטת אסף 7.10.2026) ───
+// DATA.agenda = {planned:[{id, date, time, place, note}], next (העתק של הקרובה), free:[סעיפים חופשיים מאושרים, עם meetingRef]}; משימה בסדר היום: t.agenda (מאושר בלבד מגיע לאתר), עם meetingRef.
+// "הישיבה הקרובה" היא המתוכננת המוקדמת בתאריך. סעיף בלי meetingRef, או עם הפניה לישיבה שאינה ברשימה, שייך לקרובה.
+// חבילה ישנה בלי planned: next משמש כישיבה מתוכננת יחידה.
+// הצעה מהאתר: דיווח עם הטקסט "#לישיבה @<מזהה ישיבה> <הערה>" על המשימה, או על המזהה 'agenda' עם "#לישיבה @<מזהה ישיבה> <כותרת הסעיף>" לסעיף חדש.
+// בלי "@<מזהה>" ההצעה משויכת לישיבה הקרובה. הריצה רושמת את ההצעה; אסף מאשר בלוח העריכה (למי שיש הרשאת סימון ישיר, הסעיף נכנס מיד).
 const AGENDA_TOK = '#לישיבה ';
 const AGENDA_TASK = { id: 'agenda', title: 'סדר יום' };
-function agendaItems(){
-  const ag = DATA.agenda || {}, items = [];
-  DATA.tasks.filter(t => t.agenda && t.agenda.status === 'approved' && t.status !== 'done').forEach(t => items.push({ kind:'task', id:t.id, title:t.title, note:t.agenda.note||'', topic: superTopic(t), order: t.agenda.order||0, carried: !!t.agenda.carried, task:t }));
-  (ag.free||[]).forEach(x => { const tp = TOPICS.find(z => z.name === x.topic) || TOPIC_OTHER; items.push({ kind:'free', id:x.id, title:x.title, note:x.note||'', topic: tp, order: x.order||0, carried: !!x.carried }); });
+let AG_PREPICK = null;
+function plannedList(){ const ag = DATA.agenda || {};
+  if(Array.isArray(ag.planned)) return ag.planned.slice().sort((a,b) => (a.date || '9999').localeCompare(b.date || '9999'));
+  const nx = ag.next || {}; return [{ id: '', date: nx.date || '', time: nx.time || '', place: nx.place || '', note: nx.note || '' }]; }
+const nearestPlanned = () => plannedList()[0] || null;
+const plannedName = (p) => p ? (p.date ? 'ישיבת ' + fmtD(p.date) : 'ישיבה שטרם נקבע מועדה') : '';
+function refOf(x){ const r = x && x.meetingRef, ls = plannedList(); if(r && ls.some(p => p.id === r)) return r; return ls[0] ? ls[0].id : ''; }
+function agendaLabel(t){ const r = refOf(t.agenda), n = nearestPlanned(); if(!n || r === n.id) return 'לישיבה הקרובה'; const p = plannedList().find(x => x.id === r); return 'ל' + plannedName(p); }
+function agendaItems(pmId){
+  const ag = DATA.agenda || {}, items = [], all = pmId === undefined;
+  DATA.tasks.filter(t => t.agenda && t.agenda.status === 'approved' && t.status !== 'done' && (all || refOf(t.agenda) === pmId)).forEach(t => items.push({ kind:'task', id:t.id, title:t.title, note:t.agenda.note||'', topic: superTopic(t), order: t.agenda.order||0, carried: !!t.agenda.carried, carriedFrom: t.agenda.carriedFrom || '', task:t }));
+  (ag.free||[]).filter(x => all || refOf(x) === pmId).forEach(x => { const tp = TOPICS.find(z => z.name === x.topic) || TOPIC_OTHER; items.push({ kind:'free', id:x.id, title:x.title, note:x.note||'', topic: tp, order: x.order||0, carried: !!x.carried, carriedFrom: x.carriedFrom || '' }); });
   items.sort((a,b) => topicIndex(a.topic) - topicIndex(b.topic) || (a.order - b.order) || String(a.title).localeCompare(String(b.title),'he'));
   return items;
 }
 function myAgendaPending(){ const gen = DATA.generatedAt || ''; return sentList().filter(s => s.t > gen && String(s.text||'').startsWith(AGENDA_TOK)); }
+function agPmFromText(text){ const m = String(text||'').match(/^#לישיבה\s+@(pm-[A-Za-z0-9]+)/); return m ? m[1] : ''; }
 function renderAgenda(){
-  const ag = DATA.agenda || {}, nx = ag.next || {}, items = agendaItems(), mine = myAgendaPending();
-  const when = nx.date ? '<div class="when"><span>'+ICON.cal+esc(fmtD(nx.date))+(nx.time ? ' בשעה ' + esc(nx.time) : '')+'</span>'+(nx.place ? '<span>'+esc(nx.place)+'</span>' : '')+'</div>' : '<div class="when"><span class="cnt2" style="color:var(--muted)">מועד הישיבה טרם נקבע</span></div>';
-  let html = '<div class="ag-card"><h2>ישיבת הוועד הקרובה</h2>'+when+(nx.note ? '<p style="margin:6px 0 0">'+esc(nx.note)+'</p>' : '')+'<p class="hint" style="margin:8px 0 0;font-size:13.5px;color:var(--muted)">'+items.length+' סעיפים בסדר היום. סדר היום נקבע בידי אסף; אפשר להציע סעיף בטופס שבתחתית העמוד.</p></div>';
+  const pl = plannedList(), near = pl[0] || null;
+  if(!st.agPm || !pl.some(p => p.id === st.agPm)) st.agPm = near ? near.id : '';
+  const pm = pl.find(p => p.id === st.agPm) || near || {}, isNear = near && pm.id === near.id, items = agendaItems(pm.id || ''), mine = myAgendaPending();
+  const sel = pl.length > 1 ? '<div class="ag-pms" role="group" aria-label="בחירת ישיבה">'+pl.map(p => '<button type="button" class="btn'+(p.id === pm.id ? ' primary' : '')+'" data-agpm="'+esc(p.id)+'" aria-pressed="'+(p.id === pm.id)+'">'+(p === near ? 'הקרובה · ' : '')+esc(p.date ? fmtD(p.date) : 'טרם נקבע')+'<small>'+agendaItems(p.id).length+'</small></button>').join('')+'</div>' : '';
+  const when = pm.date ? '<div class="when"><span>'+ICON.cal+esc(fmtD(pm.date))+(pm.time ? ' בשעה ' + esc(pm.time) : '')+'</span>'+(pm.place ? '<span>'+esc(pm.place)+'</span>' : '')+'</div>' : '<div class="when"><span class="cnt2" style="color:var(--muted)">מועד הישיבה טרם נקבע</span></div>';
+  let html = sel + '<div class="ag-card"><h2>'+(isNear ? 'ישיבת הוועד הקרובה' : 'ישיבת ועד מתוכננת')+'</h2>'+when+(pm.note ? '<p style="margin:6px 0 0">'+esc(pm.note)+'</p>' : '')+'<p class="hint" style="margin:8px 0 0;font-size:13.5px;color:var(--muted)">'+items.length+' סעיפים בסדר היום. סדר היום נקבע בידי אסף; אפשר להציע סעיף בטופס שבתחתית העמוד.'+(pl.length > 1 ? ' מתוכננות ' + pl.length + ' ישיבות; הבחירה למעלה.' : '')+'</p></div>';
   let last = null, n = 0;
   items.forEach(it => { if(it.topic !== last){ html += '<div class="ag-topic" style="--oc:'+it.topic.color+'">'+esc(it.topic.name)+'<small>'+items.filter(x => x.topic === it.topic).length+'</small></div>'; last = it.topic; } n++;
     html += '<div class="ag-item '+it.kind+(it.carried?' carried':'')+'" style="--oc:'+it.topic.color+'"><span class="num">'+n+'.</span><div class="body"><div class="ttl">'+(it.kind === 'task' ? '<a href="#task='+encodeURIComponent(it.id)+'">'+esc(it.title)+'</a>' : esc(it.title))+'</div>'+
-      '<div class="sub2">'+(it.kind === 'task' ? esc(ownerGroup(it.task)) + ' · ' + esc(STATUS[it.task.status]||'') : 'סעיף לדיון')+(it.note ? ' · ' + esc(it.note) : '')+(it.carried ? ' · <b>הועבר מהישיבה הקודמת</b>' : '')+'</div></div></div>'; });
-  if(!items.length) html += '<div class="empty">סדר היום לישיבה הקרובה טרם נקבע.</div>';
-  if(mine.length) html += '<div class="ag-topic" style="--oc:var(--pend)">ההצעות שלי שממתינות לאישור אסף<small>'+mine.length+'</small></div>' + mine.map(s => { const t = s.task === 'agenda' ? null : DATA.tasks.find(x => x.id === s.task); return '<div class="ag-item pending" style="--oc:var(--pend)"><span class="num">•</span><div class="body"><div class="ttl">'+esc(t ? t.title : stripTok(s.text))+'</div><div class="sub2">'+(t ? 'הערה: ' + esc(stripTok(s.text) || 'ללא') : 'סעיף חדש')+' · נשלח '+esc(fmtD(s.t))+', ממתין לאישור אסף</div></div></div>'; }).join('');
+      '<div class="sub2">'+(it.kind === 'task' ? esc(ownerGroup(it.task)) + ' · ' + esc(STATUS[it.task.status]||'') : 'סעיף לדיון')+(it.note ? ' · ' + esc(it.note) : '')+(it.carried ? ' · <b>' + (it.carriedFrom ? 'הועבר מישיבת ' + esc(fmtD(it.carriedFrom)) : 'הועבר מהישיבה הקודמת') + '</b>' : '')+'</div></div></div>'; });
+  if(!items.length) html += '<div class="empty">סדר היום לישיבה זו טרם נקבע.</div>';
+  if(mine.length) html += '<div class="ag-topic" style="--oc:var(--pend)">ההצעות שלי שממתינות לאישור אסף<small>'+mine.length+'</small></div>' + mine.map(s => { const t = s.task === 'agenda' ? null : DATA.tasks.find(x => x.id === s.task), sp = pl.find(p => p.id === agPmFromText(s.text)); return '<div class="ag-item pending" style="--oc:var(--pend)"><span class="num">•</span><div class="body"><div class="ttl">'+esc(t ? t.title : stripTok(s.text))+'</div><div class="sub2">'+(t ? 'הערה: ' + esc(stripTok(s.text) || 'ללא') : 'סעיף חדש')+(sp && pl.length > 1 ? ' · ל' + esc(plannedName(sp)) : '')+' · נשלח '+esc(fmtD(s.t))+', ממתין לאישור אסף</div></div></div>'; }).join('');
+  const pmOpts = pl.filter(p => p.id).map(p => '<option value="'+esc(p.id)+'"'+(p.id === pm.id ? ' selected' : '')+'>'+(p === near ? 'הישיבה הקרובה, ' : '')+esc(plannedName(p))+'</option>').join('');
   html += '<form class="ag-form" id="ag-form"><div><span class="l">להציע סעיף לסדר היום</span><div class="seg2"><button type="button" class="btn" id="ag-mode-task" aria-pressed="true">משימה קיימת</button><button type="button" class="btn" id="ag-mode-free" aria-pressed="false">נושא חדש</button></div></div>'+
-    '<div id="ag-pick"></div><div><label class="l" for="ag-note">הערה (למה לדון, מה מבקשים להחליט)</label><input id="ag-note" maxlength="300"></div>'+
+    '<div id="ag-pick"></div>'+(pl.filter(p => p.id).length > 1 ? '<div><label class="l" for="ag-pm">לאיזו ישיבה</label><select id="ag-pm">'+pmOpts+'</select></div>' : '')+'<div><label class="l" for="ag-note">הערה (למה לדון, מה מבקשים להחליט)</label><input id="ag-note" maxlength="300"></div>'+
     '<p class="hint" style="margin:0;font-size:13px;color:var(--muted)">ההצעה מגיעה לאסף ונכנסת לסדר היום לאחר אישורו'+(ME && PERMS && PERMS.agenda === 'direct' ? ' (ההצעות שלך נכנסות ישירות)' : '')+'.</p>'+
     '<div class="row2" style="display:flex;gap:8px"><button type="submit" class="btn primary" id="ag-send" style="flex:1">שליחת ההצעה</button></div><div id="ag-msg"></div></form>';
   $('agenda').innerHTML = html;
-  let mode = 'task', pick = null;
+  $('agenda').querySelectorAll('[data-agpm]').forEach(b => b.onclick = () => { st.agPm = b.dataset.agpm; renderAgenda(); });
+  let mode = 'task', pick = AG_PREPICK; AG_PREPICK = null;
   const drawPick = (q) => { q = String(q||'').trim(); const box = $('ag-pick');
     if(mode === 'free'){ box.innerHTML = '<label class="l" for="ag-title">כותרת הסעיף</label><input id="ag-title" maxlength="200" placeholder="למשל: חניית אורחים ליד בית הכנסת">'; return; }
     if(pick){ const o = DATA.tasks.find(x => x.id === pick); box.innerHTML = '<div class="mg-sel">משימה: '+esc(o ? o.title : pick)+'<button type="button" id="ag-clr">החלף</button></div>'; $('ag-clr').onclick = () => { pick = null; drawPick(''); }; return; }
@@ -645,14 +694,44 @@ function renderAgenda(){
   $('ag-mode-task').onclick = () => { mode = 'task'; $('ag-mode-task').setAttribute('aria-pressed','true'); $('ag-mode-free').setAttribute('aria-pressed','false'); drawPick(''); };
   $('ag-mode-free').onclick = () => { mode = 'free'; $('ag-mode-task').setAttribute('aria-pressed','false'); $('ag-mode-free').setAttribute('aria-pressed','true'); drawPick(''); };
   drawPick('');
+  if(pick){ const f = $('ag-form'); setTimeout(() => { f.scrollIntoView({ block: 'center' }); const nt = $('ag-note'); if(nt) nt.focus(); }, 60); }
   $('ag-form').onsubmit = async (ev) => { ev.preventDefault(); const note = $('ag-note').value.trim().replace(/\s+/g,' ');
+    const pmSel = $('ag-pm') ? $('ag-pm').value : (pm.id || ''), at = pmSel ? '@' + pmSel + ' ' : '';
     let t, text;
-    if(mode === 'free'){ const title = $('ag-title').value.trim().replace(/\s+/g,' '); if(!title){ $('ag-title').focus(); return; } t = AGENDA_TASK; text = AGENDA_TOK + title + (note ? ' · ' + note : ''); }
-    else { if(!pick){ const i2 = $('ag-q'); if(i2) i2.focus(); return; } t = DATA.tasks.find(x => x.id === pick); text = AGENDA_TOK + note; }
+    if(mode === 'free'){ const title = $('ag-title').value.trim().replace(/\s+/g,' '); if(!title){ $('ag-title').focus(); return; } t = AGENDA_TASK; text = AGENDA_TOK + at + title + (note ? ' · ' + note : ''); }
+    else { if(!pick){ const i2 = $('ag-q'); if(i2) i2.focus(); return; } t = DATA.tasks.find(x => x.id === pick); text = AGENDA_TOK + at + note; }
     $('ag-send').disabled = true; $('ag-send').textContent = 'שולח…';
-    const ok = await sendReport(t, text.slice(0, 2000), t.status || 'open', false, null, null);
+    const ok = await sendReport(t, text.trim().slice(0, 2000), t.status || 'open', false, null, null);
     renderAgenda(); const m = $('ag-msg'); if(m) m.innerHTML = ok ? '<div class="rep-msg" role="status">ההצעה נשלחה לאסף. היא תופיע בסדר היום לאחר אישורו.</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>';
   };
+}
+// כפתור "להציע לסדר היום" בכרטיס המשימה: פותח את הטופס עם המשימה מסומנת
+function proposeAgenda(id){ AG_PREPICK = id; setTab('agenda'); }
+
+// ─── שליחה לקבוצת הוועד בוואטסאפ (גרסה 1.10, החלטת אסף 7.10.2026, דרך א') ───
+// הכפתור מעתיק את הנוסח ופותח את קבוצת הוועד בקישור ההזמנה שלה (DATA.waGroupUrl, בחבילה המוצפנת בלבד); החבר מדביק ושולח.
+// בלי קישור נפתח wa.me/?text= לבחירת הקבוצה. וואטסאפ אינו מאפשר לאתר לפרסם בקבוצה בלי פעולה של החבר.
+const WA_GROUP_RE = /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{10,}\/?$/;
+const waGroupUrl = () => WA_GROUP_RE.test(String(DATA.waGroupUrl||'').trim()) ? String(DATA.waGroupUrl).trim() : '';
+function siteBase(){ return location.href.split('#')[0]; }
+function taskGroupText(t){ const last = (t.updates||[]).slice(-1)[0];
+  return ['משימה בוועד בית חורון: ' + t.title, 'סטטוס: ' + (STATUS[t.status] || t.status) + (isUrgent(t) && t.status !== 'done' ? ' · דחופה' : ''), 'אחראים: ' + ownerIds(t).map(nameOf).join(', ')].concat(t.due ? ['יעד: ' + fmtD(t.due) + (isOverdue(t) ? ' (באיחור)' : '')] : [])
+    .concat(last ? ['עדכון אחרון (' + fmtD(last.at) + '): ' + stripTok(last.text).slice(0, 200)] : []).concat(['', 'המשימה באתר הוועד: ' + siteBase() + '#task=' + encodeURIComponent(t.id)]).join('\n'); }
+function openGroupSend(text){
+  const url = waGroupUrl(), hrefFor = (txt) => url || ('https://wa.me/?text=' + encodeURIComponent(txt));
+  const box = document.createElement('div'); box.className = 'gw-modal';
+  box.innerHTML = '<div class="gw-box" role="dialog" aria-modal="true" aria-labelledby="wg-h"><h3 id="wg-h">שליחה לקבוצת הוועד בוואטסאפ</h3>'+
+    '<textarea id="wg-text" class="wg-text" placeholder="כתבו כאן את ההודעה לקבוצה">'+esc(text||'')+'</textarea>'+
+    '<p class="hint" style="margin:8px 0 12px">'+(url ? 'הלחיצה מעתיקה את הנוסח ופותחת את קבוצת הוועד. בוואטסאפ: הדביקו ושלחו.' : 'הלחיצה פותחת את וואטסאפ עם הנוסח; שם בוחרים את קבוצת הוועד ושולחים.')+'</p>'+
+    '<div class="row2"><button type="button" class="btn" id="wg-cancel">ביטול</button><a class="btn primary" id="wg-go" href="'+esc(hrefFor(text||''))+'" target="_blank" rel="noopener">'+ICON_WA+(url ? 'העתקה ופתיחת הקבוצה' : 'פתיחה בוואטסאפ')+'</a></div></div>';
+  document.body.appendChild(box);
+  const close = () => box.remove(), ta = box.querySelector('#wg-text'), go = box.querySelector('#wg-go');
+  box.querySelector('#wg-cancel').onclick = close; box.onclick = (e) => { if(e.target === box) close(); };
+  ta.oninput = () => { go.href = hrefFor(ta.value); };
+  go.onclick = (e) => { const v = ta.value.trim(); if(!v){ e.preventDefault(); ta.focus(); return; } go.href = hrefFor(v);
+    try { navigator.clipboard.writeText(v).catch(() => {}); } catch(err){}
+    setTimeout(close, 300); };
+  ta.focus();
 }
 
 // ─── מבצעים חיצוניים (גרסה 1.8, החלטות אסף 1.10 ו-2.10.2026) ───
@@ -753,14 +832,15 @@ function renderGuests(){
   root.querySelectorAll('[data-gcode]').forEach(b => b.onclick = simple('code', b.dataset.gcode, 'להחליף את הקוד של ' + pNameOf(b.dataset.gcode) + '? הקוד הנוכחי יפסיק לעבוד בעדכון הבא, והקוד החדש יישלח אלייך במייל.'));
   $('gm-newbtn').onclick = () => { const box = $('gm-newbox'); const gs = activeGuests();
     box.innerHTML = '<form class="gm-form" id="gm-newf"><div><label class="l" for="gn-title">מה המשימה (כותרת קצרה)</label><input id="gn-title" required maxlength="200"></div>'+
-      '<div class="two"><div><label class="l" for="gn-p">מי מבצע</label><select id="gn-p"><option value="">בלי מבצע חיצוני (בינתיים)</option>'+gs.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+'</select></div><div><label class="l" for="gn-due">עד מתי</label><input id="gn-due" type="date"></div></div>'+
+      '<div class="two"><div><label class="l" for="gn-p">מי מבצע</label><select id="gn-p"><option value="">בלי מבצע חיצוני (בינתיים)</option>'+gs.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+'</select></div><div><label class="l" for="gn-due">עד מתי</label>'+dateField('id="gn-due"', '')+'</div></div>'+
       '<div class="two"><div><label class="l" for="gn-topic">נושא</label><select id="gn-topic">'+TOPICS.map(tp => '<option>'+esc(tp.name)+'</option>').join('')+'<option>נושאים נוספים</option></select></div><div></div></div>'+
       '<div><label class="l" for="gn-ins">ההנחיה לעובד (זה מה שהוא רואה)</label><textarea id="gn-ins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea></div>'+
       '<div><label class="l" for="gn-det">הערה פנימית לוועד (לא חובה, העובד לא רואה)</label><textarea id="gn-det" maxlength="1000" style="min-height:56px"></textarea></div>'+
       '<div class="row2"><button type="button" class="btn" id="gn-cancel">ביטול</button><button type="submit" class="btn primary" id="gn-send">יצירת המשימה</button></div><div id="gn-msg"></div></form>';
     $('gn-cancel').onclick = () => { box.innerHTML = ''; }; $('gn-title').focus();
     $('gm-newf').onsubmit = async (ev) => { ev.preventDefault(); const title = $('gn-title').value.trim().replace(/\s+/g,' '); if(!title){ $('gn-title').focus(); return; }
-      const payload = { title, topic: $('gn-topic').value, due: $('gn-due').value || '', details: $('gn-det').value.trim(), participant: $('gn-p').value || '', instruction: $('gn-ins').value.trim() };
+      if(badDate('gn-due')) return;
+      const payload = { title, topic: $('gn-topic').value, due: dateVal('gn-due'), details: $('gn-det').value.trim(), participant: $('gn-p').value || '', instruction: $('gn-ins').value.trim() };
       $('gn-send').disabled = true; $('gn-send').textContent = 'שולח…';
       const ok = await sendOp(NEW_TASK, NEWTASK_TOK, payload);
       if(ok){ render(); setTab('guests'); } else { $('gn-send').disabled = false; $('gn-send').textContent = 'יצירת המשימה'; $('gn-msg').innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } }; };
@@ -772,14 +852,14 @@ function openGuestManage(id){
   const fid = 'gm-' + id.replace(/[^a-zA-Z0-9_-]/g,'');
   box.innerHTML = '<div class="gm-form">'+(parts.length ? parts.map((a,i) => { const p = participantById(a.id); return '<div><b>'+esc(p ? p.name : a.id)+'</b>'+(p && p.role ? ' <span style="color:var(--muted)">· '+esc(p.role)+'</span>' : '')+
       '<label class="l" for="'+fid+'-ins'+i+'" style="margin-top:6px">ההנחיה</label><textarea id="'+fid+'-ins'+i+'" maxlength="1000">'+esc(a.instruction||'')+'</textarea>'+
-      '<div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-due'+i+'">עד מתי</label><input id="'+fid+'-due'+i+'" type="date" value="'+esc(a.due||'')+'"></div><div style="display:flex;gap:6px;align-items:flex-end"><button type="button" class="btn primary" data-gsave="'+i+'" style="flex:1">שמירה</button><button type="button" class="btn" data-grm="'+i+'">הסרה</button></div></div></div>'; }).join('') : '<p class="hint" style="font-size:15px">למשימה הזו עדיין אין מבצע חיצוני.</p>')+
+      '<div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-due'+i+'">עד מתי</label>'+dateField('id="'+fid+'-due'+i+'"', a.due)+'</div><div style="display:flex;gap:6px;align-items:flex-end"><button type="button" class="btn primary" data-gsave="'+i+'" style="flex:1">שמירה</button><button type="button" class="btn" data-grm="'+i+'">הסרה</button></div></div></div>'; }).join('') : '<p class="hint" style="font-size:15px">למשימה הזו עדיין אין מבצע חיצוני.</p>')+
     (free.length ? '<div style="border-top:1px solid var(--line);padding-top:10px"><label class="l" for="'+fid+'-sel">לשייך מבצע</label><select id="'+fid+'-sel"><option value="">בחרי עובד…</option>'+free.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+'</select>'+
-      '<label class="l" for="'+fid+'-nins" style="margin-top:6px">ההנחיה לעובד</label><textarea id="'+fid+'-nins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea><div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-ndue">עד מתי (ריק: המועד של המשימה)</label><input id="'+fid+'-ndue" type="date"></div><div style="display:flex;align-items:flex-end"><button type="button" class="btn primary" id="'+fid+'-add" style="flex:1">שיוך</button></div></div></div>' : (gs.length ? '' : '<p class="hint">אין עובדים פעילים. מוסיפים בלשונית "עובדים".</p>'))+
+      '<label class="l" for="'+fid+'-nins" style="margin-top:6px">ההנחיה לעובד</label><textarea id="'+fid+'-nins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea><div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-ndue">עד מתי (ריק: המועד של המשימה)</label>'+dateField('id="'+fid+'-ndue"', '')+'</div><div style="display:flex;align-items:flex-end"><button type="button" class="btn primary" id="'+fid+'-add" style="flex:1">שיוך</button></div></div></div>' : (gs.length ? '' : '<p class="hint">אין עובדים פעילים. מוסיפים בלשונית "עובדים".</p>'))+
     '<p class="hint">השינויים נכנסים בעדכון הבא של האתר.</p><div class="row2"><button type="button" class="btn" id="'+fid+'-close">סגירה</button></div><div id="'+fid+'-msg"></div></div>';
   const done = (ok) => { if(ok){ st.open[id] = true; render(); const b = $('gm-'+id); if(b) b.innerHTML = '<div class="rep-msg" role="status">נשלח. ייכנס בעדכון הבא של האתר.</div>'; } else { const m = $(fid+'-msg'); if(m) m.innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } };
-  box.querySelectorAll('[data-gsave]').forEach(b => b.onclick = async () => { const i = +b.dataset.gsave, a = parts[i]; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: a.id, instruction: $(fid+'-ins'+i).value.trim(), due: $(fid+'-due'+i).value || '' })); });
+  box.querySelectorAll('[data-gsave]').forEach(b => b.onclick = async () => { const i = +b.dataset.gsave, a = parts[i]; if(badDate(fid+'-due'+i)) return; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: a.id, instruction: $(fid+'-ins'+i).value.trim(), due: dateVal(fid+'-due'+i) })); });
   box.querySelectorAll('[data-grm]').forEach(b => b.onclick = async () => { const a = parts[+b.dataset.grm]; if(!confirm('להסיר את ' + pNameOf(a.id) + ' מהמשימה?')) return; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'remove', id: a.id })); });
-  const addB = $(fid+'-add'); if(addB) addB.onclick = async () => { const pid = $(fid+'-sel').value; if(!pid){ $(fid+'-sel').focus(); return; } addB.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: pid, instruction: $(fid+'-nins').value.trim(), due: $(fid+'-ndue').value || '' })); };
+  const addB = $(fid+'-add'); if(addB) addB.onclick = async () => { const pid = $(fid+'-sel').value; if(!pid){ $(fid+'-sel').focus(); return; } if(badDate(fid+'-ndue')) return; addB.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: pid, instruction: $(fid+'-nins').value.trim(), due: dateVal(fid+'-ndue') })); };
   $(fid+'-close').onclick = () => render();
 }
 
@@ -820,7 +900,7 @@ function start(){
   // OWNERS: מזהי האחראים שמופיעים במשימות; לימור ראשונה, השאר לפי שם
   OWNERS = Array.from(new Set([].concat.apply([], DATA.tasks.map(ownerIds))));
   OWNERS.sort((a,b) => (a==='m-limor'?-1:b==='m-limor'?1:0) || nameOf(a).localeCompare(nameOf(b),'he'));
-  try { const h = location.hash.slice(1); if(['tasks','closed','meetings','agenda','guests'].includes(h)) st.tab = h; } catch(e){}
+  try { const h = location.hash.slice(1); if(['tasks','closed','meetings','agenda','guests'].includes(h)) st.tab = h; const am = h.match(/^agenda=(pm-[A-Za-z0-9]+)$/); if(am){ st.tab = 'agenda'; st.agPm = am[1]; } } catch(e){}
   setTab(st.tab);
   openFromHash(); window.addEventListener('hashchange', openFromHash);
 }
@@ -895,7 +975,7 @@ function render(){
   $('fresh-row').innerHTML = freshRowHtml(active);
   $('fresh-btn').onclick = () => { st.fresh = !st.fresh; render(); };
   $('f-since').onchange = (e) => { st.since = e.target.value; if(st.since === 'date' && !st.sinceDate) st.sinceDate = lastMeetingDate() || todayISO(); render(); };
-  if($('f-sincedate')) $('f-sincedate').onchange = (e) => { st.sinceDate = e.target.value; render(); };
+  if($('f-sincedate')) $('f-sincedate').onchange = (e) => { const v = parseDMY(e.target.value); if(v === null) return; st.sinceDate = v; render(); };
   $('f-newsrc').onchange = (e) => { st.newsrc = e.target.value; render(); };
   if($('mark-read')) $('mark-read').onclick = markAllRead;
   $('cnt-agenda').textContent = agendaItems().length || '';
@@ -994,6 +1074,8 @@ function wireTasks(root){
   root.querySelectorAll('.task-head').forEach(b => b.onclick = () => { const id = b.dataset.id; st.open[id] = !st.open[id]; const body = b.nextElementSibling; body.hidden = !st.open[id]; b.setAttribute('aria-expanded', String(!!st.open[id])); if(st.open[id]){ const t = DATA.tasks.find(x => x.id === id); if(t && isFresh(t)){ markRead(t); if(!st.fresh) render(); } } });
   root.querySelectorAll('[data-rep]').forEach(b => b.onclick = () => openForm(b.dataset.rep));
   root.querySelectorAll('[data-gm]').forEach(b => b.onclick = () => openGuestManage(b.dataset.gm));
+  root.querySelectorAll('[data-agp]').forEach(b => b.onclick = () => proposeAgenda(b.dataset.agp));
+  root.querySelectorAll('[data-wg]').forEach(b => b.onclick = () => { const t = DATA.tasks.find(x => x.id === b.dataset.wg); if(t) openGroupSend(taskGroupText(t)); });
   wireRemind(root);
 }
 
@@ -1007,7 +1089,7 @@ function taskHtml(t, desk){
   const tags = [], urg = !done && isUrgent(t), fresh = isFresh(t), fi = fresh ? freshInfo(t) : null;
   const freshSet = new Set(fi ? fi.items.filter(u => !u._created).map(u => updStamp(u) + '|' + u.text) : []);
   if(fresh) tags.push(freshTagHtml(t));
-  if(!done && t.agenda && t.agenda.status === 'approved') tags.push('<span class="tag agenda" title="'+esc(t.agenda.note||'')+'">לישיבה הקרובה</span>');
+  if(!done && t.agenda && t.agenda.status === 'approved') tags.push('<span class="tag agenda" title="'+esc(t.agenda.note||'')+'">'+esc(agendaLabel(t))+'</span>');
   if(urg) tags.push('<span class="tag urgent" title="'+esc(urgentBy(t) ? 'סימן/ה: '+urgentBy(t) : '')+'">דחוף</span>');
   tags.push('<span class="tag status">'+(done?ICON.check:'')+esc(STATUS[t.status]||t.status)+'</span>');
   if(!done && ids.length && nOk === ids.length) tags.push('<span class="tag pend">כל האחראים אישרו שבוצעה, ממתין לאישור אסף</span>');
@@ -1041,6 +1123,7 @@ function taskHtml(t, desk){
     '<div class="task-body"'+(expanded?'':' hidden')+'>'+'<div class="srcline"><span>מקור המידע:</span>'+srcTag(t, null, true)+'<span>· תאריך המידע: '+fmtD(t.createdAt)+'</span></div>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+ginsHtml+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
     (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
+    '<div class="card-acts">'+(!done && !(t.agenda && t.agenda.status === 'approved') ? '<button type="button" class="btn" data-agp="'+esc(t.id)+'">להציע לסדר היום</button>' : '')+'<button type="button" class="btn" data-wg="'+esc(t.id)+'">'+ICON_WA+'שליחה לקבוצת הוועד</button></div>'+
     (!done && canManage() ? '<div id="gm-'+esc(t.id)+'"><button class="btn gm-open" data-gm="'+esc(t.id)+'">'+(parts.length ? 'ניהול המבצעים החיצוניים' : 'לשייך מבצע חיצוני')+'</button></div>' : '')+
     (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);
       const h = who.map(id => remindHtml([t], personById(id), true)).join('');

@@ -1,6 +1,6 @@
 // Build the encrypted data for the Beit Horon committee viewer site.
 // Usage: node build.mjs bundle.json outDir
-// bundle.json: { generatedAt, logUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms,phone,email,lastLoginAt}], topics:{...}, agenda:{next,free},
+// bundle.json: { generatedAt, logUrl, waGroupUrl, tasks:[...], meetings:[...], members:[{id,name,role,code,active,perms,phone,email,lastLoginAt}], topics:{...}, agenda:{planned,next,free},
 //                participants:[{id,name,role,org,code,active,phone,email,lastLoginAt}] }
 // perms: { report: 'all' | 'own', agenda: 'direct' } lets a member send progress reports from the site, and (agenda) put items on the next meeting's agenda without Assaf's approval (see index.html).
 // phone (digits with country code, e.g. 972501234567) and email feed the reminder buttons (wa.me / mailto) on the site.
@@ -13,6 +13,11 @@
 // (task.participants[] = {id, instruction, assignedAt, due}), reduced to title, status, due, his instruction and the updates marked
 // visible to him (update.visibleTo includes '*' or his id); guestkeys.json maps his lookup id to that file. The committee bundle
 // gets the participants list without codes (for "the desk of <name>") and the tasks keep their participants field.
+// agenda.planned (version 1.10): the planned committee meetings [{id, date, time, place, note}]; agenda items (task.agenda and free[])
+// may carry meetingRef (a planned meeting id); without it, or when it points to a meeting no longer planned, the item belongs to the
+// nearest planned meeting. next is recomputed here as a copy of the nearest planned meeting, so an older cached site keeps working.
+// waGroupUrl (version 1.10): the committee WhatsApp group invite link from meta/site.waGroupUrl. It goes ONLY into the encrypted committee
+// bundle (never into index.html, keys.json or the guest bundles), and feeds the "send to the committee group" buttons on the site.
 // Output: outDir/data.enc.txt, outDir/keys.json, outDir/parts/data.enc.part-NN.txt (30,000-char slices of data.enc.txt),
 //         outDir/guestkeys.json and outDir/guests/<id>.enc.txt (one per active participant; the directory is always written, possibly empty).
 // Each run draws a fresh random data key. Every active member's code wraps that key,
@@ -65,6 +70,11 @@ const guests = participants.filter((p) => p.active !== false && normCode(p.code)
 // a task's agenda mark reaches the site only once approved
 const publishTask = (t) => { if (t.agenda && t.agenda.status !== 'approved') { const c = Object.assign({}, t); delete c.agenda; return c; } return t; };
 const agenda = bundle.agenda || {};
+const planned = Array.isArray(agenda.planned) ? agenda.planned.filter((p) => p && p.id).map((p) => ({ id: p.id, date: p.date || '', time: p.time || '', place: p.place || '', note: p.note || '' }))
+  .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')) : null;
+const nextOf = () => { if (!planned) return agenda.next || {}; const n = planned[0]; return n ? { date: n.date, time: n.time, place: n.place, note: n.note } : {}; };
+const WA_GROUP_RE = /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{10,}\/?$/;
+const waGroupUrl = WA_GROUP_RE.test(String(bundle.waGroupUrl || '').trim()) ? String(bundle.waGroupUrl).trim() : '';
 const generatedAt = bundle.generatedAt || new Date().toISOString();
 const publishedTasks = (bundle.tasks || []).filter((t) => t.approved !== false).map(publishTask);
 
@@ -75,7 +85,8 @@ const payload = {
   tasks: publishedTasks,
   meetings: bundle.meetings || [],
   topics: bundle.topics || {},   // { '<super-topic>': { goal, lead } } from meta/topics
-  agenda: { next: agenda.next || {}, free: (agenda.free || []).filter((x) => x.status === 'approved'), lastAttached: agenda.lastAttached || null },
+  agenda: Object.assign({ next: nextOf(), free: (agenda.free || []).filter((x) => x.status === 'approved'), lastAttached: agenda.lastAttached || null }, planned ? { planned } : {}),
+  waGroupUrl,
   // people: contact details for reminders are included only for active members
   people: (bundle.members || []).map((m) => ({ id: m.id, name: m.name, role: m.role || '', perms: (m.active !== false && m.perms) || null,
     phone: (m.active !== false && normPhone(m.phone)) || '', email: (m.active !== false && String(m.email || '').trim()) || '',

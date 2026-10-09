@@ -6,6 +6,8 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#24533A">
 <title>ועד בית חורון · מעקב משימות</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -195,7 +197,15 @@ button{cursor:pointer}
 .rep .row2 .btn{flex:1}
 .rep-msg{font-size:15px;color:var(--done);font-weight:700;margin-top:10px;background:var(--done-soft);border-radius:10px;padding:8px 12px}
 .rep-msg.err{color:var(--bad);background:var(--bad-soft)}
+/* גרסה 1.11: סמל היישוב במסך הכניסה ובכותרת */
+.login-card .emblem-login{display:block;height:116px;width:auto;margin:0 auto 12px}
+.login-card h1,.login-card .sub{text-align:center}
+.hero .brand{display:flex;gap:12px;align-items:center}
+.hero .emblem-h{height:54px;width:auto;flex:none;background:#fff;border-radius:8px;padding:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+@media (max-width:560px){.hero .emblem-h{height:44px}}
 /* reminders (wa.me / mailto open WhatsApp and the mail app on phone and desktop alike) */
+.remind.all{margin-top:6px}
+.remind.all .miss{font-size:13px;color:var(--muted)}
 .remind{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
 .remind .lbl{font-size:13.5px;color:var(--muted);font-weight:700;flex-basis:100%}
 .remind .btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:14.5px;padding:8px 12px;color:var(--ink)}
@@ -359,7 +369,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 <body>
 <div id="login" class="login">
   <form class="login-card" id="login-form" autocomplete="off">
-    <div class="logo" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></div>
+    <img class="emblem-login" src="emblem.jpg" alt="סמל בית חורון" width="84" height="116">
     <h1>ועד בית חורון</h1>
     <div class="sub">מעקב משימות המזכירות וההנהלה לפי החלטות הוועד</div>
     <div class="field">
@@ -376,10 +386,11 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 <div id="app" hidden>
   <header class="hero">
     <div class="wrap">
-      <div>
+      <div class="brand"><img class="emblem-h" src="emblem.jpg" alt="סמל בית חורון" width="39" height="54"><div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.10 · 7.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.11 · 9.10.2026</summary><ul>
+        <li><b>1.11:</b> כפתור "מייל לכל האחראים" בכרטיס משימה עם כמה אחראים: מייל אחד לכולם, עם נוסח מוכן וקישור ישיר למשימה. סמל היישוב במסך הכניסה, בכותרת ובאייקון האתר. אחרי שאסף שולח פרוטוקול חתום, סדר היום של הישיבה נסגר לבד: מה שנדון יורד מסדר היום, ומה שלא נדון עובר לישיבה הבאה.</li>
         <li><b>1.10:</b> סדר יום לכל ישיבה מתוכננת: הלשונית "סדר יום" מציגה את הישיבה הקרובה, ואם נקבעו כמה ישיבות, בוחרים ביניהן; בהצעת סעיף בוחרים לאיזו ישיבה, ובכרטיס כל משימה פתוחה יש כפתור "להציע לסדר היום". שליחה לקבוצת הוועד בוואטסאפ: כפתור בראש העמוד להודעה חופשית, ובכרטיס המשימה נוסח מוכן עם קישור ישיר למשימה. שדות התאריך מוצגים ומוזנים בכתיב יום.חודש.שנה.</li>
         <li><b>1.9:</b> ניהול העובדים מאתר הוועד, למי שקיבל הרשאת "ניהול עובדים" (המנכ"לית): לשונית "עובדים" להוספת עובד, השבתה וקוד חדש; "משימה חדשה למבצע"; בכרטיס המשימה "ניהול מבצעים" לשיוך, לעריכת ההנחיה והמועד ולהסרה. הכל נכנס בעדכון הבא של האתר בלי אישור של אסף; קוד הכניסה של עובד חדש נשלח למנהלת במייל.</li>
         <li><b>1.8:</b> עובדים וגורמים חיצוניים: משימה יכולה להיות משויכת למבצע חיצוני (עובד, יועץ, קבלן) עם הנחיה; המבצע רואה באתר נפרד רק את המשימות שלו, את ההנחיה ואת העדכונים שאסף סימן כגלויים, ומדווח משם. באתר הוועד: "מבצע חיצוני" וההנחיה בכרטיס המשימה, קיבוץ "לפי משתתף" ("השולחן של"), תג "ללא דיווח N ימים" אחרי 14 יום, וכפתורי וואטסאפ ומייל למבצע שמזכירים קודם שהניהול מול העובדים נעשה דרך לימור.</li>
@@ -391,7 +402,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
         <li><b>1.1:</b> מספר גרסה ורשימת שינויים.</li>
         <li><b>1.0:</b> תזכורות בוואטסאפ ובמייל לאחראים; כמה אחראים למשימה, וכל אחראי מאשר בנפרד שהמשימה בוצעה.</li>
         </ul></details>
-      </div>
+      </div></div>
       <div class="hero-acts"><button class="logout" id="wa-group" type="button" title="הודעה לקבוצת הוועד בוואטסאפ">💬 לקבוצת הוועד</button><button class="logout" id="logout" type="button">יציאה</button></div>
     </div>
   </header>
@@ -884,6 +895,17 @@ function remindHtml(ts, p, compact){
     (p.email ? '<a class="btn ml" href="mailto:'+esc(p.email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(text)+'">'+ICON_MAIL+'מייל ל'+esc(n)+'</a>' : '')+
     '<button type="button" class="btn" data-remcopy="'+esc(encodeURIComponent(text))+'">'+ICON_COPY+'העתק</button></div>';
 }
+// מייל אחד לכל האחראים של משימה (גרסה 1.11): כל הכתובות יחד, בלי הצופה עצמו; מוצג כשנשארים לפחות שני נמענים
+function mailAllHtml(t){
+  if(t.status === 'done') return '';
+  const ps = ownerIds(t).filter(id => !(ME && id === ME.id)).map(personById).filter(Boolean), withMail = ps.filter(p => p.email), miss = ps.filter(p => !p.email);
+  if(withMail.length < 2) return '';
+  const url = location.origin + location.pathname + '#task=' + encodeURIComponent(t.id), last = (t.updates||[]).slice(-1)[0];
+  const text = ['שלום ' + withMail.map(firstName).join(', ') + ',', '', 'לגבי המשימה "' + t.title + '" בוועד בית חורון:', 'סטטוס: ' + (STATUS[t.status]||t.status) + (isUrgent(t) ? ' · דחופה' : '')].concat(t.due ? ['יעד: ' + fmtD(t.due) + (isOverdue(t) ? ' (באיחור)' : '')] : [])
+    .concat(last ? ['עדכון אחרון (' + fmtD(last.at) + '): ' + String(stripTok(last.text)||'').slice(0, 200)] : []).concat(['', 'המשימה באתר הוועד: ' + url, '', 'תודה, ' + (ME ? firstName(ME) : '')]).join('\n');
+  const href = 'mailto:' + withMail.map(p => p.email).join(',') + '?subject=' + encodeURIComponent('ועד בית חורון: ' + t.title) + '&body=' + encodeURIComponent(text);
+  return '<div class="remind all"><a class="btn ml" href="'+esc(href)+'" title="'+esc(withMail.map(p => p.name).join(', '))+'">'+ICON_MAIL+'מייל לכל האחראים</a>'+(miss.length ? '<span class="miss">לא נכלל: '+esc(miss.map(firstName).join(', '))+' (אין מייל)</span>' : '')+'</div>';
+}
 function wireRemind(root){
   root.querySelectorAll('[data-remcopy]').forEach(b => b.onclick = async (e) => { e.stopPropagation(); const txt = decodeURIComponent(b.dataset.remcopy);
     try { await navigator.clipboard.writeText(txt); b.lastChild.textContent = 'הועתק'; setTimeout(() => { b.lastChild.textContent = 'העתק'; }, 1800); } catch(err){ prompt('העתק את הנוסח:', txt); } });
@@ -1127,7 +1149,7 @@ function taskHtml(t, desk){
     (!done && canManage() ? '<div id="gm-'+esc(t.id)+'"><button class="btn gm-open" data-gm="'+esc(t.id)+'">'+(parts.length ? 'ניהול המבצעים החיצוניים' : 'לשייך מבצע חיצוני')+'</button></div>' : '')+
     (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);
       const h = who.map(id => remindHtml([t], personById(id), true)).join('');
-      return h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h : ''; })() : '')+
+      return h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h+mailAllHtml(t) : mailAllHtml(t); })() : '')+
     (!done && parts.length ? parts.filter(a => !desk || a.id === desk).map(a => guestRemindHtml([t], participantById(a.id), false)).join('') : '')+
     '</div></article>';
 }

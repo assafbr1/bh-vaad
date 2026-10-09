@@ -6,10 +6,18 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#24533A">
 <title>ועד בית חורון · המשימות שלי</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
+/* גרסה 1.11: סמל היישוב במסך הכניסה ובכותרת */
+.login-card .emblem-login{display:block;height:116px;width:auto;margin:0 auto 12px}
+.login-card h1,.login-card .sub{text-align:center}
+.hero .brand{display:flex;gap:12px;align-items:center}
+.hero .emblem-h{height:54px;width:auto;flex:none;background:#fff;border-radius:8px;padding:3px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+@media (max-width:560px){.hero .emblem-h{height:44px}}
 /* אתר המשתתפים (גרסה 1.8): עובדים, יועצים וקבלנים רואים כאן רק את המשימות ששויכו להם, את ההנחיה ואת העדכונים שסומנו גלויים, ומדווחים. */
 :root{
   --bg:#EEF3F0; --surface:#FFFFFF; --surface2:#F5F8F6; --ink:#17231C; --muted:#5B6B62; --line:#DCE5DF;
@@ -116,7 +124,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 <body>
 <div id="login" class="login">
   <form class="login-card" id="login-form" autocomplete="off">
-    <div class="logo" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></div>
+    <img class="emblem-login" src="emblem.jpg" alt="סמל בית חורון" width="84" height="116">
     <h1>ועד בית חורון</h1>
     <div class="sub">המשימות שלי מטעם הוועד</div>
     <div class="field">
@@ -133,10 +141,10 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 <div id="app" hidden>
   <header class="hero">
     <div class="wrap">
-      <div>
+      <div class="brand"><img class="emblem-h" src="emblem.jpg" alt="סמל בית חורון" width="39" height="54"><div>
         <h1>ועד בית חורון · המשימות שלי</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-      </div>
+      </div></div>
       <button class="logout" id="logout" type="button">יציאה</button>
     </div>
   </header>

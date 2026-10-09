@@ -389,7 +389,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div class="brand"><img class="emblem-h" src="emblem.jpg" alt="סמל בית חורון" width="39" height="54"><div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.11 · 9.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.11.1 · 9.10.2026</summary><ul>
+        <li><b>1.11.1:</b> מי שכתובת המייל שלו בג'ימייל: כפתורי המייל (לאחראי, לכל האחראים ולמבצע חיצוני) פותחים מייל מוכן בג'ימייל בלשונית חדשה, במקום אפליקציית המייל של המחשב. לכל השאר, כמו קודם.</li>
         <li><b>1.11:</b> כפתור "מייל לכל האחראים" בכרטיס משימה עם כמה אחראים: מייל אחד לכולם, עם נוסח מוכן וקישור ישיר למשימה. סמל היישוב במסך הכניסה, בכותרת ובאייקון האתר. אחרי שאסף שולח פרוטוקול חתום, סדר היום של הישיבה נסגר לבד: מה שנדון יורד מסדר היום, ומה שלא נדון עובר לישיבה הבאה.</li>
         <li><b>1.10:</b> סדר יום לכל ישיבה מתוכננת: הלשונית "סדר יום" מציגה את הישיבה הקרובה, ואם נקבעו כמה ישיבות, בוחרים ביניהן; בהצעת סעיף בוחרים לאיזו ישיבה, ובכרטיס כל משימה פתוחה יש כפתור "להציע לסדר היום". שליחה לקבוצת הוועד בוואטסאפ: כפתור בראש העמוד להודעה חופשית, ובכרטיס המשימה נוסח מוכן עם קישור ישיר למשימה. שדות התאריך מוצגים ומוזנים בכתיב יום.חודש.שנה.</li>
         <li><b>1.9:</b> ניהול העובדים מאתר הוועד, למי שקיבל הרשאת "ניהול עובדים" (המנכ"לית): לשונית "עובדים" להוספת עובד, השבתה וקוד חדש; "משימה חדשה למבצע"; בכרטיס המשימה "ניהול מבצעים" לשיוך, לעריכת ההנחיה והמועד ולהסרה. הכל נכנס בעדכון הבא של האתר בלי אישור של אסף; קוד הכניסה של עובד חדש נשלח למנהלת במייל.</li>
@@ -771,7 +772,7 @@ function guestRemindHtml(ts, p, compact){
   const text = guestRemindText(ts, p), subj = 'ועד בית חורון: ' + (ts.length === 1 ? ts[0].title : ts.length + ' משימות'), n = firstName(p);
   return '<div class="remind">'+(compact ? '' : '<span class="lbl">תזכורת למבצע החיצוני</span>')+
     (p.phone ? '<a class="btn wa" href="https://wa.me/'+esc(p.phone)+'?text='+encodeURIComponent(text)+'" target="_blank" rel="noopener" data-gw="'+esc(p.id)+'" data-gt="'+esc(ts[0].id)+'">'+ICON_WA+'וואטסאפ ל'+esc(n)+'</a>' : '')+
-    (p.email ? '<a class="btn ml" href="mailto:'+esc(p.email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(text)+'" data-gw="'+esc(p.id)+'" data-gt="'+esc(ts[0].id)+'">'+ICON_MAIL+'מייל ל'+esc(n)+'</a>' : '')+
+    (p.email ? '<a class="btn ml" '+mailAttrs(p.email, subj, text)+' data-gw="'+esc(p.id)+'" data-gt="'+esc(ts[0].id)+'">'+ICON_MAIL+'מייל ל'+esc(n)+'</a>' : '')+
     '<button type="button" class="btn" data-remcopy="'+esc(encodeURIComponent(text))+'">'+ICON_COPY+'העתק</button></div>';
 }
 // תזכורת לפני פנייה ישירה למבצע: הניהול מול העובדים דרך לימור. לימור פטורה; לאחרים מוצג חלון שאינו חוסם.
@@ -880,6 +881,13 @@ const ICON_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
 // שם קצר: כינוי בסוגריים אם יש ("אברהם (אבי) שמלה" ← אבי), אחרת השם הפרטי
 function firstName(p){ const n = String((p && p.name)||''); const nick = n.match(/\(([^)]+)\)/); return nick ? nick[1].trim() : (n.trim().split(/\s+/)[0] || ''); }
+// כתובת המייל (גרסה 1.11.1, בקשת אסף 9.10.2026): צופה שכתובתו בג'ימייל מקבל מייל מוכן בג'ימייל בלשונית חדשה, בחשבון שלו; אחרים, אפליקציית המייל של המכשיר (mailto)
+function mailAttrs(to, subj, body){
+  const mp = ME && DATA ? (DATA.people||[]).find(x => x.id === ME.id) : null, me = String((mp && mp.email) || '').trim();
+  if(/@(gmail|googlemail)\.com$/i.test(me))
+    return 'href="'+esc('https://mail.google.com/mail/?authuser=' + encodeURIComponent(me) + '&view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + encodeURIComponent(subj||'') + '&body=' + encodeURIComponent(body||''))+'" target="_blank" rel="noopener"';
+  return 'href="'+esc('mailto:' + to + '?subject=' + encodeURIComponent(subj||'') + '&body=' + encodeURIComponent(body||''))+'"';
+}
 function remindText(ts, p){
   const url = location.origin + location.pathname;
   const lines = ['היי ' + firstName(p) + ', תזכורת מדאשבורד ועד בית חורון:', ''];
@@ -892,7 +900,7 @@ function remindHtml(ts, p, compact){
   const text = remindText(ts, p), subj = ts.length === 1 ? 'תזכורת: ' + ts[0].title : 'תזכורת: ' + ts.length + ' משימות פתוחות בוועד בית חורון', n = firstName(p);
   return '<div class="remind">'+(compact ? '' : '<span class="lbl">תזכורת לאחראי</span>')+
     (p.phone ? '<a class="btn wa" href="https://wa.me/'+esc(p.phone)+'?text='+encodeURIComponent(text)+'" target="_blank" rel="noopener">'+ICON_WA+'וואטסאפ ל'+esc(n)+'</a>' : '')+
-    (p.email ? '<a class="btn ml" href="mailto:'+esc(p.email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(text)+'">'+ICON_MAIL+'מייל ל'+esc(n)+'</a>' : '')+
+    (p.email ? '<a class="btn ml" '+mailAttrs(p.email, subj, text)+'>'+ICON_MAIL+'מייל ל'+esc(n)+'</a>' : '')+
     '<button type="button" class="btn" data-remcopy="'+esc(encodeURIComponent(text))+'">'+ICON_COPY+'העתק</button></div>';
 }
 // מייל אחד לכל האחראים של משימה (גרסה 1.11): כל הכתובות יחד, בלי הצופה עצמו; מוצג כשנשארים לפחות שני נמענים
@@ -903,8 +911,8 @@ function mailAllHtml(t){
   const url = location.origin + location.pathname + '#task=' + encodeURIComponent(t.id), last = (t.updates||[]).slice(-1)[0];
   const text = ['שלום ' + withMail.map(firstName).join(', ') + ',', '', 'לגבי המשימה "' + t.title + '" בוועד בית חורון:', 'סטטוס: ' + (STATUS[t.status]||t.status) + (isUrgent(t) ? ' · דחופה' : '')].concat(t.due ? ['יעד: ' + fmtD(t.due) + (isOverdue(t) ? ' (באיחור)' : '')] : [])
     .concat(last ? ['עדכון אחרון (' + fmtD(last.at) + '): ' + String(stripTok(last.text)||'').slice(0, 200)] : []).concat(['', 'המשימה באתר הוועד: ' + url, '', 'תודה, ' + (ME ? firstName(ME) : '')]).join('\n');
-  const href = 'mailto:' + withMail.map(p => p.email).join(',') + '?subject=' + encodeURIComponent('ועד בית חורון: ' + t.title) + '&body=' + encodeURIComponent(text);
-  return '<div class="remind all"><a class="btn ml" href="'+esc(href)+'" title="'+esc(withMail.map(p => p.name).join(', '))+'">'+ICON_MAIL+'מייל לכל האחראים</a>'+(miss.length ? '<span class="miss">לא נכלל: '+esc(miss.map(firstName).join(', '))+' (אין מייל)</span>' : '')+'</div>';
+  const attrs = mailAttrs(withMail.map(p => p.email).join(','), 'ועד בית חורון: ' + t.title, text);
+  return '<div class="remind all"><a class="btn ml" '+attrs+' title=""'+esc(withMail.map(p => p.name).join(', '))+'">'+ICON_MAIL+'מייל לכל האחראים</a>'+(miss.length ? '<span class="miss">לא נכלל: '+esc(miss.map(firstName).join(', '))+' (אין מייל)</span>' : '')+'</div>';
 }
 function wireRemind(root){
   root.querySelectorAll('[data-remcopy]').forEach(b => b.onclick = async (e) => { e.stopPropagation(); const txt = decodeURIComponent(b.dataset.remcopy);

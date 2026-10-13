@@ -344,6 +344,20 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 .gm-form .hint{font-size:13px;color:var(--muted);margin:0}
 .gm-open{margin-top:10px;width:100%;background:var(--wait-soft);color:var(--wait);border:1px solid var(--wait);font-weight:700}
 @media (max-width:560px){.gm-form .two{grid-template-columns:1fr}}
+/* גרסה 1.13: תפעול שוטף */
+.ops-intro{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:16px;font-size:15px;color:var(--muted);border-inline-start:5px solid var(--wait)}
+.ops-closed{margin-top:8px}
+.ops-closed>summary{cursor:pointer;font-size:18px;font-weight:800;color:var(--done);padding:6px 0 10px;list-style-position:inside}
+.last.gl{color:var(--ink)}
+.last.gl b{color:var(--wait)}
+.card-acts .btn.trk{border-color:var(--brand);color:var(--brand)}
+:root:not([data-theme="light"]) .card-acts .btn.trk{color:var(--ink)}
+.vaad-chk{display:flex;gap:10px;align-items:flex-start;font-size:15px;font-weight:700;background:var(--brand-soft);color:var(--brand);border-radius:10px;padding:10px 12px}
+:root:not([data-theme="light"]) .vaad-chk{color:var(--ink)}
+.vaad-chk input{width:20px;height:20px;flex:none;margin-top:2px}
+.gw-box textarea{width:100%;min-height:96px;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:16px;resize:vertical;color:var(--ink)}
+.gw-box .l{font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+.gw-box .note{background:var(--wait-soft);color:var(--wait);border-radius:10px;padding:8px 12px;font-weight:700;font-size:14.5px}
 /* ── phone ── */
 @media (max-width:720px){
   .hero .wrap{padding-block:14px 58px}
@@ -355,6 +369,9 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
   .tab{flex:1;flex-direction:column;gap:2px;padding:6px 4px;font-size:12.5px;justify-content:center;min-height:54px}
   .tab .cnt{position:absolute;margin-top:-4px;margin-inline-start:26px;font-size:11px;padding:0 6px;background:var(--bad);color:#fff}
   .tab{position:relative}
+  /* גרסה 1.13: שש לשוניות (עם "תפעול שוטף") נכנסות בשורה בטלפון; תווית ארוכה נשברת לשתי שורות */
+  .tabs{gap:2px;padding-inline:4px}
+  .tab{min-width:0;white-space:normal;text-align:center;line-height:1.15;font-size:12px;padding:6px 2px}
   .tab .cnt{display:none}
   body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   .grid{grid-template-columns:1fr}
@@ -389,7 +406,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div class="brand"><img class="emblem-h" src="emblem.jpg" alt="סמל בית חורון" width="39" height="54"><div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.12 · 11.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.13 · 13.10.2026</summary><ul>
+        <li><b>1.13:</b> לשונית "תפעול שוטף" למשימות העובדים בניהול לימור, נפרדת ממשימות הוועד; לימור סוגרת משימה שוטפת, מעלה משימה לוועד ומעבירה משימה לתפעול השוטף; עובד שנוסף זה עתה אפשר לשייך מיד, עוד לפני העדכון הבא.</li>
         <li><b>1.12:</b> דיוק בזיהוי פרוטוקול חתום: פרוטוקול שחתום בידי יו"ר הוועד מזוהה כחתום גם כשמישהו אחר רשם אותו; פרוטוקול שנשמר פעמיים אינו נבדק פעמיים.</li>
         <li><b>1.11.1:</b> מי שכתובת המייל שלו בג'ימייל: כפתורי המייל (לאחראי, לכל האחראים ולמבצע חיצוני) פותחים מייל מוכן בג'ימייל בלשונית חדשה, במקום אפליקציית המייל של המחשב. לכל השאר, כמו קודם.</li>
         <li><b>1.11:</b> כפתור "מייל לכל האחראים" בכרטיס משימה עם כמה אחראים: מייל אחד לכולם, עם נוסח מוכן וקישור ישיר למשימה. סמל היישוב במסך הכניסה, בכותרת ובאייקון האתר. אחרי שאסף שולח פרוטוקול חתום, סדר היום של הישיבה נסגר לבד: מה שנדון יורד מסדר היום, ומה שלא נדון עובר לישיבה הבאה.</li>
@@ -416,6 +434,7 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <button class="tab" role="tab" data-tab="agenda" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/></svg><span>סדר יום</span><span class="cnt" id="cnt-agenda"></span></button>
       <button class="tab" role="tab" data-tab="guests" aria-selected="false" id="tab-guests" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 11l2 2 4-4"/></svg><span>עובדים</span><span class="cnt" id="cnt-guests"></span></button>
       <button class="tab" role="tab" data-tab="meetings" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>ישיבות ועד</span></button>
+      <button class="tab" role="tab" data-tab="ops" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9l-3.8 3.8z"/></svg><span>תפעול שוטף</span></button>
     </nav>
 
     <section id="view-tasks">
@@ -440,7 +459,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
     <section id="view-agenda" hidden><div id="agenda"></div></section>
     <section id="view-guests" hidden><div id="guests"></div></section>
     <section id="view-meetings" hidden><div id="meetings" class="grid"></div></section>
-    <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה נעשית באישור אסף ברקוביץ.</footer>
+    <section id="view-ops" hidden><div id="ops"></div></section>
+    <footer>הנתונים מוצפנים ומתעדכנים פעמיים ביום. סגירת משימה של הוועד נעשית באישור אסף ברקוביץ.</footer>
   </div>
 </div>
 
@@ -560,6 +580,11 @@ async function sendReport(t, text, status, close, urg, mergeWith){
 }
 
 // ─── helpers ───
+// מסלול תפעול שוטף (גרסה 1.13, החלטות אסף 12.10 ו-13.10.2026): task.track = 'ops' | 'vaad' (חסר = ועד). משימה שוטפת מוצגת רק בלשונית "תפעול שוטף";
+// כל המסכים, המונים וסימוני "חדש" של הוועד עובדים על vaadTasks() בלבד, כך שאף מונה אינו סופר משימה שוטפת.
+const isOps = (t) => !!t && t.track === 'ops';
+const vaadTasks = () => DATA.tasks.filter(t => !isOps(t));
+const opsTasks = () => DATA.tasks.filter(isOps);
 function isOverdue(t){ return t.status !== 'done' && t.due && t.due < todayISO(); }
 function soon(t){ if(t.status==='done'||!t.due) return false; const d=(new Date(t.due)-new Date(todayISO()))/864e5; return d>=0 && d<=7; }
 // ─── אחראים מרובים (מודל ג'): owners = מזהי חברי ועד שווי מעמד; approvals = מי מהם אישר שבוצעה ───
@@ -589,7 +614,7 @@ const URG_ON = '#דחוף ', URG_OFF = '#לא-דחוף ';
 // הצעת איחוד (גרסה 1.5): הטקסט מתחיל ב-'#איחוד <מזהה המשימה האחרת> '. הריצה יוצרת מזה הצעה בלוח העריכה; אסף מחליט.
 const MERGE_TOK = '#איחוד ';
 const mergeTarget = (text) => { const m = String(text||'').match(/^#איחוד\s+(\S+)\s*/); return m ? m[1] : null; };
-const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|לישיבה(?:\s+@pm-[A-Za-z0-9]+)?|איחוד\s+\S+|עובד|שיוך|משימה)\s*/, '');
+const stripTok = (s) => String(s||'').replace(/^#(דחוף|לא-דחוף|לישיבה(?:\s+@pm-[A-Za-z0-9]+)?|איחוד\s+\S+|עובד|שיוך|משימה|מסלול|סגירה)\s*/, '');
 // מקור ותאריך המידע (גרסה 1.6): לכל עדכון src ו-ref; עדכון ישן בלי src מוצג לפי מקור המשימה (תג מקווקו)
 const SRC_LABEL = { whatsapp:'וואטסאפ', mail:'מייל', protocol:'פרוטוקול ישיבה', site:'אתר הוועד', manual:'לוח העריכה (אסף)' };
 function srcOf(t, u){ if(u && u.src) return { type: u.src, ref: u.ref || '', guess: false }; if(u && u.by) return { type: u.by === 'אסף ברקוביץ' ? 'manual' : 'site', ref: '', guess: false }; return { type: (t && t.source) || 'manual', ref: (t && t.sourceRef) || '', guess: !!u }; }
@@ -630,7 +655,7 @@ function freshInfo(t){
   items.sort((a,b) => updStamp(b).localeCompare(updStamp(a)));
   return { n: items.length, items, latest: items[0] || null };
 }
-const isFresh = (t) => t.status !== 'done' && freshInfo(t).n > 0;
+const isFresh = (t) => !isOps(t) && t.status !== 'done' && freshInfo(t).n > 0;
 function freshTagHtml(t){ const f = freshInfo(t); if(!f.n) return ''; const u = f.latest, kind = srcKind(t, u._created ? null : u);
   return '<span class="tag fresh" title="'+esc('מקור: ' + (SRC_KINDS[kind]||kind))+'">'+(SRC_ICON[kind]||'')+' חדש'+(f.n > 1 ? ' · ' + f.n : '')+'</span>'; }
 function freshLine(t){ const f = freshInfo(t); if(!f.n) return ''; const u = f.latest, kind = srcKind(t, u._created ? null : u);
@@ -668,7 +693,7 @@ function refOf(x){ const r = x && x.meetingRef, ls = plannedList(); if(r && ls.s
 function agendaLabel(t){ const r = refOf(t.agenda), n = nearestPlanned(); if(!n || r === n.id) return 'לישיבה הקרובה'; const p = plannedList().find(x => x.id === r); return 'ל' + plannedName(p); }
 function agendaItems(pmId){
   const ag = DATA.agenda || {}, items = [], all = pmId === undefined;
-  DATA.tasks.filter(t => t.agenda && t.agenda.status === 'approved' && t.status !== 'done' && (all || refOf(t.agenda) === pmId)).forEach(t => items.push({ kind:'task', id:t.id, title:t.title, note:t.agenda.note||'', topic: superTopic(t), order: t.agenda.order||0, carried: !!t.agenda.carried, carriedFrom: t.agenda.carriedFrom || '', task:t }));
+  vaadTasks().filter(t => t.agenda && t.agenda.status === 'approved' && t.status !== 'done' && (all || refOf(t.agenda) === pmId)).forEach(t => items.push({ kind:'task', id:t.id, title:t.title, note:t.agenda.note||'', topic: superTopic(t), order: t.agenda.order||0, carried: !!t.agenda.carried, carriedFrom: t.agenda.carriedFrom || '', task:t }));
   (ag.free||[]).filter(x => all || refOf(x) === pmId).forEach(x => { const tp = TOPICS.find(z => z.name === x.topic) || TOPIC_OTHER; items.push({ kind:'free', id:x.id, title:x.title, note:x.note||'', topic: tp, order: x.order||0, carried: !!x.carried, carriedFrom: x.carriedFrom || '' }); });
   items.sort((a,b) => topicIndex(a.topic) - topicIndex(b.topic) || (a.order - b.order) || String(a.title).localeCompare(String(b.title),'he'));
   return items;
@@ -700,7 +725,7 @@ function renderAgenda(){
     if(mode === 'free'){ box.innerHTML = '<label class="l" for="ag-title">כותרת הסעיף</label><input id="ag-title" maxlength="200" placeholder="למשל: חניית אורחים ליד בית הכנסת">'; return; }
     if(pick){ const o = DATA.tasks.find(x => x.id === pick); box.innerHTML = '<div class="mg-sel">משימה: '+esc(o ? o.title : pick)+'<button type="button" id="ag-clr">החלף</button></div>'; $('ag-clr').onclick = () => { pick = null; drawPick(''); }; return; }
     // נושאים שעלו לאחרונה ראשונים (החלטת אסף 2.10.2026): לפי הפעילות האחרונה במשימה (עדכון, שינוי או יצירה)
-    const ls = DATA.tasks.filter(x => x.status !== 'done' && !(x.agenda && x.agenda.status === 'approved') && (!q || ((x.title||'')+' '+(x.topic||'')+' '+(x.subtopic||'')).includes(q))).sort((a,b) => lastActivity(b).localeCompare(lastActivity(a))).slice(0, 12);
+    const ls = vaadTasks().filter(x => x.status !== 'done' && !(x.agenda && x.agenda.status === 'approved') && (!q || ((x.title||'')+' '+(x.topic||'')+' '+(x.subtopic||'')).includes(q))).sort((a,b) => lastActivity(b).localeCompare(lastActivity(a))).slice(0, 12);
     box.innerHTML = '<div class="mg-pick"><input id="ag-q" type="search" placeholder="חיפוש המשימה…" value="'+esc(q)+'">'+(ls.length ? ls.map(x => '<button type="button" class="opt" data-ag="'+esc(x.id)+'">'+esc(x.title)+(x.topic?' <span style="color:var(--muted)">· '+esc(x.topic)+'</span>':'')+'</button>').join('') : '<span class="hint">לא נמצאו משימות.</span>')+'</div>';
     const inp = $('ag-q'); inp.oninput = (e) => { const v = e.target.value; drawPick(v); const i2 = $('ag-q'); if(i2){ i2.focus(); i2.setSelectionRange(v.length, v.length); } };
     box.querySelectorAll('[data-ag]').forEach(b => b.onclick = () => { pick = b.dataset.ag; drawPick(''); }); };
@@ -761,7 +786,7 @@ function lastGuestReport(t, pid){ return (t.updates||[]).filter(u => isGuestUpd(
 function guestSilentDays(t, pid){ const a = taskParts(t).find(x => x.id === pid); const lr = lastGuestReport(t, pid); const from = lr ? updStamp(lr) : (a && a.assignedAt) || t.createdAt || ''; return from ? daysSince(from) : Infinity; }
 const guestOverdue = (t, pid) => t.status !== 'done' && guestSilentDays(t, pid) > GUEST_NOREPORT_DAYS;
 const partDue = (t, a) => (a && a.due) || t.due || null;
-const hasParticipants = () => DATA.tasks.some(t => t.status !== 'done' && partIds(t).length);
+const hasParticipants = () => vaadTasks().some(t => t.status !== 'done' && partIds(t).length);
 function guestRemindText(ts, p){
   const lines = ['היי ' + firstName(p) + ', תזכורת מוועד בית חורון:', ''];
   ts.forEach(t => { const a = taskParts(t).find(x => x.id === p.id) || {}, d = partDue(t, a); lines.push((ts.length > 1 ? '• ' : '') + t.title + (d ? ' (עד ' + fmtD(d) + (d < todayISO() ? ', באיחור' : '') + ')' : '')); if(a.instruction) lines.push('  ' + a.instruction); });
@@ -797,16 +822,26 @@ function wireGuestWarn(root){
 //   '#משימה {title, topic, due, details, participant, instruction}' על המזהה 'new' (נוצרת משימה חדשה עם המנהלת כאחראית).
 // קוד הכניסה של עובד חדש נוצר בריצה ונשלח למנהלת במייל (ולעובד אם יש לו מייל); הוא לעולם אינו נכנס לחבילת האתר.
 const GUEST_TOK = '#עובד ', ASSIGN_TOK = '#שיוך ', NEWTASK_TOK = '#משימה ';
+// גרסה 1.13: '#מסלול {op:up|down, reason}' ו-'#סגירה {text}' על משימה קיימת; ב-'#משימה' גם track ('ops' | 'vaad'), וב-'#משימה' וב-'#שיוך' אפשר
+// ref:{name, phone} במקום מזהה, לעובד שנוסף ממכשיר זה וטרם נקלט (הריצה מעבדת לפי סדר השליחה, ולכן ההוספה קודמת לשיוך).
+const TRACK_TOK = '#מסלול ', CLOSE_TOK = '#סגירה ';
 const GUEST_TASK = { id: 'guest', title: 'ניהול עובדים' }, NEW_TASK = { id: 'new', title: 'משימה חדשה' };
 const canManage = () => !!(PERMS && PERMS.guests === 'manage');
 const parseOp = (text, tok) => { const t = String(text||''); if(!t.startsWith(tok)) return null; try { return JSON.parse(t.slice(tok.length)); } catch(e){ return null; } };
 function pendOps(tok, taskId){ const gen = DATA.generatedAt || ''; return sentList().filter(s => s.t > gen && (!taskId || s.task === taskId) && String(s.text||'').startsWith(tok)).map(s => Object.assign({ _t: s.t, _task: s.task }, parseOp(s.text, tok) || {})); }
 async function sendOp(t, tok, payload){ return sendReport(t, tok + JSON.stringify(payload), 'open', false, null, null); }
 const activeGuests = () => (DATA.participants||[]).filter(p => p.active !== false);
+// עובדים שהמנהלת הוסיפה ממכשיר זה וממתינים לעדכון הבא (גרסה 1.13): לבחירה ב"מי מבצע"; הבחירה נשלחת כ-ref:{name, phone}
+function pendingWorkers(){ const seen = {}; return pendOps(GUEST_TOK, 'guest').filter(o => o.op === 'add' && o.name).map(o => ({ name: String(o.name), phone: String(o.phone||'') })).filter(w => { const k = w.name + '|' + w.phone; if(seen[k]) return false; seen[k] = 1; return true; }); }
+const pendWorkerOpts = (ws) => ws.map((w, i) => '<option value="ref:'+i+'">'+esc(w.name)+' (ממתין לעדכון הבא)</option>').join('');
+const refOfSel = (v, ws) => { const m = String(v||'').match(/^ref:(\d+)$/); return m && ws[+m[1]] ? { name: ws[+m[1]].name, phone: ws[+m[1]].phone } : null; };
+const workerName = (o) => o && o.id ? pNameOf(o.id) : (o && o.ref && o.ref.name) || '';
 function pendLabel(s){
-  const a = parseOp(s.text, ASSIGN_TOK); if(a) return a.op === 'remove' ? 'ביקשת להסיר את ' + pNameOf(a.id) + ' מהמשימה' : 'שייכת את ' + pNameOf(a.id) + (a.instruction ? ' עם הנחיה: ' + a.instruction : '');
+  const a = parseOp(s.text, ASSIGN_TOK); if(a) return a.op === 'remove' ? 'ביקשת להסיר את ' + workerName(a) + ' מהמשימה' : 'שייכת את ' + workerName(a) + (a.instruction ? ' עם הנחיה: ' + a.instruction : '');
   const g = parseOp(s.text, GUEST_TOK); if(g) return ({ add:'עובד חדש: ' + (g.name||''), edit:'עדכון פרטים: ' + (g.name||pNameOf(g.id)), off:'השבתה: ' + pNameOf(g.id), on:'הפעלה מחדש: ' + pNameOf(g.id), code:'קוד חדש ל' + pNameOf(g.id) })[g.op] || 'פעולה על עובד';
-  const n = parseOp(s.text, NEWTASK_TOK); if(n) return 'משימה חדשה: ' + (n.title||'') + (n.participant ? ' (למבצע ' + pNameOf(n.participant) + ')' : '');
+  const n = parseOp(s.text, NEWTASK_TOK); if(n){ const w = n.participant ? pNameOf(n.participant) : (n.ref && n.ref.name) || ''; return 'משימה חדשה: ' + (n.title||'') + (w ? ' (למבצע ' + w + ')' : '') + (n.track === 'vaad' ? ', להבאה לוועד' : n.track === 'ops' ? ', לתפעול השוטף' : ''); }
+  const k = parseOp(s.text, TRACK_TOK); if(k){ const t = DATA.tasks.find(x => x.id === s.task); return (k.op === 'up' ? 'להעלות לוועד' : t && ME && t.createdBy === ME.id ? 'להעביר לתפעול שוטף' : 'הצעה להעביר לתפעול שוטף, לאישור אסף') + (k.reason ? ': ' + k.reason : ''); }
+  const c = parseOp(s.text, CLOSE_TOK); if(c) return 'סגירת המשימה' + (c.text ? ': ' + c.text : '');
   return '';
 }
 function renderGuests(){
@@ -818,9 +853,9 @@ function renderGuests(){
     (ps.length ? ps.map(p => { const mine = DATA.tasks.filter(t => t.status !== 'done' && partIds(t).includes(p.id)); const lr = mine.map(t => lastGuestReport(t, p.id)).filter(Boolean).sort((a,b) => updStamp(b).localeCompare(updStamp(a)))[0];
       return '<div class="gm-row'+(p.active===false?' off':'')+'"><span class="nm">'+esc(p.name)+(p.role?' <span style="font-weight:400;color:var(--muted)">· '+esc(p.role)+'</span>':'')+(p.active===false?' <span class="tag">מושבת</span>':'')+'</span><span class="mt">'+(p.phone?esc(p.phone.replace(/^972/,'0'))+' · ':'')+mine.length+' משימות פתוחות'+(lr?' · דיווח אחרון '+esc(fmtD(lr.at)):' · טרם דיווח')+(p.lastLoginAt?' · נכנס '+esc(fmtD(p.lastLoginAt)):' · טרם נכנס לאתר')+'</span>'+
         '<button type="button" class="btn" data-gedit="'+esc(p.id)+'">עריכה</button>'+(p.active===false?'<button type="button" class="btn" data-gon="'+esc(p.id)+'">הפעל מחדש</button>':'<button type="button" class="btn" data-gcode="'+esc(p.id)+'">קוד חדש</button><button type="button" class="btn" data-goff="'+esc(p.id)+'">השבת</button>')+'</div>'; }).join('') : '<p class="hint" style="font-size:15px">עדיין אין עובדים. הוסיפי את הראשון בטופס שלמטה.</p>') +
-    pend.map(o => '<div class="gm-pend">נשלח, ייכנס בעדכון הבא: '+esc(pendLabel({text: GUEST_TOK + JSON.stringify(o)}))+'</div>').join('') +
+    pend.map(o => '<div class="gm-pend">נשלח, ייכנס בעדכון הבא: '+esc(pendLabel({text: GUEST_TOK + JSON.stringify(o), task: o._task}))+'</div>').join('') +
     '<button type="button" class="btn gm-open" id="gm-addbtn">+ עובד חדש</button><div id="gm-addbox"></div></div>';
-  html += '<div class="gm-card"><h3>משימה חדשה לעובד</h3><p class="hint" style="margin:4px 0 6px;font-size:14px;color:var(--muted)">המשימה נפתחת על שמך בוועד, והעובד רואה את הכותרת, המועד וההנחיה.</p>' + pendNew.map(o => '<div class="gm-pend">נשלח, ייכנס בעדכון הבא: '+esc(pendLabel({text: NEWTASK_TOK + JSON.stringify(o)}))+'</div>').join('') + '<button type="button" class="btn gm-open" id="gm-newbtn">+ משימה חדשה לעובד</button><div id="gm-newbox"></div></div>';
+  html += '<div class="gm-card"><h3>משימה חדשה לעובד</h3><p class="hint" style="margin:4px 0 6px;font-size:14px;color:var(--muted)">המשימה נפתחת על שמך, והעובד רואה את הכותרת, המועד וההנחיה.</p>' + pendNew.map(o => '<div class="gm-pend">נשלח, ייכנס בעדכון הבא: '+esc(pendLabel({text: NEWTASK_TOK + JSON.stringify(o)}))+'</div>').join('') + '<button type="button" class="btn gm-open" id="gm-newbtn">+ משימה חדשה לעובד</button><div id="gm-newbox"></div></div>';
   $('guests').innerHTML = html;
   const root = $('guests');
   const drawAdd = (p) => { const box = $('gm-addbox'); const v = (k) => esc((p && p[k]) || '');
@@ -843,17 +878,20 @@ function renderGuests(){
   root.querySelectorAll('[data-goff]').forEach(b => b.onclick = simple('off', b.dataset.goff, 'להשבית את ' + pNameOf(b.dataset.goff) + '? הקוד שלו יפסיק לעבוד בעדכון הבא, והמשימות שלו נשארות.'));
   root.querySelectorAll('[data-gon]').forEach(b => b.onclick = simple('on', b.dataset.gon, 'להפעיל מחדש את ' + pNameOf(b.dataset.gon) + '? הקוד הקודם יחזור לעבוד בעדכון הבא.'));
   root.querySelectorAll('[data-gcode]').forEach(b => b.onclick = simple('code', b.dataset.gcode, 'להחליף את הקוד של ' + pNameOf(b.dataset.gcode) + '? הקוד הנוכחי יפסיק לעבוד בעדכון הבא, והקוד החדש יישלח אלייך במייל.'));
-  $('gm-newbtn').onclick = () => { const box = $('gm-newbox'); const gs = activeGuests();
+  $('gm-newbtn').onclick = () => { const box = $('gm-newbox'); const gs = activeGuests(), pw = pendingWorkers();
     box.innerHTML = '<form class="gm-form" id="gm-newf"><div><label class="l" for="gn-title">מה המשימה (כותרת קצרה)</label><input id="gn-title" required maxlength="200"></div>'+
-      '<div class="two"><div><label class="l" for="gn-p">מי מבצע</label><select id="gn-p"><option value="">בלי מבצע חיצוני (בינתיים)</option>'+gs.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+'</select></div><div><label class="l" for="gn-due">עד מתי</label>'+dateField('id="gn-due"', '')+'</div></div>'+
+      '<div class="two"><div><label class="l" for="gn-p">מי מבצע</label><select id="gn-p"><option value="">בלי מבצע חיצוני (בינתיים)</option>'+gs.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+pendWorkerOpts(pw)+'</select></div><div><label class="l" for="gn-due">עד מתי</label>'+dateField('id="gn-due"', '')+'</div></div>'+
       '<div class="two"><div><label class="l" for="gn-topic">נושא</label><select id="gn-topic">'+TOPICS.map(tp => '<option>'+esc(tp.name)+'</option>').join('')+'<option>נושאים נוספים</option></select></div><div></div></div>'+
       '<div><label class="l" for="gn-ins">ההנחיה לעובד (זה מה שהוא רואה)</label><textarea id="gn-ins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea></div>'+
       '<div><label class="l" for="gn-det">הערה פנימית לוועד (לא חובה, העובד לא רואה)</label><textarea id="gn-det" maxlength="1000" style="min-height:56px"></textarea></div>'+
+      '<div><label class="vaad-chk"><input type="checkbox" id="gn-vaad"> <span>להביא לוועד</span></label><p class="hint" style="margin-top:6px">בלי סימון, המשימה נכנסת לתפעול השוטף ואינה מוצגת לוועד במשימות הפתוחות.</p></div>'+
       '<div class="row2"><button type="button" class="btn" id="gn-cancel">ביטול</button><button type="submit" class="btn primary" id="gn-send">יצירת המשימה</button></div><div id="gn-msg"></div></form>';
     $('gn-cancel').onclick = () => { box.innerHTML = ''; }; $('gn-title').focus();
     $('gm-newf').onsubmit = async (ev) => { ev.preventDefault(); const title = $('gn-title').value.trim().replace(/\s+/g,' '); if(!title){ $('gn-title').focus(); return; }
       if(badDate('gn-due')) return;
-      const payload = { title, topic: $('gn-topic').value, due: dateVal('gn-due'), details: $('gn-det').value.trim(), participant: $('gn-p').value || '', instruction: $('gn-ins').value.trim() };
+      const ref = refOfSel($('gn-p').value, pw);
+      const payload = { title, topic: $('gn-topic').value, due: dateVal('gn-due'), details: $('gn-det').value.trim(), participant: ref ? '' : ($('gn-p').value || ''), instruction: $('gn-ins').value.trim(), track: $('gn-vaad').checked ? 'vaad' : 'ops' };
+      if(ref) payload.ref = ref;
       $('gn-send').disabled = true; $('gn-send').textContent = 'שולח…';
       const ok = await sendOp(NEW_TASK, NEWTASK_TOK, payload);
       if(ok){ render(); setTab('guests'); } else { $('gn-send').disabled = false; $('gn-send').textContent = 'יצירת המשימה'; $('gn-msg').innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } }; };
@@ -861,18 +899,20 @@ function renderGuests(){
 // ניהול המבצעים של משימה אחת (למנהלת): שיוך, עריכת הנחיה ומועד, הסרה
 function openGuestManage(id){
   const t = DATA.tasks.find(x => x.id === id); const box = $('gm-'+id); if(!t || !box) return;
-  const parts = taskParts(t), gs = activeGuests(), free = gs.filter(p => !parts.some(a => a.id === p.id));
+  const parts = taskParts(t), gs = activeGuests(), free = gs.filter(p => !parts.some(a => a.id === p.id)), pw = pendingWorkers();
   const fid = 'gm-' + id.replace(/[^a-zA-Z0-9_-]/g,'');
   box.innerHTML = '<div class="gm-form">'+(parts.length ? parts.map((a,i) => { const p = participantById(a.id); return '<div><b>'+esc(p ? p.name : a.id)+'</b>'+(p && p.role ? ' <span style="color:var(--muted)">· '+esc(p.role)+'</span>' : '')+
       '<label class="l" for="'+fid+'-ins'+i+'" style="margin-top:6px">ההנחיה</label><textarea id="'+fid+'-ins'+i+'" maxlength="1000">'+esc(a.instruction||'')+'</textarea>'+
       '<div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-due'+i+'">עד מתי</label>'+dateField('id="'+fid+'-due'+i+'"', a.due)+'</div><div style="display:flex;gap:6px;align-items:flex-end"><button type="button" class="btn primary" data-gsave="'+i+'" style="flex:1">שמירה</button><button type="button" class="btn" data-grm="'+i+'">הסרה</button></div></div></div>'; }).join('') : '<p class="hint" style="font-size:15px">למשימה הזו עדיין אין מבצע חיצוני.</p>')+
-    (free.length ? '<div style="border-top:1px solid var(--line);padding-top:10px"><label class="l" for="'+fid+'-sel">לשייך מבצע</label><select id="'+fid+'-sel"><option value="">בחרי עובד…</option>'+free.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+'</select>'+
-      '<label class="l" for="'+fid+'-nins" style="margin-top:6px">ההנחיה לעובד</label><textarea id="'+fid+'-nins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea><div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-ndue">עד מתי (ריק: המועד של המשימה)</label>'+dateField('id="'+fid+'-ndue"', '')+'</div><div style="display:flex;align-items:flex-end"><button type="button" class="btn primary" id="'+fid+'-add" style="flex:1">שיוך</button></div></div></div>' : (gs.length ? '' : '<p class="hint">אין עובדים פעילים. מוסיפים בלשונית "עובדים".</p>'))+
+    (free.length || pw.length ? '<div style="border-top:1px solid var(--line);padding-top:10px"><label class="l" for="'+fid+'-sel">לשייך מבצע</label><select id="'+fid+'-sel"><option value="">בחרי עובד…</option>'+free.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+pendWorkerOpts(pw)+'</select>'+
+      '<label class="l" for="'+fid+'-nins" style="margin-top:6px">ההנחיה לעובד</label><textarea id="'+fid+'-nins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea><div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-ndue">עד מתי (ריק: המועד של המשימה)</label>'+dateField('id="'+fid+'-ndue"', '')+'</div><div style="display:flex;align-items:flex-end"><button type="button" class="btn primary" id="'+fid+'-add" style="flex:1">שיוך</button></div></div></div>' : (gs.length || pw.length ? '' : '<p class="hint">אין עובדים פעילים. מוסיפים בלשונית "עובדים".</p>'))+
     '<p class="hint">השינויים נכנסים בעדכון הבא של האתר.</p><div class="row2"><button type="button" class="btn" id="'+fid+'-close">סגירה</button></div><div id="'+fid+'-msg"></div></div>';
   const done = (ok) => { if(ok){ st.open[id] = true; render(); const b = $('gm-'+id); if(b) b.innerHTML = '<div class="rep-msg" role="status">נשלח. ייכנס בעדכון הבא של האתר.</div>'; } else { const m = $(fid+'-msg'); if(m) m.innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } };
   box.querySelectorAll('[data-gsave]').forEach(b => b.onclick = async () => { const i = +b.dataset.gsave, a = parts[i]; if(badDate(fid+'-due'+i)) return; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: a.id, instruction: $(fid+'-ins'+i).value.trim(), due: dateVal(fid+'-due'+i) })); });
   box.querySelectorAll('[data-grm]').forEach(b => b.onclick = async () => { const a = parts[+b.dataset.grm]; if(!confirm('להסיר את ' + pNameOf(a.id) + ' מהמשימה?')) return; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'remove', id: a.id })); });
-  const addB = $(fid+'-add'); if(addB) addB.onclick = async () => { const pid = $(fid+'-sel').value; if(!pid){ $(fid+'-sel').focus(); return; } if(badDate(fid+'-ndue')) return; addB.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: pid, instruction: $(fid+'-nins').value.trim(), due: dateVal(fid+'-ndue') })); };
+  const addB = $(fid+'-add'); if(addB) addB.onclick = async () => { const pid = $(fid+'-sel').value; if(!pid){ $(fid+'-sel').focus(); return; } if(badDate(fid+'-ndue')) return; addB.disabled = true;
+    const ref = refOfSel(pid, pw), payload = ref ? { op:'set', instruction: $(fid+'-nins').value.trim(), due: dateVal(fid+'-ndue'), ref } : { op:'set', id: pid, instruction: $(fid+'-nins').value.trim(), due: dateVal(fid+'-ndue') };
+    done(await sendOp(t, ASSIGN_TOK, payload)); };
   $(fid+'-close').onclick = () => render();
 }
 
@@ -931,7 +971,7 @@ function start(){
   // OWNERS: מזהי האחראים שמופיעים במשימות; לימור ראשונה, השאר לפי שם
   OWNERS = Array.from(new Set([].concat.apply([], DATA.tasks.map(ownerIds))));
   OWNERS.sort((a,b) => (a==='m-limor'?-1:b==='m-limor'?1:0) || nameOf(a).localeCompare(nameOf(b),'he'));
-  try { const h = location.hash.slice(1); if(['tasks','closed','meetings','agenda','guests'].includes(h)) st.tab = h; const am = h.match(/^agenda=(pm-[A-Za-z0-9]+)$/); if(am){ st.tab = 'agenda'; st.agPm = am[1]; } } catch(e){}
+  try { const h = location.hash.slice(1); if(['tasks','closed','meetings','agenda','guests','ops'].includes(h)) st.tab = h; const am = h.match(/^agenda=(pm-[A-Za-z0-9]+)$/); if(am){ st.tab = 'agenda'; st.agPm = am[1]; } } catch(e){}
   setTab(st.tab);
   openFromHash(); window.addEventListener('hashchange', openFromHash);
 }
@@ -941,7 +981,8 @@ function openFromHash(){
   if(!id) return; const t = DATA.tasks.find(x => x.id === id); if(!t) return;
   st.q = ''; st.owner = 'all'; st.status = 'active'; st.stat = ''; st.cq = ''; st.cowner = 'all'; st.open[id] = true;
   const q = $('q'); if(q) q.value = ''; const cq = $('cq'); if(cq) cq.value = '';
-  setTab(t.status === 'done' ? 'closed' : 'tasks');
+  if(isOps(t) && t.status === 'done') st.opsClosed = true;
+  setTab(isOps(t) ? 'ops' : t.status === 'done' ? 'closed' : 'tasks');
   const head = document.querySelector('.task-head[data-id="'+CSS.escape(id)+'"]'); if(!head) return;
   const art = head.closest('.task'); art.classList.add('flash'); const go = () => art.scrollIntoView({ block: 'start' }); go(); setTimeout(go, 400); setTimeout(go, 1200); setTimeout(() => art.classList.remove('flash'), 5000);
 }
@@ -957,7 +998,7 @@ function ownerChips(sel, key, list){
 
 function filtered(){
   const q = st.q.trim();
-  return DATA.tasks.filter(t => {
+  return vaadTasks().filter(t => {
     if(t.status === 'done') return false;
     if(st.stat==='overdue' && !isOverdue(t)) return false;
     if(st.stat==='waiting' && t.status!=='waiting') return false;
@@ -972,7 +1013,7 @@ function filtered(){
 }
 
 function render(){
-  const all = DATA.tasks, active = all.filter(t=>t.status!=='done'), closed = all.filter(t=>t.status==='done');
+  const all = vaadTasks(), active = all.filter(t=>t.status!=='done'), closed = all.filter(t=>t.status==='done');
   const n = { open: active.length, overdue: all.filter(isOverdue).length, waiting: all.filter(t=>t.status==='waiting').length,
     done30: closed.filter(t=>closedAt(t) && (Date.now()-new Date(closedAt(t)))<30*864e5).length };
   const tile = (k,label,cls) => '<button class="stat '+cls+(st.tab==='tasks'&&st.stat===k?' active':'')+'" data-stat="'+k+'"><b>'+n[k]+'</b><span>'+label+'</span></button>';
@@ -1088,7 +1129,7 @@ function render(){
     : '<div class="empty">'+(closed.length ? 'אין משימות סגורות שמתאימות לסינון.' : 'עדיין לא נסגרו משימות. משימה שתיסגר תופיע כאן, עם תאריך הסגירה.')+'</div>';
   wireTasks($('closed'));
 
-  renderAgenda(); renderGuests();
+  renderAgenda(); renderGuests(); renderOps();
   // meetings
   const ms = (DATA.meetings||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   $('meetings').innerHTML = ms.length ? ms.map(m => {
@@ -1107,12 +1148,13 @@ function wireTasks(root){
   root.querySelectorAll('[data-gm]').forEach(b => b.onclick = () => openGuestManage(b.dataset.gm));
   root.querySelectorAll('[data-agp]').forEach(b => b.onclick = () => proposeAgenda(b.dataset.agp));
   root.querySelectorAll('[data-wg]').forEach(b => b.onclick = () => { const t = DATA.tasks.find(x => x.id === b.dataset.wg); if(t) openGroupSend(taskGroupText(t)); });
+  root.querySelectorAll('[data-trk]').forEach(b => b.onclick = () => openTrackDialog(b.dataset.id, b.dataset.trk));
   wireRemind(root);
 }
 
 // desk (לא חובה): בקיבוץ "לפי משתתף", המזהה של המבצע שהשולחן שלו מוצג; ההנחיה שלו מודגשת בכרטיס
 function taskHtml(t, desk){
-  const done = t.status === 'done', late = isOverdue(t);
+  const done = t.status === 'done', late = isOverdue(t), ops = isOps(t);
   const last = (t.updates||[]).slice(-1)[0];
   const parts = taskParts(t), silent = done ? [] : parts.map(x => x.id).filter(id => guestOverdue(t, id));
   const mine = (PERMS && (PERMS.report || PERMS.guests)) ? pendingFor(t.id) : [];
@@ -1123,18 +1165,21 @@ function taskHtml(t, desk){
   if(!done && t.agenda && t.agenda.status === 'approved') tags.push('<span class="tag agenda" title="'+esc(t.agenda.note||'')+'">'+esc(agendaLabel(t))+'</span>');
   if(urg) tags.push('<span class="tag urgent" title="'+esc(urgentBy(t) ? 'סימן/ה: '+urgentBy(t) : '')+'">דחוף</span>');
   tags.push('<span class="tag status">'+(done?ICON.check:'')+esc(STATUS[t.status]||t.status)+'</span>');
-  if(!done && ids.length && nOk === ids.length) tags.push('<span class="tag pend">כל האחראים אישרו שבוצעה, ממתין לאישור אסף</span>');
+  // משימה שוטפת (גרסה 1.13) נסגרת בידי לימור בלבד; אישור ביצוע שנרשם עליה מוצג בלי "ממתין לאישור אסף"
+  if(!done && ops && (nOk || Object.keys(apr).length)) tags.push('<span class="tag pend">דווח כבוצע</span>');
+  else if(!done && ids.length && nOk === ids.length) tags.push('<span class="tag pend">כל האחראים אישרו שבוצעה, ממתין לאישור אסף</span>');
   else if(!done && (nOk || Object.keys(apr).length)) tags.push('<span class="tag pend">'+(ids.length > 1 ? 'אישרו שבוצעה: '+nOk+' מתוך '+ids.length : 'דווח כבוצע, ממתין לאישור אסף')+'</span>');
   if(!done && iSent && !apr[ME.id]) tags.push('<span class="tag pend">אישרת שבוצעה, יופיע בעדכון הבא</span>');
   if(done) tags.push('<span class="tag">'+ICON.cal+'נסגרה '+fmtD(closedAt(t))+'</span>');
   else if(t.due) tags.push('<span class="tag '+(late?'late':soon(t)?'soon':'')+'">'+ICON.cal+(late?'באיחור · ':'יעד ')+fmtD(t.due)+'</span>');
   if(isMine(t)) tags.push('<span class="tag topic">'+ICON_USER+'באחריותי</span>');
   // מבצע חיצוני (גרסה 1.8): שם המבצע, ותג "ללא דיווח N ימים" כשעברו 14 יום מהדיווח האחרון שלו או מהשיוך
-  if(parts.length && st.group !== 'participant') tags.push('<span class="tag guest" title="'+esc(parts.map(x => (x.instruction ? pNameOf(x.id) + ': ' + x.instruction : pNameOf(x.id))).join(' · '))+'">מבצע חיצוני: '+esc(parts.map(x => pNameOf(x.id)).join(', '))+'</span>');
+  if(parts.length && !desk && (ops || st.group !== 'participant')) tags.push('<span class="tag guest" title="'+esc(parts.map(x => (x.instruction ? pNameOf(x.id) + ': ' + x.instruction : pNameOf(x.id))).join(' · '))+'">מבצע חיצוני: '+esc(parts.map(x => pNameOf(x.id)).join(', '))+'</span>');
   if(silent.length) tags.push('<span class="tag noreport" title="'+esc(silent.map(pNameOf).join(', '))+'">ללא דיווח '+Math.floor(Math.min.apply(null, silent.map(id => guestSilentDays(t, id))))+' ימים</span>');
-  const byTopic = !done && st.group==='topic';
+  const byTopic = !done && !ops && st.group==='topic';
   // אחראים: בקיבוץ לפי נושא כולם; בקיבוץ לפי אחראי רק כשהמשימה משותפת. ✓ למי שאישר שבוצעה
-  if(!done && (byTopic || ids.length > 1)) ids.forEach(id => tags.push('<span class="tag own" style="--oc:'+ownerColor(id)+'"><i class="dot"></i>'+esc(firstName(personById(id)||{name:id}))+(apr[id]?' ✓':'')+'</span>'));
+  if(!done && (byTopic || ops || ids.length > 1)) ids.forEach(id => tags.push('<span class="tag own" style="--oc:'+ownerColor(id)+'"><i class="dot"></i>'+esc(firstName(personById(id)||{name:id}))+(apr[id]?' ✓':'')+'</span>'));
+  if(!done && !ops && canManage() && t.trackProposal && t.trackProposal.to === 'ops') tags.push('<span class="tag pend">הוצע להעביר לתפעול שוטף, ממתין לאישור אסף</span>');
   if(t.topic && !(byTopic && superTopic(t).name===t.topic)) tags.push('<span class="tag topic">'+esc(t.topic)+'</span>');
   if(t.subtopic && !byTopic) tags.push('<span class="tag sub">'+esc(t.subtopic)+'</span>');
   if(t.meetingId) tags.push('<span class="tag">'+esc(meetingLabel(t.meetingId))+'</span>');
@@ -1149,18 +1194,75 @@ function taskHtml(t, desk){
   return '<article class="'+cls+'"><button class="task-head" data-id="'+esc(t.id)+'" aria-expanded="'+expanded+'">'+
     '<span class="task-top"><span class="task-title">'+esc(t.title)+'</span>'+ICON.chev+'</span>'+
     '<span class="tags">'+tags.join('')+'</span>'+
-    (fresh && !expanded ? freshLine(t) : '')+(last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(stripTok(last.text))+'</span>' : '')+
+    (fresh && !expanded ? freshLine(t) : '')+(ops && !done && !expanded ? parts.filter(a => !desk || a.id === desk).map(a => { const d = partDue(t, a); return '<span class="last gl"><b>'+esc(pNameOf(a.id))+':</b> '+(a.instruction ? esc(a.instruction) : 'טרם נכתבה הנחיה')+(d ? ' · עד '+esc(fmtD(d)) : '')+'</span>'; }).join('') : '')+(last && !expanded ? '<span class="last">'+fmtD(last.at)+': '+esc(stripTok(last.text))+'</span>' : '')+
     '</button>'+
     '<div class="task-body"'+(expanded?'':' hidden')+'>'+'<div class="srcline"><span>מקור המידע:</span>'+srcTag(t, null, true)+'<span>· תאריך המידע: '+fmtD(t.createdAt)+'</span></div>'+(t.details?'<p class="details">'+esc(t.details)+'</p>':'')+ginsHtml+
     ((pend||upd)?'<ul class="tl">'+pend+upd+'</ul>':'<p class="empty-upd">אין עדכונים עדיין.</p>')+
     (canReport(t) ? '<div id="rep-'+esc(t.id)+'"><button class="btn rep-open" data-rep="'+esc(t.id)+'">עדכון התקדמות</button></div>' : '')+
-    '<div class="card-acts">'+(!done && !(t.agenda && t.agenda.status === 'approved') ? '<button type="button" class="btn" data-agp="'+esc(t.id)+'">להציע לסדר היום</button>' : '')+'<button type="button" class="btn" data-wg="'+esc(t.id)+'">'+ICON_WA+'שליחה לקבוצת הוועד</button></div>'+
+    '<div class="card-acts">'+(!done && !ops && !(t.agenda && t.agenda.status === 'approved') ? '<button type="button" class="btn" data-agp="'+esc(t.id)+'">להציע לסדר היום</button>' : '')+'<button type="button" class="btn" data-wg="'+esc(t.id)+'">'+ICON_WA+'שליחה לקבוצת הוועד</button></div>'+
+    trackActsHtml(t)+
     (!done && canManage() ? '<div id="gm-'+esc(t.id)+'"><button class="btn gm-open" data-gm="'+esc(t.id)+'">'+(parts.length ? 'ניהול המבצעים החיצוניים' : 'לשייך מבצע חיצוני')+'</button></div>' : '')+
     (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);
       const h = who.map(id => remindHtml([t], personById(id), true)).join('');
       return h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h+mailAllHtml(t) : mailAllHtml(t); })() : '')+
     (!done && parts.length ? parts.filter(a => !desk || a.id === desk).map(a => guestRemindHtml([t], participantById(a.id), false)).join('') : '')+
     '</div></article>';
+}
+
+// ─── תפעול שוטף (גרסה 1.13) ───
+// לשונית לכל חבר ועד: משימות שוטפות פתוחות לפי "השולחן של", אחריהן "בלי מבצע חיצוני", וקטע מקופל של מה שנסגר ב-30 הימים האחרונים. בלי מונה ובלי "חדש".
+function renderOps(){
+  const box = $('ops'); if(!box) return;
+  const ts = opsTasks(), open = ts.filter(t => t.status !== 'done');
+  const closed = ts.filter(t => t.status === 'done' && closedAt(t) && (Date.now() - new Date(closedAt(t))) < 30*864e5).sort((a,b) => closedAt(b).localeCompare(closedAt(a)));
+  const byDue = (a,b) => (isUrgent(b)-isUrgent(a)) || (isOverdue(b)-isOverdue(a)) || (a.due||'9').localeCompare(b.due||'9');
+  const groups = {}, none = [];
+  open.forEach(t => { const ids = partIds(t); if(!ids.length) none.push(t); ids.forEach(pid => (groups[pid] = groups[pid] || []).push(t)); });
+  let html = '<div class="ops-intro">משימות התפעול השוטף של העובדים, בניהול לימור. הן אינן חלק מהמשימות של הוועד.</div>';
+  html += Object.keys(groups).sort((a,b) => pNameOf(a).localeCompare(pNameOf(b),'he')).map(pid => {
+    const p = participantById(pid) || { id: pid, name: pid }, list = groups[pid].sort((a,b) => (guestOverdue(b,pid)-guestOverdue(a,pid)) || byDue(a,b));
+    const nSil = list.filter(t => guestOverdue(t, pid)).length, label = p.name + (p.role ? ' · ' + p.role : '') + (p.org ? ' (' + p.org + ')' : '');
+    return '<div class="group"><div class="group-h"><span class="av" style="--oc:var(--wait)">'+esc(initial(p.name))+'</span><h2>השולחן של '+esc(label)+'</h2><small>'+list.length+' משימות</small>'+(nSil ? '<span class="tag noreport">'+nSil+' ללא דיווח</span>' : '')+guestRemindHtml(list, p, true)+'</div><div class="grid">'+list.map(t => taskHtml(t, pid)).join('')+'</div></div>';
+  }).join('');
+  if(none.length) html += '<div class="group"><div class="group-h"><span class="av" style="--oc:var(--muted)">–</span><h2>בלי מבצע חיצוני</h2><small>'+none.length+' משימות</small></div><div class="grid">'+none.sort(byDue).map(t => taskHtml(t)).join('')+'</div></div>';
+  if(!open.length) html += '<div class="empty">אין כרגע משימות תפעול שוטף פתוחות.</div>';
+  html += '<details class="ops-closed" id="ops-closed"'+(st.opsClosed ? ' open' : '')+'><summary>נסגרו ב-30 הימים האחרונים · '+closed.length+'</summary>'+(closed.length ? '<div class="grid">'+closed.map(t => taskHtml(t)).join('')+'</div>' : '<div class="empty">לא נסגרו משימות תפעול שוטף ב-30 הימים האחרונים.</div>')+'</details>';
+  box.innerHTML = html;
+  $('ops-closed').ontoggle = (e) => { st.opsClosed = e.target.open; };
+  wireTasks(box);
+}
+// פעולות המנהלת בכרטיס (canManage): במשימה שוטפת פתוחה "סגירת המשימה" ו"להעלות לוועד"; במשימת ועד פתוחה ומאושרת "להעביר לתפעול שוטף".
+// אחרי שליחה מוצג "נשלח, ייכנס בעדכון הבא" במקום הכפתורים, עד הבנייה הבאה.
+function trackActsHtml(t){
+  if(!canManage() || t.status === 'done' || t.approved === false) return '';
+  const pend = sentList().filter(s => s.t > (DATA.generatedAt || '') && s.task === t.id && (String(s.text||'').startsWith(TRACK_TOK) || String(s.text||'').startsWith(CLOSE_TOK)));
+  if(pend.length) return pend.map(s => '<div class="gm-pend">נשלח, ייכנס בעדכון הבא: '+esc(pendLabel(s))+'</div>').join('');
+  const b = (kind, label) => '<button type="button" class="btn trk" data-trk="'+kind+'" data-id="'+esc(t.id)+'">'+label+'</button>';
+  return '<div class="card-acts">'+(isOps(t) ? b('close', ICON.check + 'סגירת המשימה') + b('up', 'להעלות לוועד') : b('down', 'להעביר לתפעול שוטף'))+'</div>';
+}
+function openTrackDialog(id, kind){
+  const t = DATA.tasks.find(x => x.id === id); if(!t || !canManage()) return;
+  const own = !!ME && t.createdBy === ME.id;
+  const cfg = {
+    close: { h: 'סגירת המשימה', p: 'המשימה תיסגר בעדכון הבא של האתר ותעבור לקטע "נסגרו ב-30 הימים האחרונים".', l: 'מה נעשה (לא חובה)', req: false, go: 'סגירת המשימה' },
+    up:    { h: 'להעלות לוועד', p: 'המשימה תעבור למשימות הפתוחות של הוועד בעדכון הבא של האתר.', l: 'למה (חובה)', req: true, go: 'להעלות לוועד' },
+    down:  { h: 'להעביר לתפעול שוטף', p: own ? 'המשימה תעבור לתפעול השוטף בעדכון הבא של האתר.' : '', l: 'למה (חובה)', req: true, go: own ? 'להעביר לתפעול שוטף' : 'שליחה לאישור אסף' }
+  }[kind]; if(!cfg) return;
+  const box = document.createElement('div'); box.className = 'gw-modal';
+  box.innerHTML = '<form class="gw-box" role="dialog" aria-modal="true" aria-labelledby="trk-h"><h3 id="trk-h">'+esc(cfg.h)+'</h3><p><b>'+esc(t.title)+'</b></p>'+
+    (kind === 'down' && !own ? '<p class="note">המשימה לא נפתחה על ידך, ולכן ההעברה תגיע לאסף לאישור.</p>' : '<p>'+esc(cfg.p)+'</p>')+
+    '<label class="l" for="trk-text">'+esc(cfg.l)+'</label><textarea id="trk-text" maxlength="1000"'+(cfg.req ? ' required' : '')+'></textarea>'+
+    '<div class="row2" style="margin-top:12px"><button type="button" class="btn" id="trk-cancel">ביטול</button><button type="submit" class="btn primary" id="trk-go">'+esc(cfg.go)+'</button></div><div id="trk-msg"></div></form>';
+  document.body.appendChild(box);
+  const close = () => box.remove(), ta = box.querySelector('#trk-text'), go = box.querySelector('#trk-go');
+  box.querySelector('#trk-cancel').onclick = close; box.onclick = (e) => { if(e.target === box) close(); };
+  box.querySelector('form').onsubmit = async (ev) => { ev.preventDefault();
+    const v = ta.value.replace(/\s+/g, ' ').trim().slice(0, 1000); if(cfg.req && !v){ ta.focus(); return; }
+    go.disabled = true; go.textContent = 'שולח…';
+    const ok = kind === 'close' ? await sendOp(t, CLOSE_TOK, { text: v }) : await sendOp(t, TRACK_TOK, { op: kind, reason: v });
+    if(ok){ close(); st.open[t.id] = true; render(); }
+    else { go.disabled = false; go.textContent = cfg.go; box.querySelector('#trk-msg').innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } };
+  ta.focus();
 }
 
 function openForm(id){
@@ -1172,6 +1274,7 @@ function openForm(id){
     '<div><span class="l" style="font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">סטטוס</span><div class="seg" role="radiogroup" aria-label="סטטוס">'+
       ['open','progress','waiting'].map(k => '<label><input type="radio" name="'+fid+'-st" value="'+k+'"'+(k===t.status?' checked':'')+'><span class="s-'+k+'">'+(k==='waiting'?'ממתינה':STATUS[k])+'</span></label>').join('')+'</div></div>'+
     (function(){ const ids = ownerIds(t), owner = ids.includes(ME.id), multi = ids.length > 1;
+      if(isOps(t)) return '<p class="hint">העדכון יופיע לחברי הוועד בעדכון הבא של האתר. משימת תפעול שוטף נסגרת בידי לימור.</p>';
       if(approvalsOf(t)[ME.id]) return '<p class="hint">כבר אישרת שהמשימה בוצעה. היא נסגרת באישור אסף'+(multi ? ', בדרך כלל אחרי שכל האחראים אישרו' : '')+'.</p>';
       return '<label class="close-chk"><input type="checkbox" id="'+fid+'-close"> <span>'+(owner ? 'מבחינתי המשימה בוצעה' : 'המשימה בוצעה. לבקש מאסף לסגור אותה')+'</span></label>'+
         '<p class="hint">העדכון יופיע לחברי הוועד בעדכון הבא של האתר. '+(multi ? 'למשימה כמה אחראים; היא מגיעה לאסף לסגירה עם האישורים של כולם, ונסגרת רק באישורו.' : 'משימה נסגרת רק באישור אסף.')+'</p>'; })()+
@@ -1185,7 +1288,7 @@ function openForm(id){
   const mgBox = $(fid+'-mg');
   const drawMg = (q) => { q = String(q||'').trim();
     if(mergeWith){ const o = DATA.tasks.find(x => x.id === mergeWith); mgBox.innerHTML = '<div class="mg-sel">לאחד עם: '+esc(o ? o.title : mergeWith)+'<button type="button" id="'+fid+'-mgclr">ביטול</button></div><p class="hint">ההצעה תגיע לאסף; האיחוד נעשה רק באישורו.</p>'; $(fid+'-mgclr').onclick = () => { mergeWith = null; drawMg(''); }; return; }
-    const ls = DATA.tasks.filter(x => x.id !== t.id && x.status !== 'done' && (!q || ((x.title||'')+' '+(x.topic||'')+' '+(x.subtopic||'')).includes(q))).slice(0, 12);
+    const ls = DATA.tasks.filter(x => x.id !== t.id && x.status !== 'done' && isOps(x) === isOps(t) && (!q || ((x.title||'')+' '+(x.topic||'')+' '+(x.subtopic||'')).includes(q))).slice(0, 12);
     mgBox.innerHTML = '<div class="mg-pick"><input id="'+fid+'-mgq" type="search" placeholder="חיפוש המשימה הכפולה…" value="'+esc(q)+'">'+(ls.length ? ls.map(x => '<button type="button" class="opt" data-mg="'+esc(x.id)+'">'+esc(x.title)+(x.topic?' <span style="color:var(--muted)">· '+esc(x.topic)+'</span>':'')+'</button>').join('') : '<span class="hint">לא נמצאו משימות.</span>')+'<button type="button" class="mg-link" id="'+fid+'-mgclose">סגור</button></div>';
     const inp = $(fid+'-mgq'); inp.oninput = (e) => { const v = e.target.value; drawMg(v); const i2 = $(fid+'-mgq'); if(i2){ i2.focus(); i2.setSelectionRange(v.length, v.length); } };
     mgBox.querySelectorAll('[data-mg]').forEach(b => b.onclick = () => { mergeWith = b.dataset.mg; drawMg(''); });
@@ -1210,7 +1313,7 @@ function setTab(k){
   if(k === 'guests' && !canManage()) k = 'tasks';
   st.tab = k;
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab===k)));
-  $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings'; $('view-agenda').hidden = k!=='agenda'; $('view-guests').hidden = k!=='guests';
+  $('view-tasks').hidden = k!=='tasks'; $('view-closed').hidden = k!=='closed'; $('view-meetings').hidden = k!=='meetings'; $('view-agenda').hidden = k!=='agenda'; $('view-guests').hidden = k!=='guests'; $('view-ops').hidden = k!=='ops';
   render();
 }
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => { if(b.dataset.tab==='tasks') st.stat=''; setTab(b.dataset.tab); window.scrollTo({top:0}); });

@@ -326,6 +326,10 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 .dfield.inline{display:inline-flex;width:auto;vertical-align:middle}.dfield.inline .dtext{width:130px;flex:0 0 130px}
 .freshrow .dtext{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;min-height:44px}
 .ag-pms{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.proto-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.proto-row .btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;border-color:var(--brand);color:var(--brand)}
+:root:not([data-theme="light"]) .proto-row .btn{color:var(--ink)}
+.proto-row span{font-size:13.5px;color:var(--muted)}
 .ag-pms .btn{display:inline-flex;align-items:center;gap:8px}
 .ag-pms .btn small{background:rgba(0,0,0,.08);border-radius:999px;padding:0 8px;font-size:12.5px}
 .ag-form select{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;width:100%;font-size:16px;min-height:44px}
@@ -418,7 +422,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div class="brand"><img class="emblem-h" src="emblem.jpg" alt="סמל בית חורון" width="39" height="54"><div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.14 · 25.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.16 · 26.10.2026</summary><ul>
+        <li><b>1.16:</b> הפקת תבנית פרוטוקול: בלשונית "סדר יום", למי שמנהל את סדר היום, כפתור "📝 הפקת תבנית פרוטוקול" שמוריד קובץ Word על נייר המכתבים של המזכירות, עם סדר היום של הישיבה, הנוכחים וטבלת "נושאים לדיון / החלטות", לעריכת הפרוטוקול.</li>
         <li><b>1.14:</b> משימת אב ותת משימות: משימה שאסף שייך כתת משימה מוצגת מתחת למשימת האב, עם חץ לקיפול ופתיחה, מונה "N מתוך M תת משימות נסגרו" ופס התקדמות. תת משימה היא משימה לכל דבר: אחראים, יעד, סטטוס, אישור ביצוע ותזכורות.</li>
         <li><b>1.13:</b> לשונית "תפעול שוטף" למשימות העובדים בניהול לימור, נפרדת ממשימות הוועד; לימור סוגרת משימה שוטפת, מעלה משימה לוועד ומעבירה משימה לתפעול השוטף; עובד שנוסף זה עתה אפשר לשייך מיד, עוד לפני העדכון הבא.</li>
         <li><b>1.12:</b> דיוק בזיהוי פרוטוקול חתום: פרוטוקול שחתום בידי יו"ר הוועד מזוהה כחתום גם כשמישהו אחר רשם אותו; פרוטוקול שנשמר פעמיים אינו נבדק פעמיים.</li>
@@ -734,7 +739,8 @@ function renderAgenda(){
   const pm = pl.find(p => p.id === st.agPm) || near || {}, isNear = near && pm.id === near.id, items = agendaItems(pm.id || ''), mine = myAgendaPending();
   const sel = pl.length > 1 ? '<div class="ag-pms" role="group" aria-label="בחירת ישיבה">'+pl.map(p => '<button type="button" class="btn'+(p.id === pm.id ? ' primary' : '')+'" data-agpm="'+esc(p.id)+'" aria-pressed="'+(p.id === pm.id)+'">'+(p === near ? 'הקרובה · ' : '')+esc(p.date ? fmtD(p.date) : 'טרם נקבע')+'<small>'+agendaItems(p.id).length+'</small></button>').join('')+'</div>' : '';
   const when = pm.date ? '<div class="when"><span>'+ICON.cal+esc(fmtD(pm.date))+(pm.time ? ' בשעה ' + esc(pm.time) : '')+'</span>'+(pm.place ? '<span>'+esc(pm.place)+'</span>' : '')+'</div>' : '<div class="when"><span class="cnt2" style="color:var(--muted)">מועד הישיבה טרם נקבע</span></div>';
-  let html = sel + '<div class="ag-card"><h2>'+(isNear ? 'ישיבת הוועד הקרובה' : 'ישיבת ועד מתוכננת')+'</h2>'+when+(pm.note ? '<p style="margin:6px 0 0">'+esc(pm.note)+'</p>' : '')+'<p class="hint" style="margin:8px 0 0;font-size:13.5px;color:var(--muted)">'+items.length+' סעיפים בסדר היום. סדר היום נקבע בידי אסף; אפשר להציע סעיף בטופס שבתחתית העמוד.'+(pl.length > 1 ? ' מתוכננות ' + pl.length + ' ישיבות; הבחירה למעלה.' : '')+'</p></div>';
+  let html = sel + '<div class="ag-card"><h2>'+(isNear ? 'ישיבת הוועד הקרובה' : 'ישיבת ועד מתוכננת')+'</h2>'+when+(pm.note ? '<p style="margin:6px 0 0">'+esc(pm.note)+'</p>' : '')+'<p class="hint" style="margin:8px 0 0;font-size:13.5px;color:var(--muted)">'+items.length+' סעיפים בסדר היום. סדר היום נקבע בידי אסף; אפשר להציע סעיף בטופס שבתחתית העמוד.'+(pl.length > 1 ? ' מתוכננות ' + pl.length + ' ישיבות; הבחירה למעלה.' : '')+'</p>'+
+    (canProto() && pm.id && pm.date ? '<div class="proto-row"><button type="button" class="btn" id="ag-proto">📝 הפקת תבנית פרוטוקול</button><span>קובץ Word על נייר המכתבים, עם הסעיפים של ישיבה זו</span></div>' : '')+'</div>';
   let last = null, n = 0;
   items.forEach(it => { if(it.topic !== last){ html += '<div class="ag-topic" style="--oc:'+it.topic.color+'">'+esc(it.topic.name)+'<small>'+items.filter(x => x.topic === it.topic).length+'</small></div>'; last = it.topic; } n++;
     html += '<div class="ag-item '+it.kind+(it.carried?' carried':'')+'" style="--oc:'+it.topic.color+'"><span class="num">'+n+'.</span><div class="body"><div class="ttl">'+(it.kind === 'task' ? '<a href="#task='+encodeURIComponent(it.id)+'">'+esc(it.title)+'</a>' : esc(it.title))+'</div>'+
@@ -748,6 +754,7 @@ function renderAgenda(){
     '<div class="row2" style="display:flex;gap:8px"><button type="submit" class="btn primary" id="ag-send" style="flex:1">שליחת ההצעה</button></div><div id="ag-msg"></div></form>';
   $('agenda').innerHTML = html;
   $('agenda').querySelectorAll('[data-agpm]').forEach(b => b.onclick = () => { st.agPm = b.dataset.agpm; renderAgenda(); });
+  if($('ag-proto')) $('ag-proto').onclick = () => downloadProtocol(pm, items, $('ag-proto'));
   let mode = 'task', pick = AG_PREPICK; AG_PREPICK = null;
   const drawPick = (q) => { q = String(q||'').trim(); const box = $('ag-pick');
     if(mode === 'free'){ box.innerHTML = '<label class="l" for="ag-title">כותרת הסעיף</label><input id="ag-title" maxlength="200" placeholder="למשל: חניית אורחים ליד בית הכנסת">'; return; }
@@ -770,6 +777,108 @@ function renderAgenda(){
     const ok = await sendReport(t, text.trim().slice(0, 2000), t.status || 'open', false, null, null);
     renderAgenda(); const m = $('ag-msg'); if(m) m.innerHTML = ok ? '<div class="rep-msg" role="status">ההצעה נשלחה לאסף. היא תופיע בסדר היום לאחר אישורו.</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>';
   };
+}
+// ─── תבנית פרוטוקול לישיבת ועד (גרסה 1.16, b-protocol-template, בקשת אסף 26.10.2026) ───
+// קובץ Word על נייר המכתבים של המזכירות, במבנה של פרוטוקול 65: סדר יום ממוספר בעמוד הראשון, ובעמוד השני "פרוטוקול ישיבת ועד",
+// נוכחים, מוזמנים, טבלה "נושאים לדיון | החלטות" (ראשון: אישור פרוטוקול קודם, אחרון: עדכונים) ושורת רשם.
+// ערכת נייר המכתבים (protocol-kit.json): חלקי הקובץ הקבועים, דחוסים מראש (deflate) עם crc וגודל, כך שה-ZIP נבנה בלי ספרייה ובלי פריסה.
+// הקוד זהה בלוח הניהול ובאתר הוועד; שינוי באחד מחייב שינוי זהה בשני.
+const PROTO = (() => {
+  const X = (v) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const FONT = '<w:rFonts w:ascii="David" w:hAnsi="David" w:cs="David"/>';
+  const rpr = (o) => '<w:rPr>' + FONT + (o.b ? '<w:b/><w:bCs/>' : '') + '<w:sz w:val="' + (o.sz || 24) + '"/><w:szCs w:val="' + (o.sz || 24) + '"/>' + (o.u ? '<w:u w:val="single"/>' : '') + '<w:rtl/></w:rPr>';
+  const run = (t, o) => '<w:r>' + rpr(o || {}) + '<w:t xml:space="preserve">' + X(t) + '</w:t></w:r>';
+  const SP = '<w:spacing w:after="0" w:line="480" w:lineRule="auto"/>';
+  const p = (ppr, runs, o) => '<w:p><w:pPr>' + ppr + rpr(o || {}) + '</w:pPr>' + (runs || '') + '</w:p>';
+  const pageBreak = '<w:p><w:pPr>' + SP + '</w:pPr><w:r><w:br w:type="page"/></w:r></w:p>';
+  // תאריך בכתיב של הפרוטוקולים: 6.10.26
+  const dShort = (iso) => { const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? (+m[3]) + '.' + (+m[2]) + '.' + m[1].slice(2) : ''; };
+  // "אברהם (אבי) שמלה" נכתב בפרוטוקולים "אבי שמלה"
+  const shortName = (n) => { const m = String(n || '').trim().match(/^\S+\s+\(([^)]+)\)\s+(.+)$/); return m ? m[1] + ' ' + m[2] : String(n || '').trim(); };
+  function cell(w, inner){ return '<w:tc><w:tcPr><w:tcW w:w="' + w + '" w:type="dxa"/></w:tcPr>' + inner + '</w:tc>'; }
+  function row(left, right, head){
+    const pl = p(SP + '<w:jc w:val="both"/>', left ? run(left, { b: true }) : '', { b: true });
+    const pr = p(SP, right ? run(right, { b: !!head }) : '', { b: !!head });
+    return '<w:tr><w:trPr><w:trHeight w:val="' + (head ? 290 : 381) + '"/></w:trPr>' + cell(3573, pl) + cell(4806, pr) + '</w:tr>';
+  }
+  // m: {number, date (YYYY-MM-DD), items:[כותרות], prev:{number, date}|null, present:[שמות], recorder:{name, fem}}
+  function documentXml(kit, m){
+    const num = String(m.number || '').trim(), dd = dShort(m.date);
+    const title = (txt) => p(SP + '<w:ind w:left="368" w:hanging="284"/><w:jc w:val="center"/>', run(txt, { b: true, sz: 28, u: true }), { b: true, sz: 28, u: true });
+    const items = ['אישור פרוטוקול קודם'].concat(m.items || [], ['עדכונים']);
+    const gap = p(SP + '<w:ind w:left="368" w:hanging="368"/><w:jc w:val="both"/>', ''); // שורה ריקה מתחת לנייר המכתבים, כמו בפרוטוקולים
+    let b = gap + title('סדר יום לישיבת ועד מס׳ ' + num + '  ' + dd);
+    items.forEach(t => { b += p('<w:pStyle w:val="a7"/><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>' + SP + '<w:ind w:hanging="284"/><w:jc w:val="both"/>', run(t)); });
+    b += pageBreak + gap;
+    b += p(SP, run('פרוטוקול ישיבת ועד מס׳ ' + num + ' יום ' + dd, { b: true, sz: 28, u: true }), { b: true });
+    b += p(SP + '<w:ind w:left="368" w:hanging="284"/>', run('נוכחים:', { b: true }) + run(' ' + (m.present || []).map(shortName).join(', ') + ((m.present || []).length ? '.' : '')));
+    b += p(SP + '<w:ind w:left="368" w:hanging="284"/>', run('מוזמנים:', { b: true }) + run(' '));
+    const prevTxt = m.prev && m.prev.number ? 'אישור פרוטוקול קודם מספר ' + m.prev.number + (m.prev.date ? ' מתאריך ' + dShort(m.prev.date) : '') : 'אישור פרוטוקול קודם';
+    b += '<w:tbl><w:tblPr><w:tblStyle w:val="aa"/><w:bidiVisual/><w:tblW w:w="8379" w:type="dxa"/><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr><w:tblGrid><w:gridCol w:w="3573"/><w:gridCol w:w="4806"/></w:tblGrid>' +
+      row('נושאים לדיון', 'החלטות', true) + row(prevTxt, '') + (m.items || []).map(t => row(t, '')).join('') + row('עדכונים', '') + '</w:tbl>';
+    b += p(SP + '<w:ind w:left="509" w:hanging="368"/><w:jc w:val="both"/>', '');
+    const rec = m.recorder || {};
+    b += p(SP + '<w:ind w:left="509" w:hanging="368"/><w:jc w:val="both"/>', run((rec.fem ? 'רשמה' : 'רשם') + ' : ' + (rec.name || '')));
+    b += '<w:sectPr><w:headerReference w:type="default" r:id="rId7"/><w:footerReference w:type="default" r:id="rId8"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="2011" w:right="1800" w:bottom="1440" w:left="1800" w:header="708" w:footer="708" w:gutter="0"/><w:cols w:space="708"/><w:bidi/><w:rtlGutter/><w:docGrid w:linePitch="360"/></w:sectPr>';
+    return kit.root + '<w:body>' + b + '</w:body></w:document>';
+  }
+  function coreXml(m){ const now = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>' + X('פרוטוקול ישיבת ועד מס׳ ' + (m.number || '')) + '</dc:title><dc:creator>' + X((m.recorder && m.recorder.name) || 'ועד בית חורון') + '</dc:creator><cp:lastModifiedBy>' + X((m.recorder && m.recorder.name) || '') + '</cp:lastModifiedBy><cp:revision>1</cp:revision><dcterms:created xsi:type="dcterms:W3CDTF">' + now + '</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">' + now + '</dcterms:modified></cp:coreProperties>'; }
+  const T = (() => { const t = new Uint32Array(256); for(let n = 0; n < 256; n++){ let c = n; for(let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  const crc = (u8) => { let c = 0xFFFFFFFF; for(let i = 0; i < u8.length; i++) c = T[(c ^ u8[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  const b64 = (s) => { const bin = atob(s), u = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; };
+  // ZIP: חלקי הערכה בשיטה 8 (דחוסים מראש), החלקים שנבנים כאן בשיטה 0
+  function zip(entries){
+    const enc = new TextEncoder(), out = [], central = []; let off = 0;
+    const u16 = (v) => [v & 0xFF, (v >>> 8) & 0xFF], u32 = (v) => [v & 0xFF, (v >>> 8) & 0xFF, (v >>> 16) & 0xFF, (v >>> 24) & 0xFF];
+    entries.forEach(e => { const name = enc.encode(e.name), meth = e.method || 0;
+      const head = new Uint8Array([].concat(u32(0x04034b50), u16(20), u16(0x0800), u16(meth), u16(0), u16(0x21), u32(e.crc), u32(e.data.length), u32(e.size), u16(name.length), u16(0)));
+      out.push(head, name, e.data);
+      central.push(new Uint8Array([].concat(u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(meth), u16(0), u16(0x21), u32(e.crc), u32(e.data.length), u32(e.size), u16(name.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(off))), name);
+      off += head.length + name.length + e.data.length; });
+    const cd = central.reduce((a, x) => a + x.length, 0);
+    const end = new Uint8Array([].concat(u32(0x06054b50), u16(0), u16(0), u16(entries.length), u16(entries.length), u32(cd), u32(off), u16(0)));
+    return new Blob(out.concat(central, [end]), { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  }
+  function build(kit, m){
+    const enc = new TextEncoder(), plain = (name, s) => { const d = enc.encode(s); return { name, data: d, crc: crc(d), size: d.length, method: 0 }; };
+    const fixed = kit.parts.map(x => ({ name: x.n, data: b64(x.d), crc: x.c >>> 0, size: x.s, method: 8 }));
+    const ct = fixed.shift(); // [Content_Types].xml ראשון בקובץ
+    return zip([ct, plain('word/document.xml', documentXml(kit, m)), plain('docProps/core.xml', coreXml(m))].concat(fixed));
+  }
+  // הנתונים לתבנית, מאותם מקורות בלוח ובאתר. o: {pm, planned (ממוינות), meetings, people [{name, role, active}], items [כותרות], me {name, role}}
+  // מספר הישיבה: המספר הגבוה בישיבות שנרשמו ועוד 1, ועוד מקומה בין הישיבות המתוכננות; נוכחים: כל חברי הוועד הפעילים בלי המנכ"לית (שרושמת)
+  function model(o){
+    const nums = (o.meetings || []).map(x => ({ n: parseInt(String(x.number || '').replace(/\D/g, ''), 10), d: x.date || '' })).filter(x => x.n > 0).sort((a,b) => a.n - b.n);
+    const last = nums[nums.length - 1] || null, idx = Math.max(0, (o.planned || []).findIndex(x => x.id === o.pm.id));
+    const skip = (t) => /^(אישור פרוטוקול|עי?דכונים\.?$)/.test(t);
+    const isCeo = (r) => /מנכ"?ל/.test(String(r || ''));
+    const me = o.me || {};
+    return {
+      number: last ? String(last.n + 1 + idx) : '', date: o.pm.date || '',
+      prev: last ? { number: String(last.n + idx), date: idx ? ((o.planned[idx - 1] || {}).date || '') : last.d } : null,
+      items: (o.items || []).map(t => String(t || '').trim()).filter(t => t && !skip(t)),
+      present: (o.people || []).filter(x => x && x.active !== false && !isCeo(x.role)).map(x => shortName(x.name)).sort((a,b) => a.localeCompare(b, 'he')),
+      recorder: { name: shortName(me.name || ''), fem: /(ית|ת ועד)$/.test(String(me.role || '').trim()) } };
+  }
+  const fileName = (m) => 'פרוטוקול ישיבת ועד ' + (m.number || '') + ' - ' + dShort(m.date).replace(/\./g, '-') + ' (תבנית).docx';
+  return { build, model, documentXml, fileName, shortName, dShort };
+})();
+// באתר הכפתור מוצג רק למי שמנהל את סדר היום (הרשאת "סימון ישיר": לימור ואסף). התצוגה בלבד; סדר היום גלוי ממילא לכל חבר ועד
+const canProto = () => !!(ME && PERMS && PERMS.agenda === 'direct');
+let _protoKit = null, _protoBusy = false;
+async function downloadProtocol(pm, items, btn){
+  if(_protoBusy) return; _protoBusy = true; const lbl = btn ? btn.textContent : ''; if(btn){ btn.disabled = true; btn.textContent = 'מכין תבנית…'; }
+  try {
+    if(!_protoKit){ const r = await fetch('protocol-kit.json?v=1.16', { cache: 'no-cache' }); if(!r.ok) throw new Error('נייר המכתבים לא נטען (' + r.status + ')'); _protoKit = await r.json(); }
+    const people = (DATA.people || []).map(p => ({ name: p.name, role: p.role, active: !!p.perms }));
+    const me = (DATA.people || []).find(p => p.id === ME.id) || { name: ME.name || '', role: '' };
+    const m = PROTO.model({ pm, planned: plannedList(), meetings: DATA.meetings || [], people, items: items.map(it => it.title), me });
+    const url = URL.createObjectURL(PROTO.build(_protoKit, m)), a = document.createElement('a');
+    a.href = url; a.download = PROTO.fileName(m); document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 20000);
+    if(btn){ btn.textContent = '✓ התבנית ירדה'; setTimeout(() => { btn.textContent = lbl; }, 3000); }
+  } catch(e){ console.error(e); alert('הפקת התבנית נכשלה: ' + ((e && e.message) || e) + '. נסו שוב, או פנו לאסף.'); if(btn) btn.textContent = lbl; }
+  finally { _protoBusy = false; if(btn) btn.disabled = false; }
 }
 // כפתור "להציע לסדר היום" בכרטיס המשימה: פותח את הטופס עם המשימה מסומנת
 function proposeAgenda(id){ AG_PREPICK = id; setTab('agenda'); }

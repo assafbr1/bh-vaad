@@ -294,6 +294,19 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
 .ag-item .sub2{font-size:13.5px;color:var(--muted);margin-top:2px}
 .ag-item.free{border-inline-start-style:dashed}
 .ag-item.pending{opacity:.85;border-inline-start-color:var(--pend)}
+/* גרסה 1.17 (b-agenda-inline-cards): סעיף שהוא משימה מוצג ככרטיס המשימה עצמו; העטיפה שקופה והכרטיס נושא את העיצוב */
+.ag-item.ag-task{background:none;box-shadow:none;padding:0;border-inline-start:none}
+.ag-item.ag-task .num{padding-top:14px}
+.ag-item.ag-task .body{min-width:0}
+.ag-item.ag-task .ag-note{font-size:13.5px;color:var(--muted);margin:0 2px 6px}
+.ag-item.ag-task .ag-note b{color:var(--wait)}
+.ag-open{display:inline-block;font-size:13px;color:var(--muted);margin:6px 2px 0;text-decoration:underline}
+.ag-open:hover{color:var(--brand)}
+/* גרסה 1.17 (b-mail-all-vaad) */
+.remind.vaad{margin-top:6px}
+.vm-to{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:13.5px;color:var(--muted);margin:4px 0 8px}
+.vm-to b{color:var(--ink);font-weight:600}
+.gw-box input.vm-su{width:100%;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:16px;color:var(--ink);margin-bottom:8px}
 .ag-form{margin-top:14px;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
 .ag-form input{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;width:100%;font-size:16px}
 .ag-form .l{font-size:14px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
@@ -422,7 +435,8 @@ footer{color:var(--muted);font-size:13px;margin:30px 0 20px;text-align:center}
       <div class="brand"><img class="emblem-h" src="emblem.jpg" alt="סמל בית חורון" width="39" height="54"><div>
         <h1>ועד בית חורון · מעקב משימות</h1>
         <div class="meta"><span id="hello"></span><span id="updated"></span></div>
-        <details class="ver"><summary>גרסה 1.16 · 26.10.2026</summary><ul>
+        <details class="ver"><summary>גרסה 1.17 · 10.11.2026</summary><ul>
+        <li><b>1.17:</b> בלשונית "סדר יום" כל סעיף שהוא משימה מוצג ככרטיס המשימה עצמו, כמו ברשימת המשימות הפתוחות: אותם תגים, חץ להרחבה עם הפירוט, ציר העדכונים והתזכורות, וקישור קטן "פתח ברשימת המשימות". כפתור "מייל לכל הוועד" בכרטיס המשימה: מייל אחד לכל חברי הוועד עם נוסח מוכן שאפשר לערוך לפני השליחה.</li>
         <li><b>1.16:</b> הפקת תבנית פרוטוקול: בלשונית "סדר יום", למי שמנהל את סדר היום, כפתור "📝 הפקת תבנית פרוטוקול" שמוריד קובץ Word על נייר המכתבים של המזכירות, עם סדר היום של הישיבה, הנוכחים וטבלת "נושאים לדיון / החלטות", לעריכת הפרוטוקול.</li>
         <li><b>1.14:</b> משימת אב ותת משימות: משימה שאסף שייך כתת משימה מוצגת מתחת למשימת האב, עם חץ לקיפול ופתיחה, מונה "N מתוך M תת משימות נסגרו" ופס התקדמות. תת משימה היא משימה לכל דבר: אחראים, יעד, סטטוס, אישור ביצוע ותזכורות.</li>
         <li><b>1.13:</b> לשונית "תפעול שוטף" למשימות העובדים בניהול לימור, נפרדת ממשימות הוועד; לימור סוגרת משימה שוטפת, מעלה משימה לוועד ומעבירה משימה לתפעול השוטף; עובד שנוסף זה עתה אפשר לשייך מיד, עוד לפני העדכון הבא.</li>
@@ -743,8 +757,11 @@ function renderAgenda(){
     (canProto() && pm.id && pm.date ? '<div class="proto-row"><button type="button" class="btn" id="ag-proto">📝 הפקת תבנית פרוטוקול</button><span>קובץ Word על נייר המכתבים, עם הסעיפים של ישיבה זו</span></div>' : '')+'</div>';
   let last = null, n = 0;
   items.forEach(it => { if(it.topic !== last){ html += '<div class="ag-topic" style="--oc:'+it.topic.color+'">'+esc(it.topic.name)+'<small>'+items.filter(x => x.topic === it.topic).length+'</small></div>'; last = it.topic; } n++;
-    html += '<div class="ag-item '+it.kind+(it.carried?' carried':'')+'" style="--oc:'+it.topic.color+'"><span class="num">'+n+'.</span><div class="body"><div class="ttl">'+(it.kind === 'task' ? '<a href="#task='+encodeURIComponent(it.id)+'">'+esc(it.title)+'</a>' : esc(it.title))+'</div>'+
-      '<div class="sub2">'+(it.kind === 'task' ? esc(ownerGroup(it.task)) + ' · ' + esc(STATUS[it.task.status]||'') : 'סעיף לדיון')+(it.note ? ' · ' + esc(it.note) : '')+(it.carried ? ' · <b>' + (it.carriedFrom ? 'הועבר מישיבת ' + esc(fmtD(it.carriedFrom)) : 'הועבר מהישיבה הקודמת') + '</b>' : '')+'</div></div></div>'; });
+    // סעיף שהוא משימה (גרסה 1.17, b-agenda-inline-cards): כרטיס המשימה עצמו (taskHtml), עם ההערה וההעברה מעליו וקישור קטן לרשימת המשימות; סעיף חופשי כפי שהיה
+    if(it.kind === 'task'){ const carriedTxt = it.carried ? '<b>' + (it.carriedFrom ? 'הועבר מישיבת ' + esc(fmtD(it.carriedFrom)) : 'הועבר מהישיבה הקודמת') + '</b>' : '';
+      html += '<div class="ag-item task ag-task" style="--oc:'+it.topic.color+'"><span class="num">'+n+'.</span><div class="body">'+(it.note || carriedTxt ? '<div class="ag-note">'+(it.note ? 'הערה לסעיף: ' + esc(it.note) : '')+(it.note && carriedTxt ? ' · ' : '')+carriedTxt+'</div>' : '')+taskHtml(it.task)+'<a class="ag-open" href="#task='+encodeURIComponent(it.id)+'">פתח ברשימת המשימות ↗</a></div></div>'; }
+    else html += '<div class="ag-item '+it.kind+(it.carried?' carried':'')+'" style="--oc:'+it.topic.color+'"><span class="num">'+n+'.</span><div class="body"><div class="ttl">'+esc(it.title)+'</div>'+
+      '<div class="sub2">סעיף לדיון'+(it.note ? ' · ' + esc(it.note) : '')+(it.carried ? ' · <b>' + (it.carriedFrom ? 'הועבר מישיבת ' + esc(fmtD(it.carriedFrom)) : 'הועבר מהישיבה הקודמת') + '</b>' : '')+'</div></div></div>'; });
   if(!items.length) html += '<div class="empty">סדר היום לישיבה זו טרם נקבע.</div>';
   if(mine.length) html += '<div class="ag-topic" style="--oc:var(--pend)">ההצעות שלי שממתינות לאישור אסף<small>'+mine.length+'</small></div>' + mine.map(s => { const t = s.task === 'agenda' ? null : DATA.tasks.find(x => x.id === s.task), sp = pl.find(p => p.id === agPmFromText(s.text)); return '<div class="ag-item pending" style="--oc:var(--pend)"><span class="num">•</span><div class="body"><div class="ttl">'+esc(t ? t.title : stripTok(s.text))+'</div><div class="sub2">'+(t ? 'הערה: ' + esc(stripTok(s.text) || 'ללא') : 'סעיף חדש')+(sp && pl.length > 1 ? ' · ל' + esc(plannedName(sp)) : '')+' · נשלח '+esc(fmtD(s.t))+', ממתין לאישור אסף</div></div></div>'; }).join('');
   const pmOpts = pl.filter(p => p.id).map(p => '<option value="'+esc(p.id)+'"'+(p.id === pm.id ? ' selected' : '')+'>'+(p === near ? 'הישיבה הקרובה, ' : '')+esc(plannedName(p))+'</option>').join('');
@@ -752,7 +769,8 @@ function renderAgenda(){
     '<div id="ag-pick"></div>'+(pl.filter(p => p.id).length > 1 ? '<div><label class="l" for="ag-pm">לאיזו ישיבה</label><select id="ag-pm">'+pmOpts+'</select></div>' : '')+'<div><label class="l" for="ag-note">הערה (למה לדון, מה מבקשים להחליט)</label><input id="ag-note" maxlength="300"></div>'+
     '<p class="hint" style="margin:0;font-size:13px;color:var(--muted)">ההצעה מגיעה לאסף ונכנסת לסדר היום לאחר אישורו'+(ME && PERMS && PERMS.agenda === 'direct' ? ' (ההצעות שלך נכנסות ישירות)' : '')+'.</p>'+
     '<div class="row2" style="display:flex;gap:8px"><button type="submit" class="btn primary" id="ag-send" style="flex:1">שליחת ההצעה</button></div><div id="ag-msg"></div></form>';
-  $('agenda').innerHTML = html;
+  $('agenda').innerHTML = html; wireTasks($('agenda'));
+  $('agenda').querySelectorAll('a.ag-open').forEach(a => a.onclick = (e) => { e.preventDefault(); const h = a.getAttribute('href').slice(1); if(location.hash.slice(1) === h) openFromHash(); else location.hash = h; });
   $('agenda').querySelectorAll('[data-agpm]').forEach(b => b.onclick = () => { st.agPm = b.dataset.agpm; renderAgenda(); });
   if($('ag-proto')) $('ag-proto').onclick = () => downloadProtocol(pm, items, $('ag-proto'));
   let mode = 'task', pick = AG_PREPICK; AG_PREPICK = null;
@@ -1034,8 +1052,10 @@ function renderGuests(){
       if(ok){ render(); setTab('guests'); } else { $('gn-send').disabled = false; $('gn-send').textContent = 'יצירת המשימה'; $('gn-msg').innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } }; };
 }
 // ניהול המבצעים של משימה אחת (למנהלת): שיוך, עריכת הנחיה ומועד, הסרה
+// גרסה 1.17: אותה משימה יכולה להופיע גם בלשונית סדר יום וגם ברשימת המשימות, ולכן המכל (rep-<id>, gm-<id>) נבחר מהלשונית המוצגת ולא לפי המזהה בלבד
+function visBox(id){ const els = Array.from(document.querySelectorAll('#' + CSS.escape(id))); return els.find(el => !el.closest('section[hidden]') && !el.closest('[hidden]')) || els[0] || null; }
 function openGuestManage(id){
-  const t = DATA.tasks.find(x => x.id === id); const box = $('gm-'+id); if(!t || !box) return;
+  const t = DATA.tasks.find(x => x.id === id); const box = visBox('gm-'+id); if(!t || !box) return;
   const parts = taskParts(t), gs = activeGuests(), free = gs.filter(p => !parts.some(a => a.id === p.id)), pw = pendingWorkers();
   const fid = 'gm-' + id.replace(/[^a-zA-Z0-9_-]/g,'');
   box.innerHTML = '<div class="gm-form">'+(parts.length ? parts.map((a,i) => { const p = participantById(a.id); return '<div><b>'+esc(p ? p.name : a.id)+'</b>'+(p && p.role ? ' <span style="color:var(--muted)">· '+esc(p.role)+'</span>' : '')+
@@ -1044,7 +1064,7 @@ function openGuestManage(id){
     (free.length || pw.length ? '<div style="border-top:1px solid var(--line);padding-top:10px"><label class="l" for="'+fid+'-sel">לשייך מבצע</label><select id="'+fid+'-sel"><option value="">בחרי עובד…</option>'+free.map(p => '<option value="'+esc(p.id)+'">'+esc(p.name)+(p.role?' · '+esc(p.role):'')+'</option>').join('')+pendWorkerOpts(pw)+'</select>'+
       '<label class="l" for="'+fid+'-nins" style="margin-top:6px">ההנחיה לעובד</label><textarea id="'+fid+'-nins" maxlength="1000" placeholder="מה בדיוק לעשות, איפה, ועד מתי"></textarea><div class="two" style="margin-top:6px"><div><label class="l" for="'+fid+'-ndue">עד מתי (ריק: המועד של המשימה)</label>'+dateField('id="'+fid+'-ndue"', '')+'</div><div style="display:flex;align-items:flex-end"><button type="button" class="btn primary" id="'+fid+'-add" style="flex:1">שיוך</button></div></div></div>' : (gs.length || pw.length ? '' : '<p class="hint">אין עובדים פעילים. מוסיפים בלשונית "עובדים".</p>'))+
     '<p class="hint">השינויים נכנסים בעדכון הבא של האתר.</p><div class="row2"><button type="button" class="btn" id="'+fid+'-close">סגירה</button></div><div id="'+fid+'-msg"></div></div>';
-  const done = (ok) => { if(ok){ st.open[id] = true; render(); const b = $('gm-'+id); if(b) b.innerHTML = '<div class="rep-msg" role="status">נשלח. ייכנס בעדכון הבא של האתר.</div>'; } else { const m = $(fid+'-msg'); if(m) m.innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } };
+  const done = (ok) => { if(ok){ st.open[id] = true; render(); const b = visBox('gm-'+id); if(b) b.innerHTML = '<div class="rep-msg" role="status">נשלח. ייכנס בעדכון הבא של האתר.</div>'; } else { const m = $(fid+'-msg'); if(m) m.innerHTML = '<div class="rep-msg err" role="alert">השליחה נכשלה. בדקי את החיבור ונסי שוב.</div>'; } };
   box.querySelectorAll('[data-gsave]').forEach(b => b.onclick = async () => { const i = +b.dataset.gsave, a = parts[i]; if(badDate(fid+'-due'+i)) return; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'set', id: a.id, instruction: $(fid+'-ins'+i).value.trim(), due: dateVal(fid+'-due'+i) })); });
   box.querySelectorAll('[data-grm]').forEach(b => b.onclick = async () => { const a = parts[+b.dataset.grm]; if(!confirm('להסיר את ' + pNameOf(a.id) + ' מהמשימה?')) return; b.disabled = true; done(await sendOp(t, ASSIGN_TOK, { op:'remove', id: a.id })); });
   const addB = $(fid+'-add'); if(addB) addB.onclick = async () => { const pid = $(fid+'-sel').value; if(!pid){ $(fid+'-sel').focus(); return; } if(badDate(fid+'-ndue')) return; addB.disabled = true;
@@ -1090,7 +1110,43 @@ function mailAllHtml(t){
   const text = ['שלום ' + withMail.map(firstName).join(', ') + ',', '', 'לגבי המשימה "' + t.title + '" בוועד בית חורון:', 'סטטוס: ' + (STATUS[t.status]||t.status) + (isUrgent(t) ? ' · דחופה' : '')].concat(t.due ? ['יעד: ' + fmtD(t.due) + (isOverdue(t) ? ' (באיחור)' : '')] : [])
     .concat(last ? ['עדכון אחרון (' + fmtD(last.at) + '): ' + String(stripTok(last.text)||'').slice(0, 200)] : []).concat(['', 'המשימה באתר הוועד: ' + url, '', 'תודה, ' + (ME ? firstName(ME) : '')]).join('\n');
   const attrs = mailAttrs(withMail.map(p => p.email).join(','), 'ועד בית חורון: ' + t.title, text);
-  return '<div class="remind all"><a class="btn ml" '+attrs+' title=""'+esc(withMail.map(p => p.name).join(', '))+'">'+ICON_MAIL+'מייל לכל האחראים</a>'+(miss.length ? '<span class="miss">לא נכלל: '+esc(miss.map(firstName).join(', '))+' (אין מייל)</span>' : '')+'</div>';
+  return '<div class="remind all"><a class="btn ml" '+attrs+' title="'+esc(withMail.map(p => p.name).join(', '))+'">'+ICON_MAIL+'מייל לכל האחראים</a>'+(miss.length ? '<span class="miss">לא נכלל: '+esc(miss.map(firstName).join(', '))+' (אין מייל)</span>' : '')+'</div>';
+}
+// ─── מייל לכל חברי הוועד על משימה (גרסה 1.17, b-mail-all-vaad, בקשת אסף 3.11.2026) ───
+// מייל אחד לכל חברי הוועד הפעילים שיש להם כתובת בחבילה, בלי הצופה עצמו, דרך mailAttrs (ג'ימייל בחשבון הצופה, אחרת mailto).
+// הכפתור פותח חלון עם הנושא והנוסח לעריכה (כמו "שליחה לקבוצת הוועד") ואז את המייל. חבר פעיל בלי מייל מצוין "לא נכלל".
+const isActivePerson = (p) => !!p && (!!p.perms || !!p.email || !!p.phone);
+function vaadMailMembers(){ return (DATA.people||[]).filter(p => isActivePerson(p) && p.email && !(ME && p.id === ME.id)).sort((a,b) => (a.id==='m-limor'?-1:b.id==='m-limor'?1:0) || String(a.name).localeCompare(String(b.name),'he')); }
+function vaadMailMissing(){ return (DATA.people||[]).filter(p => isActivePerson(p) && !p.email && !(ME && p.id === ME.id)); }
+function vaadMailSubject(t){ return 'ועד בית חורון: ' + t.title; }
+function vaadMailText(t){ return ['שלום לכולם,', ''].concat(taskGroupText(t).split('\n')).concat(['', 'תודה, ' + (ME ? firstName(ME) : '')]).join('\n'); }
+function mailHref(to, subj, body){
+  const mp = ME && DATA ? (DATA.people||[]).find(x => x.id === ME.id) : null, me = String((mp && mp.email) || '').trim();
+  if(/@(gmail|googlemail)\.com$/i.test(me)) return { href: 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(me) + '&view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + encodeURIComponent(subj||'') + '&body=' + encodeURIComponent(body||''), newTab: true };
+  return { href: 'mailto:' + to + '?subject=' + encodeURIComponent(subj||'') + '&body=' + encodeURIComponent(body||''), newTab: false };
+}
+function vaadMailHtml(t){
+  if(t.status === 'done') return ''; const ms = vaadMailMembers(), miss = vaadMailMissing(); if(!ms.length) return '';
+  const attrs = mailAttrs(ms.map(p => p.email).join(','), vaadMailSubject(t), vaadMailText(t));
+  return '<div class="remind vaad"><a class="btn ml" '+attrs+' data-vmail="'+esc(t.id)+'" title="'+esc(ms.map(p => p.name).join(', '))+'">'+ICON_MAIL+'מייל לכל הוועד</a>'+(miss.length ? '<span class="miss">לא נכלל: '+esc(miss.map(firstName).join(', '))+' (אין מייל)</span>' : '')+'</div>';
+}
+function openVaadMail(t){
+  const ms = vaadMailMembers(), miss = vaadMailMissing(); if(!ms.length) return;
+  const to = ms.map(p => p.email).join(','), first = mailHref(to, vaadMailSubject(t), vaadMailText(t));
+  const box = document.createElement('div'); box.className = 'gw-modal';
+  box.innerHTML = '<div class="gw-box" role="dialog" aria-modal="true" aria-labelledby="vm-h"><h3 id="vm-h">מייל לכל חברי הוועד</h3>'+
+    '<div class="vm-to"><b>אל:</b> '+ms.map(p => '<span title="'+esc(p.email)+'">'+esc(p.name)+'</span>').join(', ')+(miss.length ? '<span>· לא נכלל (אין מייל): '+esc(miss.map(firstName).join(', '))+'</span>' : '')+'</div>'+
+    '<label class="l" for="vm-su">נושא</label><input id="vm-su" class="vm-su" value="'+esc(vaadMailSubject(t))+'">'+
+    '<label class="l" for="vm-text">נוסח המייל</label><textarea id="vm-text" style="min-height:170px">'+esc(vaadMailText(t))+'</textarea>'+
+    '<p class="hint" style="margin:8px 0 12px">אפשר לערוך את הנושא ואת הנוסח; הלחיצה פותחת את המייל עם כל הכתובות'+(first.newTab ? " בג'ימייל" : '')+'.</p>'+
+    '<div class="row2"><button type="button" class="btn" id="vm-cancel">ביטול</button><a class="btn primary" id="vm-go" href="'+esc(first.href)+'"'+(first.newTab ? ' target="_blank" rel="noopener"' : '')+'>'+ICON_MAIL+'פתיחת המייל</a></div></div>';
+  document.body.appendChild(box);
+  const close = () => box.remove(), ta = box.querySelector('#vm-text'), su = box.querySelector('#vm-su'), go = box.querySelector('#vm-go');
+  const sync = () => { go.href = mailHref(to, su.value.trim(), ta.value).href; };
+  box.querySelector('#vm-cancel').onclick = close; box.onclick = (e) => { if(e.target === box) close(); };
+  ta.oninput = sync; su.oninput = sync;
+  go.onclick = () => { sync(); setTimeout(close, 300); };
+  ta.focus();
 }
 function wireRemind(root){
   root.querySelectorAll('[data-remcopy]').forEach(b => b.onclick = async (e) => { e.stopPropagation(); const txt = decodeURIComponent(b.dataset.remcopy);
@@ -1286,6 +1342,7 @@ function wireTasks(root){
   root.querySelectorAll('[data-gm]').forEach(b => b.onclick = () => openGuestManage(b.dataset.gm));
   root.querySelectorAll('[data-agp]').forEach(b => b.onclick = () => proposeAgenda(b.dataset.agp));
   root.querySelectorAll('[data-wg]').forEach(b => b.onclick = () => { const t = DATA.tasks.find(x => x.id === b.dataset.wg); if(t) openGroupSend(taskGroupText(t)); });
+  root.querySelectorAll('[data-vmail]').forEach(a => a.onclick = (e) => { e.preventDefault(); const t = DATA.tasks.find(x => x.id === a.dataset.vmail); if(t) openVaadMail(t); });
   root.querySelectorAll('[data-trk]').forEach(b => b.onclick = () => openTrackDialog(b.dataset.id, b.dataset.trk));
   root.querySelectorAll('[data-subtoggle]').forEach(b => b.onclick = () => toggleSubs(b.dataset.subtoggle));
   wireRemind(root);
@@ -1346,7 +1403,7 @@ function taskHtml(t, desk, nested){
     (!done && canManage() ? '<div id="gm-'+esc(t.id)+'"><button class="btn gm-open" data-gm="'+esc(t.id)+'">'+(parts.length ? 'ניהול המבצעים החיצוניים' : 'לשייך מבצע חיצוני')+'</button></div>' : '')+
     (!done ? (function(){ const pend = pendingOwners(t), who = (nOk && pend.length ? pend : ids).filter(id => id !== ME.id);
       const h = who.map(id => remindHtml([t], personById(id), true)).join('');
-      return h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h+mailAllHtml(t) : mailAllHtml(t); })() : '')+
+      return (h ? '<div class="remind"><span class="lbl">'+(who.length > 1 ? (nOk ? 'תזכורת למי שטרם אישר' : 'תזכורת לאחראים') : 'תזכורת לאחראי')+'</span></div>'+h+mailAllHtml(t) : mailAllHtml(t)) + vaadMailHtml(t); })() : '')+
     (!done && parts.length ? parts.filter(a => !desk || a.id === desk).map(a => guestRemindHtml([t], participantById(a.id), false)).join('') : '')+
     '</div></article>';
 }
@@ -1409,7 +1466,7 @@ function openTrackDialog(id, kind){
 
 function openForm(id){
   const t = DATA.tasks.find(x => x.id === id); if(!t) return;
-  const box = $('rep-'+id); if(!box) return;
+  const box = visBox('rep-'+id); if(!box) return;
   const fid = 'r-'+id.replace(/[^a-zA-Z0-9_-]/g,'');
   box.innerHTML = '<form class="rep" id="'+fid+'-form">'+
     '<div><label class="l" for="'+fid+'-text">מה התקדם?</label><textarea id="'+fid+'-text" placeholder="למשל: נשלחה פנייה למועצה, ממתינים לתשובה עד סוף השבוע."></textarea></div>'+
@@ -1446,7 +1503,7 @@ function openForm(id){
     const closeEl = $(fid+'-close');
     const ok = await sendReport(t, text.replace(/\s+/g,' ').trim().slice(0,2000), sel ? sel.value : t.status, !!(closeEl && closeEl.checked), urg, mergeWith);
     st.open[id] = true; render(); if(urg != null) setTimeout(fetchUrgent, 1500);
-    const b = $('rep-'+id);
+    const b = visBox('rep-'+id);
     if(b) b.insertAdjacentHTML('afterbegin', ok ? '<div class="rep-msg" role="status">'+(urg != null ? 'סימון הדחיפות עודכן ומופיע לכולם. ' : '')+(mergeWith ? 'הצעת האיחוד נשלחה לאסף. ' : '')+(text ? 'העדכון נשלח. הוא יופיע באתר בעדכון הבא.' : '')+'</div>' : '<div class="rep-msg err" role="alert">השליחה נכשלה. בדוק את החיבור ונסה שוב.</div>');
   };
 }
